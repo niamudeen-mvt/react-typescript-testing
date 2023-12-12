@@ -1,7 +1,14 @@
-import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import Header from "./components/layout/Header";
+import { renderRoutes, routes } from "./routes";
 
 function App() {
-  return <div className="App">Typescript</div>;
+  return (
+    <BrowserRouter>
+      <Header />
+      {renderRoutes(routes)}
+    </BrowserRouter>
+  );
 }
 
 export default App;
