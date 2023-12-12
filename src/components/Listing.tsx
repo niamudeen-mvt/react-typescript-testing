@@ -56,12 +56,12 @@ const Listing = ({ tasks, setTasks, handleDragStart }: Props) => {
       <ul className="w-full">
         {tasks.map((el, index) => {
           return (
-            <li className="bg-white py-3 my-3 rounded-lg px-3 text-slate-500 shadow-sm flex justify-between border">
+            <li className="bg-white  my-3 rounded-lg px-3 text-slate-500 shadow-sm flex justify-between border">
               {el.isEdit ? (
                 <input
                   type="text"
                   placeholder="Edit Task...."
-                  className="outline-none bg-transparent  w-full"
+                  className="outline-none bg-transparent  w-full py-3"
                   value={todo}
                   onChange={(event) => setTodo(event.target.value)}
                   spellCheck={false}
@@ -70,7 +70,7 @@ const Listing = ({ tasks, setTasks, handleDragStart }: Props) => {
                 <input
                   type="text"
                   placeholder="Enter Task...."
-                  className="outline-none cursor-pointer bg-transparent w-full"
+                  className="outline-none cursor-pointer bg-transparent w-full py-3"
                   value={el.title}
                   spellCheck={false}
                   id={index.toString()}
@@ -92,7 +92,7 @@ const Listing = ({ tasks, setTasks, handleDragStart }: Props) => {
                       onClick={() => handleEdit(index)}
                     />
                     <AiOutlineDelete
-                      className="cursor-pointer text-black "
+                      className="cursor-pointer text-black"
                       onClick={() => deleteTask(index)}
                     />
                   </>

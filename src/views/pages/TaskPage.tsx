@@ -78,7 +78,8 @@ const TaskPage = () => {
     });
 
     setTasks(copiedTaskList);
-    taskCompleted(index);
+    const filterdTasks = completeTask.filter((task, i) => i !== index);
+    setCompleteTask(filterdTasks);
 
     sendNotification("warning", "Task is Pending");
   };
@@ -130,16 +131,11 @@ const TaskPage = () => {
                 <ul className="w-full  overflow-auto">
                   {completeTask.map((el, index) => {
                     return (
-                      // <li
-                      //   className={`${
-                      //     dragOver ? "bg-red-700" : ""
-                      //   }py-3 my-3 rounded-lg px-3 text-slate-500 shadow-sm flex justify-between bg-white`}
-                      // >
-                      <li className="bg-white py-3 my-3 rounded-lg px-3 text-slate-500 shadow-sm flex justify-between">
+                      <li className="bg-white my-3 rounded-lg px-3 text-slate-500 shadow-sm flex justify-between">
                         <input
                           type="text"
                           placeholder="Enter Task...."
-                          className="outline-none cursor-pointer w-full bg-transparent"
+                          className="outline-none cursor-pointer w-full bg-transparent py-3"
                           value={el.title}
                           spellCheck={false}
                           id={index.toString()}
