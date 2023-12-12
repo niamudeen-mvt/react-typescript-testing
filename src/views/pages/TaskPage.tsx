@@ -2,6 +2,7 @@ import { useState } from "react";
 import Listing from "../../components/Listing";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FaCheck } from "react-icons/fa6";
+import { sendNotification } from "../../utils/notifications";
 
 interface ITask {
   title: string;
@@ -11,7 +12,6 @@ interface ITask {
 
 const TaskPage = () => {
   const [dragOver, setDragOver] = useState(false);
-  console.log(dragOver, "dragging <<<<<<<<<<<<<<<<<");
 
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [task, setTask] = useState({
@@ -31,6 +31,7 @@ const TaskPage = () => {
 
   const handleAddTask = () => {
     if (task.title) {
+      sendNotification("success", "Task Added Successfully");
       setTasks([...tasks, task]);
 
       setTask({
@@ -41,7 +42,7 @@ const TaskPage = () => {
     }
   };
 
-  // DRAG AND DROP
+  //  ======== DRAG AND DROP =============================
   const handleDragOverStart = () => setDragOver(true);
   const handleDragOverEnd = () => setDragOver(false);
 
@@ -53,9 +54,6 @@ const TaskPage = () => {
   const enableDropping = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
   };
-
-  console.log(tasks, "tasks", tasks.length);
-  console.log(completeTask, "completeTask.", completeTask.length);
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     const id = event.dataTransfer.getData("text");
@@ -81,11 +79,15 @@ const TaskPage = () => {
 
     setTasks(copiedTaskList);
     taskCompleted(index);
+
+    sendNotification("warning", "Task is Pending");
   };
 
   const taskCompleted = (index: number) => {
     const filterdTasks = completeTask.filter((task, i) => i !== index);
     setCompleteTask(filterdTasks);
+
+    sendNotification("success", "Task is completed");
   };
 
   return (

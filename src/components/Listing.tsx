@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaCheck } from "react-icons/fa6";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FiEdit } from "react-icons/fi";
+import { sendNotification } from "../utils/notifications";
 
 interface ITask {
   title: string;
@@ -21,6 +22,7 @@ const Listing = ({ tasks, setTasks, handleDragStart }: Props) => {
   const deleteTask = (index: number) => {
     const filterdTasks = tasks.filter((task, i) => i !== index);
     setTasks(filterdTasks);
+    sendNotification("error", "Task Deleted Successfully");
   };
 
   const handleEdit = (index: number) => {
@@ -31,16 +33,21 @@ const Listing = ({ tasks, setTasks, handleDragStart }: Props) => {
   };
 
   const editTask = (index: number) => {
-    const copiedTasks = [...tasks];
+    if (todo) {
+      const copiedTasks = [...tasks];
 
-    const tempObj = {
-      title: todo,
-      isEdit: false,
-      isTaskComplete: false,
-    };
-    copiedTasks[index] = tempObj;
-    setTasks(copiedTasks);
-    setTodo("");
+      const tempObj = {
+        title: todo,
+        isEdit: false,
+        isTaskComplete: false,
+      };
+      copiedTasks[index] = tempObj;
+      setTasks(copiedTasks);
+      setTodo("");
+      sendNotification("success", "Task Edited Successfully");
+    } else {
+      sendNotification("warning", "This field is required");
+    }
   };
 
   return (
@@ -49,12 +56,12 @@ const Listing = ({ tasks, setTasks, handleDragStart }: Props) => {
       <ul className="w-full">
         {tasks.map((el, index) => {
           return (
-            <li className="bg-white py-3 my-3 rounded-lg px-3 text-slate-500 shadow-sm flex justify-between">
+            <li className="bg-white py-3 my-3 rounded-lg px-3 text-slate-500 shadow-sm flex justify-between border">
               {el.isEdit ? (
                 <input
                   type="text"
                   placeholder="Edit Task...."
-                  className="outline-none bg-transparent"
+                  className="outline-none bg-transparent  w-full"
                   value={todo}
                   onChange={(event) => setTodo(event.target.value)}
                   spellCheck={false}
@@ -63,7 +70,7 @@ const Listing = ({ tasks, setTasks, handleDragStart }: Props) => {
                 <input
                   type="text"
                   placeholder="Enter Task...."
-                  className="outline-none cursor-pointer w-full bg-transparent"
+                  className="outline-none cursor-pointer bg-transparent w-full"
                   value={el.title}
                   spellCheck={false}
                   id={index.toString()}
