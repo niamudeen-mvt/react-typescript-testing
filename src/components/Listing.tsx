@@ -1,20 +1,21 @@
 import React, { useState } from "react";
-import editIcon from "../assets/icons/edit.svg";
-import deleteIcon from "../assets/icons/trash.svg";
-import submitIcon from "../assets/icons/check.svg";
+import { FaCheck } from "react-icons/fa6";
+import { AiOutlineDelete } from "react-icons/ai";
+import { FiEdit } from "react-icons/fi";
 
 interface ITask {
   title: string;
-  isDone: boolean;
+  isTaskComplete: boolean;
   isEdit: boolean;
 }
 
 interface Props {
   tasks: ITask[];
   setTasks: React.Dispatch<React.SetStateAction<ITask[]>>;
+  handleDragStart: (event: React.DragEvent<HTMLDivElement>) => void;
 }
 
-const Listing = ({ tasks, setTasks }: Props) => {
+const Listing = ({ tasks, setTasks, handleDragStart }: Props) => {
   const [todo, setTodo] = useState("");
 
   const deleteTask = (index: number) => {
@@ -35,7 +36,7 @@ const Listing = ({ tasks, setTasks }: Props) => {
     const tempObj = {
       title: todo,
       isEdit: false,
-      isDone: false,
+      isTaskComplete: false,
     };
     copiedTasks[index] = tempObj;
     setTasks(copiedTasks);
@@ -43,70 +44,58 @@ const Listing = ({ tasks, setTasks }: Props) => {
   };
 
   return (
-    <ul className="w-full max-h-[70vh] overflow-auto">
-      {tasks.map((el, index) => {
-        return (
-          <li className="bg-white py-3 my-3 rounded-lg px-3 text-slate-500 shadow-sm flex justify-between">
-            {el.isEdit ? (
-              <input
-                type="text"
-                placeholder="Enter Task...."
-                className="outline-none"
-                value={todo}
-                onChange={(event) => setTodo(event.target.value)}
-                spellCheck={false}
-              />
-            ) : (
-              <input
-                type="text"
-                placeholder="Enter Task...."
-                className="outline-none"
-                value={el.title}
-                readOnly={true}
-                spellCheck={false}
-              />
-            )}
-            <div className="flex items-center gap-2">
+    <div>
+      <h4 className="text-center text-white">Tasks</h4>
+      <ul className="w-full">
+        {tasks.map((el, index) => {
+          return (
+            <li className="bg-white py-3 my-3 rounded-lg px-3 text-slate-500 shadow-sm flex justify-between">
               {el.isEdit ? (
-                <span
-                  className="cursor-pointer"
-                  onClick={() => editTask(index)}
-                >
-                  <img
-                    src={submitIcon}
-                    alt="edit-icon"
-                    className="task__icon"
-                  />
-                </span>
+                <input
+                  type="text"
+                  placeholder="Edit Task...."
+                  className="outline-none bg-transparent"
+                  value={todo}
+                  onChange={(event) => setTodo(event.target.value)}
+                  spellCheck={false}
+                />
               ) : (
-                <>
-                  <span
-                    className="cursor-pointer"
-                    onClick={() => handleEdit(index)}
-                  >
-                    <img
-                      src={editIcon}
-                      alt="edit-icon"
-                      className="task__icon"
-                    />
-                  </span>
-                  <span
-                    className="cursor-pointer"
-                    onClick={() => deleteTask(index)}
-                  >
-                    <img
-                      src={deleteIcon}
-                      alt="edit-icon"
-                      className="task__icon"
-                    />
-                  </span>
-                </>
+                <input
+                  type="text"
+                  placeholder="Enter Task...."
+                  className="outline-none cursor-pointer w-full bg-transparent"
+                  value={el.title}
+                  spellCheck={false}
+                  id={index.toString()}
+                  draggable={true}
+                  onDragStart={handleDragStart}
+                  disabled={true}
+                />
               )}
-            </div>
-          </li>
-        );
-      })}
-    </ul>
+              <div className="flex items-center gap-2">
+                {el.isEdit ? (
+                  <FaCheck
+                    className="cursor-pointer text-black "
+                    onClick={() => editTask(index)}
+                  />
+                ) : (
+                  <>
+                    <FiEdit
+                      className="cursor-pointer text-black "
+                      onClick={() => handleEdit(index)}
+                    />
+                    <AiOutlineDelete
+                      className="cursor-pointer text-black "
+                      onClick={() => deleteTask(index)}
+                    />
+                  </>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 };
 

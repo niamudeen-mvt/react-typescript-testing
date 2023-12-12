@@ -20,7 +20,7 @@ const Posts = () => {
       className="bg-slate-500 text-black flex justify-center py-32 min-h-[100vh]"
       onClick={() => setShowMenu(false)}
     >
-      <div className="w-1/2">
+      <div className="custom__container">
         <div className="flex__SB mb-10">
           <h1 className="text-5xl text-center font-medium  text-white">
             POSTS

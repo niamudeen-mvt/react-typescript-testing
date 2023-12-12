@@ -27,3 +27,9 @@ body {
 .flex__SB {
   @apply flex justify-between items-center;
 }
+
+/* =================== CONTAINER ==================== */
+
+.custom__container {
+  @apply max-w-[1200px] w-full mx-auto px-10 min-h-full;
+}
