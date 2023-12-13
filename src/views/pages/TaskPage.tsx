@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Listing from "../../components/Listing";
 import { MdDelete } from "react-icons/md";
-
+import ReactTyped from "react-typed";
 import { sendNotification } from "../../utils/notifications";
 import {
   DragDropContext,
@@ -139,7 +139,12 @@ const TaskPage = () => {
 
   return (
     <section className="bg-slate-500 h-screen">
-      <div className="custom__container py-20  flex-col mb-3">
+      <div className="custom__container py-20 flex__center  flex-col mb-3">
+        <div>
+          <h1 className="text-4xl sm:text-5xl mb-20 text-white font-semibold text-center">
+            Welcome to <ReactTyped strings={["Taskify"]} typeSpeed={100} loop />
+          </h1>
+        </div>
         <div className="flex gap-6 mb-5 w-full">
           <form onSubmit={handleAddTask} className="flex gap-6 w-full">
             <input
