@@ -184,7 +184,10 @@ const TaskPage = () => {
                               {...provided.dragHandleProps}
                               ref={provided.innerRef}
                             >
-                              <p>{el.title}</p>
+                              <p>
+                                {index + 1}.{` `}
+                                {el.title}
+                              </p>
                               <div className="flex items-center gap-4 text-black">
                                 <span
                                   className="cursor-pointer"

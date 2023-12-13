@@ -109,7 +109,10 @@ const Listing = ({ tasks, setTasks }: Props) => {
                             onChange={(event) => setTodo(event.target.value)}
                           />
                         ) : (
-                          <p>{el.title}</p>
+                          <p>
+                            {index + 1}.{` `}
+                            {el.title}
+                          </p>
                         )}
                         {el.isEdit && el.id === editTaskId ? (
                           <button type="submit">
