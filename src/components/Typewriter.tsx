@@ -19,9 +19,8 @@ const Typewriter = ({ text, delay, infinite }: IProps) => {
         setCurrentIndex((prevIndex) => prevIndex + 1);
       }, delay);
     } else if (infinite) {
-      // ADD THIS CHECK
-      setCurrentIndex(0);
-      setCurrentText("");
+      // setCurrentIndex(0);
+      // setCurrentText("");
     }
 
     return () => clearTimeout(timeout);

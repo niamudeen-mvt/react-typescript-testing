@@ -48,8 +48,6 @@ const Listing = ({ tasks, setTasks }: Props) => {
         };
       });
 
-      console.log(copiedTasks, "copied task");
-
       setTasks(copiedTasks);
     }
   };
@@ -72,8 +70,6 @@ const Listing = ({ tasks, setTasks }: Props) => {
       sendNotification("warning", "Please enter task");
     }
   };
-
-  console.log(tasks);
 
   return (
     <div className="bg-slate-300/25 p-3 rounded-lg">

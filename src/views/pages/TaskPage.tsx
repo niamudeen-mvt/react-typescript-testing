@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Listing from "../../components/Listing";
 import { MdDelete } from "react-icons/md";
 import ReactTyped from "react-typed";
@@ -28,6 +28,26 @@ const TaskPage = () => {
     isEdit: false,
     isTaskComplete: false,
   });
+
+  useEffect(() => {
+    const storedTasks = JSON.parse(localStorage.getItem("tasks") || "");
+    const storedCompleteTask = JSON.parse(
+      localStorage.getItem("completeTask") || ""
+    );
+    if (storedTasks) {
+      setTasks(storedTasks);
+    } else if (storedCompleteTask) {
+      setCompleteTask(storedCompleteTask);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  useEffect(() => {
+    localStorage.setItem("completeTask", JSON.stringify(completeTask));
+  }, [completeTask]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -70,7 +90,6 @@ const TaskPage = () => {
   const handleAfterDrop = (result: DropResult) => {
     const { destination, source } = result;
 
-    console.log(destination, source);
     // IF NOT DROP +====================
     if (!destination) {
       return;

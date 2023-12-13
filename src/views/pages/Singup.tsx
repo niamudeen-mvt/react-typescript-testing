@@ -12,8 +12,6 @@ const SignupPage = () => {
     console.log(data);
   };
 
-  console.log(errors, "errors");
-
   return (
     <div className="custom__container flex__center h-screen">
       <form onSubmit={handleSubmit(onSubmit)}>
