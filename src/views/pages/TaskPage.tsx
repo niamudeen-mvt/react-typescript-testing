@@ -11,6 +11,7 @@ import {
 } from "react-beautiful-dnd";
 import { v4 as uuidv4 } from "uuid";
 import { IoMdThumbsUp } from "react-icons/io";
+import { useAuth0 } from "@auth0/auth0-react";
 
 interface ITask {
   id: string;
@@ -20,6 +21,7 @@ interface ITask {
 }
 
 const TaskPage = () => {
+  const { user, isAuthenticated, isLoading } = useAuth0();
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [completeTask, setCompleteTask] = useState<ITask[]>([]);
   const [task, setTask] = useState({
@@ -30,13 +32,14 @@ const TaskPage = () => {
   });
 
   useEffect(() => {
-    const storedTasks = JSON.parse(localStorage.getItem("tasks") || "");
+    const storedTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
     const storedCompleteTask = JSON.parse(
-      localStorage.getItem("completeTask") || ""
+      localStorage.getItem("completeTask") || "[]"
     );
-    if (storedTasks) {
+
+    if (storedTasks.length > 0) {
       setTasks(storedTasks);
-    } else if (storedCompleteTask) {
+    } else if (storedCompleteTask.length > 0) {
       setCompleteTask(storedCompleteTask);
     }
   }, []);
@@ -161,7 +164,8 @@ const TaskPage = () => {
       <div className="custom__container py-20 flex__center  flex-col mb-3">
         <div>
           <h1 className="text-4xl sm:text-5xl mb-20 text-white font-semibold text-center">
-            Welcome to <ReactTyped strings={["Taskify"]} typeSpeed={100} loop />
+            Welcome {user?.given_name} to{" "}
+            <ReactTyped strings={["Taskify"]} typeSpeed={100} loop />
           </h1>
         </div>
         <div className="flex gap-6 mb-5 w-full">

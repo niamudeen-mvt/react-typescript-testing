@@ -1,20 +1,14 @@
 import { Route, Routes } from "react-router-dom";
 import Posts from "../components/Posts";
 import TaskPage from "../views/pages/TaskPage";
-// import LoginPage from "../views/pages/LoginPage";
-// import SignupPage from "../views/pages/Singup";
+import LoginPage from "../views/pages/Login";
 
 export const routes = [
-  // {
-  //   id: "login",
-  //   path: "/login",
-  //   element: <LoginPage />,
-  // },
-  // {
-  //   id: "signup",
-  //   path: "/signup",
-  //   element: <SignupPage />,
-  // },
+  {
+    id: "login",
+    path: "/login",
+    element: <LoginPage />,
+  },
   {
     id: "tasks",
     path: "/",
@@ -24,11 +18,6 @@ export const routes = [
     id: "posts",
     path: "/posts",
     element: <Posts />,
-  },
-  {
-    id: "*",
-    path: "*",
-    element: <TaskPage />,
   },
 ];
 
