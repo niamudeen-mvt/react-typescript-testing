@@ -139,7 +139,7 @@ const TaskPage = () => {
 
   return (
     <section className="bg-slate-500 h-screen">
-      <div className="custom__container flex__center flex-col mb-3">
+      <div className="custom__container py-20  flex-col mb-3">
         <div className="flex gap-6 mb-5 w-full">
           <form onSubmit={handleAddTask} className="flex gap-6 w-full">
             <input
@@ -159,7 +159,7 @@ const TaskPage = () => {
           </form>
         </div>
         <DragDropContext onDragEnd={handleAfterDrop}>
-          <div className="grid  grid-cols-1 sm:grid-cols-2 mx-auto w-full gap-10 max-h-[70vh] sm:h-full overflow-auto sm:overflow-auto">
+          <div className="grid  grid-cols-1 sm:grid-cols-2 mx-auto w-full gap-10 max-h-[90vh] sm:h-full overflow-auto sm:overflow-auto">
             <Listing tasks={tasks} setTasks={setTasks} />
             <div className="bg-slate-300/25 p-3 rounded-lg">
               <p className="text-white text-center">Completed Tasks</p>
