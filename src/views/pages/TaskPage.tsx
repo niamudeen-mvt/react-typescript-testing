@@ -1,91 +1,137 @@
 import { useState } from "react";
 import Listing from "../../components/Listing";
-import { AiOutlineDelete } from "react-icons/ai";
-import { FaCheck } from "react-icons/fa6";
+import { MdDelete } from "react-icons/md";
+
 import { sendNotification } from "../../utils/notifications";
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable,
+} from "react-beautiful-dnd";
+import { v4 as uuidv4 } from "uuid";
+import { IoMdThumbsUp } from "react-icons/io";
 
 interface ITask {
+  id: string;
   title: string;
   isTaskComplete: boolean;
   isEdit: boolean;
 }
 
 const TaskPage = () => {
-  const [dragOver, setDragOver] = useState(false);
-
   const [tasks, setTasks] = useState<ITask[]>([]);
+  const [completeTask, setCompleteTask] = useState<ITask[]>([]);
   const [task, setTask] = useState({
+    id: "",
     title: "",
     isEdit: false,
     isTaskComplete: false,
   });
-  const [completeTask, setCompleteTask] = useState<ITask[]>([]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
+    const unique_id = uuidv4();
+
+    // upating task details
     setTask({
-      ...task,
+      id: unique_id,
       title: event.target.value,
+      isEdit: false,
+      isTaskComplete: false,
     });
   };
 
-  const handleAddTask = () => {
+  const handleAddTask = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (task.title) {
-      sendNotification("success", "Task Added Successfully");
-      setTasks([...tasks, task]);
+      const existTask = tasks.find((el) => el.title === task.title.trim());
 
-      setTask({
-        title: "",
-        isEdit: false,
-        isTaskComplete: false,
-      });
+      if (existTask) {
+        sendNotification("warning", "Task already exist");
+      } else {
+        sendNotification("success", "Task Added Successfully");
+        setTasks([...tasks, task]);
+
+        setTask({
+          id: "",
+          title: "",
+          isEdit: false,
+          isTaskComplete: false,
+        });
+      }
+    } else {
+      sendNotification("warning", "Please enter task");
     }
   };
 
   //  ======== DRAG AND DROP =============================
-  const handleDragOverStart = () => setDragOver(true);
-  const handleDragOverEnd = () => setDragOver(false);
 
-  const handleDragStart = (event: React.DragEvent<HTMLDivElement>) => {
-    event.dataTransfer.setData("text", event.currentTarget.id);
-    console.log("dragging");
+  const handleAfterDrop = (result: DropResult) => {
+    const { destination, source } = result;
+
+    console.log(destination, source);
+    // IF NOT DROP +====================
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    let active = tasks.slice();
+    let complete = completeTask.slice();
+
+    // Get the task that is being dragged
+    const draggedTask =
+      source.droppableId === "activeTask"
+        ? active[source.index]
+        : complete[source.index];
+
+    // Remove the task from its source list
+    if (source.droppableId === "activeTask") {
+      active.splice(source.index, 1);
+    } else {
+      complete.splice(source.index, 1);
+    }
+
+    // If the destination is activeTask, insert the task into the active list
+    if (destination.droppableId === "activeTask") {
+      active.splice(destination.index, 0, draggedTask);
+    } else {
+      // Otherwise, insert the task into the complete list
+      complete.splice(destination.index, 0, draggedTask);
+      sendNotification("success", "task is completed");
+    }
+
+    // Update the state with the modified lists
+    setTasks(active);
+    setCompleteTask(complete);
   };
 
-  const enableDropping = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-  };
+  const removeCompleteTask = (id: string) => {
+    const task = completeTask.find((task, i) => task.id === id);
+    if (task) {
+      const copiedTaskList = [...tasks];
 
-  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    const id = event.dataTransfer.getData("text");
-    console.log(`Somebody dropped an element with id: ${id}`);
-    const tempObj = tasks.filter((task, i) => i === parseInt(id))[0];
+      task.isTaskComplete = false;
+      copiedTaskList.push(task);
 
-    const filterdTasks = tasks.filter((task, i) => i !== parseInt(id));
-    setTasks(filterdTasks);
+      setTasks(copiedTaskList);
+    }
 
-    setCompleteTask([...completeTask, { ...tempObj, isTaskComplete: true }]);
-    setDragOver(false);
-  };
-
-  const removeCompleteTask = (index: number) => {
-    const task = completeTask.filter((task, i) => i === index)[0];
-
-    const copiedTaskList = [...tasks];
-    console.log(copiedTaskList);
-    copiedTaskList.push({
-      ...task,
-      isTaskComplete: false,
-    });
-
-    setTasks(copiedTaskList);
-    const filterdTasks = completeTask.filter((task, i) => i !== index);
+    const filterdTasks = completeTask.filter((task, i) => task.id !== id);
     setCompleteTask(filterdTasks);
 
     sendNotification("warning", "Task is Pending");
   };
 
-  const taskCompleted = (index: number) => {
-    const filterdTasks = completeTask.filter((task, i) => i !== index);
+  const taskCompleted = (id: string) => {
+    const filterdTasks = completeTask.filter((task, i) => task.id !== id);
     setCompleteTask(filterdTasks);
 
     sendNotification("success", "Task is completed");
@@ -93,77 +139,78 @@ const TaskPage = () => {
 
   return (
     <section className="bg-slate-500 h-screen">
-      <div className="custom__container flex__center">
-        <div className="flex flex-col gap-6 w-full max-w-[1200px]">
-          <div className="flex gap-6">
+      <div className="custom__container flex__center flex-col mb-3">
+        <div className="flex gap-6 mb-5 w-full">
+          <form onSubmit={handleAddTask} className="flex gap-6 w-full">
             <input
               type="text"
               placeholder="Enter Task...."
-              className="bg-white w-full rounded-lg px-3 text-slate-500 h-12 outline-none"
+              className="bg-white w-full rounded-lg px-3 text-black h-12 outline-none"
               value={task.title}
               onChange={handleChange}
               spellCheck={false}
             />
             <button
-              className="h-12 bg-white rounded-md text-sm w-32 uppercase font-semibold"
-              onClick={handleAddTask}
+              type="submit"
+              className="h-12 bg-slate-900 rounded-md text-sm w-32 uppercase font-semibold text-white hover:bg-slate-700"
             >
               <p className="w-full">Add Task</p>
             </button>
-          </div>
-          <div className="grid  grid-cols-1 sm:grid-cols-2 mx-auto w-full gap-10 max-h-[70vh] sm:h-full overflow-auto sm:overflow-auto">
-            <div className="flex flex-col gap-y-10 p-5 bg-slate-300/25 opacity-100 rounded-lg  min-h-[300px]">
-              <Listing
-                tasks={tasks}
-                setTasks={setTasks}
-                handleDragStart={handleDragStart}
-              />
-            </div>
-            <div
-              className="bg-slate-300/25 opacity-100 w-full min-h-[300px] p-5 rounded-lg"
-              onDragOver={enableDropping}
-              onDrop={handleDrop}
-              onDragEnter={handleDragOverStart}
-              onDragLeave={handleDragOverEnd}
-            >
-              <div>
-                <h4 className="text-center text-white">Complete Task</h4>
-                <ul className="w-full  overflow-auto">
-                  {completeTask.map((el, index) => {
-                    return (
-                      <li className="bg-white my-3 rounded-lg px-3 text-slate-500 shadow-sm flex justify-between">
-                        <input
-                          type="text"
-                          placeholder="Enter Task...."
-                          className="outline-none cursor-pointer w-full bg-transparent py-3"
-                          value={el.title}
-                          spellCheck={false}
-                          id={index.toString()}
-                          draggable={true}
-                          onDragStart={handleDragStart}
-                          disabled={true}
-                        />
-                        <div className="flex items-center gap-4 text-black">
-                          <span
-                            className="cursor-pointer"
-                            onClick={() => taskCompleted(index)}
-                          >
-                            <FaCheck />
-                          </span>
-                          <span className="cursor-pointer">
-                            <AiOutlineDelete
-                              onClick={() => removeCompleteTask(index)}
-                            />
-                          </span>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            </div>
-          </div>
+          </form>
         </div>
+        <DragDropContext onDragEnd={handleAfterDrop}>
+          <div className="grid  grid-cols-1 sm:grid-cols-2 mx-auto w-full gap-10 max-h-[70vh] sm:h-full overflow-auto sm:overflow-auto">
+            <Listing tasks={tasks} setTasks={setTasks} />
+            <div className="bg-slate-300/25 p-3 rounded-lg">
+              <p className="text-white text-center">Completed Tasks</p>
+              <Droppable droppableId="completeTask">
+                {(provided) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    className="w-full flex flex-col gap-y-3  min-w-[300px] flex__center p-3"
+                  >
+                    {completeTask.map((el, index) => {
+                      return (
+                        <Draggable
+                          key={el.id}
+                          draggableId={el.id}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <div
+                              className="rounded-lg p-3 text-black shadow-sm w-full bg-white flex__SB"
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              ref={provided.innerRef}
+                            >
+                              <p>{el.title}</p>
+                              <div className="flex items-center gap-4 text-black">
+                                <span
+                                  className="cursor-pointer"
+                                  onClick={() => taskCompleted(el.id)}
+                                >
+                                  <IoMdThumbsUp size={22} />
+                                </span>
+                                <span className="cursor-pointer">
+                                  <MdDelete
+                                    size={20}
+                                    onClick={() => removeCompleteTask(el.id)}
+                                  />
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </Draggable>
+                      );
+                    })}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </div>
+          </div>
+        </DragDropContext>
       </div>
     </section>
   );

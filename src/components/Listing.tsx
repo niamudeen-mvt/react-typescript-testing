@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { FaCheck } from "react-icons/fa6";
-import { AiOutlineDelete } from "react-icons/ai";
-import { FiEdit } from "react-icons/fi";
+import { Draggable, Droppable } from "react-beautiful-dnd";
 import { sendNotification } from "../utils/notifications";
+import { IoMdThumbsUp } from "react-icons/io";
+import { AiFillEdit } from "react-icons/ai";
+import { MdDelete } from "react-icons/md";
 
 interface ITask {
+  id: string;
   title: string;
   isTaskComplete: boolean;
   isEdit: boolean;
@@ -13,95 +15,134 @@ interface ITask {
 interface Props {
   tasks: ITask[];
   setTasks: React.Dispatch<React.SetStateAction<ITask[]>>;
-  handleDragStart: (event: React.DragEvent<HTMLDivElement>) => void;
 }
 
-const Listing = ({ tasks, setTasks, handleDragStart }: Props) => {
+const Listing = ({ tasks, setTasks }: Props) => {
   const [todo, setTodo] = useState("");
+  const [editTaskId, setEditTaskId] = useState("");
 
-  const deleteTask = (index: number) => {
-    const filterdTasks = tasks.filter((task, i) => i !== index);
+  const deleteTask = (id: string) => {
+    const filterdTasks = tasks.filter((task, i) => task.id !== id);
     setTasks(filterdTasks);
     sendNotification("error", "Task Deleted Successfully");
   };
 
-  const handleEdit = (index: number) => {
-    console.log("edit", index);
-    const copiedTasks = [...tasks];
-    copiedTasks[index].isEdit = true;
-    setTasks(copiedTasks);
-  };
+  const handleEdit = (id: string) => {
+    setEditTaskId(id);
+    const existIndex = tasks.findIndex((task) => task.id === id);
 
-  const editTask = (index: number) => {
-    if (todo) {
-      const copiedTasks = [...tasks];
+    if (existIndex > -1) {
+      // const copiedTasks = [...tasks];
+      // copiedTasks[existIndex].isEdit = true;
 
-      const tempObj = {
-        title: todo,
-        isEdit: false,
-        isTaskComplete: false,
-      };
-      copiedTasks[index] = tempObj;
+      const copiedTasks = tasks.map((task, index) => {
+        if (index === existIndex)
+          return {
+            ...task,
+            isEdit: true,
+          };
+
+        return {
+          ...task,
+          isEdit: false,
+        };
+      });
+
+      console.log(copiedTasks, "copied task");
+
       setTasks(copiedTasks);
-      setTodo("");
-      sendNotification("success", "Task Edited Successfully");
-    } else {
-      sendNotification("warning", "This field is required");
     }
   };
 
+  const editTask = (event: React.FormEvent<HTMLFormElement>, id: string) => {
+    event.preventDefault();
+    if (todo) {
+      const existIndex = tasks.findIndex((task) => task.id === id);
+
+      if (existIndex > -1) {
+        const copiedTasks = [...tasks];
+        copiedTasks[existIndex].title = todo;
+        copiedTasks[existIndex].isEdit = false;
+
+        setTasks(copiedTasks);
+        setTodo("");
+        sendNotification("success", "Task Edited Successfully");
+      }
+    } else {
+      sendNotification("warning", "Please enter task");
+    }
+  };
+
+  console.log(tasks);
+
   return (
-    <div>
-      <h4 className="text-center text-white">Tasks</h4>
-      <ul className="w-full">
-        {tasks.map((el, index) => {
-          return (
-            <li className="bg-white  my-3 rounded-lg px-3 text-slate-500 shadow-sm flex justify-between border">
-              {el.isEdit ? (
-                <input
-                  type="text"
-                  placeholder="Edit Task...."
-                  className="outline-none bg-transparent  w-full py-3"
-                  value={todo}
-                  onChange={(event) => setTodo(event.target.value)}
-                  spellCheck={false}
-                />
-              ) : (
-                <input
-                  type="text"
-                  placeholder="Enter Task...."
-                  className="outline-none cursor-pointer bg-transparent w-full py-3"
-                  value={el.title}
-                  spellCheck={false}
-                  id={index.toString()}
-                  draggable={true}
-                  onDragStart={handleDragStart}
-                  disabled={true}
-                />
-              )}
-              <div className="flex items-center gap-2">
-                {el.isEdit ? (
-                  <FaCheck
-                    className="cursor-pointer text-black "
-                    onClick={() => editTask(index)}
-                  />
-                ) : (
-                  <>
-                    <FiEdit
-                      className="cursor-pointer text-black "
-                      onClick={() => handleEdit(index)}
-                    />
-                    <AiOutlineDelete
-                      className="cursor-pointer text-black"
-                      onClick={() => deleteTask(index)}
-                    />
-                  </>
-                )}
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+    <div className="bg-slate-300/25 p-3 rounded-lg">
+      <p className="text-white text-center">Active Tasks</p>
+      <Droppable droppableId="activeTask">
+        {(provided) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            className="w-full flex flex-col gap-y-3 min-w-[300px] flex__center p-3"
+          >
+            {tasks.map((el, index) => {
+              return (
+                <Draggable key={el.id} draggableId={el.id} index={index}>
+                  {(provided) => (
+                    <div
+                      className="bg-white rounded-lg p-3 mb-3 text-black shadow-sm w-full flex__SB"
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      ref={provided.innerRef}
+                    >
+                      <form
+                        onSubmit={(event) => editTask(event, el.id)}
+                        className="flex__SB w-full"
+                      >
+                        {el.isEdit && el.id === editTaskId ? (
+                          <input
+                            type="text"
+                            placeholder="Edit Task...."
+                            className="outline-none bg-transparent w-full"
+                            spellCheck={false}
+                            value={todo}
+                            onChange={(event) => setTodo(event.target.value)}
+                          />
+                        ) : (
+                          <p>{el.title}</p>
+                        )}
+                        {el.isEdit && el.id === editTaskId ? (
+                          <button type="submit">
+                            <IoMdThumbsUp
+                              className="cursor-pointer"
+                              size={22}
+                            />
+                          </button>
+                        ) : null}
+                      </form>
+                      {!el.isEdit ? (
+                        <div className="flex items-center gap-4">
+                          <AiFillEdit
+                            size={20}
+                            className="cursor-pointer"
+                            onClick={() => handleEdit(el.id)}
+                          />
+                          <MdDelete
+                            className="cursor-pointer"
+                            onClick={() => deleteTask(el.id)}
+                            size={20}
+                          />
+                        </div>
+                      ) : null}
+                    </div>
+                  )}
+                </Draggable>
+              );
+            })}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
     </div>
   );
 };

@@ -14,7 +14,7 @@ export const routes = [
     element: <Posts />,
   },
   {
-    id: "tasks",
+    id: "*",
     path: "*",
     element: <TaskPage />,
   },
