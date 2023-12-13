@@ -1,8 +1,20 @@
 import { Route, Routes } from "react-router-dom";
 import Posts from "../components/Posts";
 import TaskPage from "../views/pages/TaskPage";
+// import LoginPage from "../views/pages/LoginPage";
+// import SignupPage from "../views/pages/Singup";
 
 export const routes = [
+  // {
+  //   id: "login",
+  //   path: "/login",
+  //   element: <LoginPage />,
+  // },
+  // {
+  //   id: "signup",
+  //   path: "/signup",
+  //   element: <SignupPage />,
+  // },
   {
     id: "tasks",
     path: "/",
