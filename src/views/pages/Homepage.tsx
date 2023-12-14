@@ -20,7 +20,7 @@ const Homepage: FC = () => {
               </h1>
               {isAuthenticated ? null : (
                 <button
-                  className="bg-slate-700 px-12 py-4 text-white rounded-lg"
+                  className="bg-slate-700 px-12 py-4 text-white rounded-lg hover:bg-slate-600"
                   onClick={() => loginWithRedirect()}
                 >
                   login

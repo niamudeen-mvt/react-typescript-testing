@@ -21,7 +21,7 @@ interface ITask {
 }
 
 const TaskPage = () => {
-  const { user, isAuthenticated, isLoading } = useAuth0();
+  const { user, isLoading } = useAuth0();
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [completeTask, setCompleteTask] = useState<ITask[]>([]);
   const [task, setTask] = useState({
@@ -31,7 +31,7 @@ const TaskPage = () => {
     isTaskComplete: false,
   });
 
-  console.log(user, "user");
+  // GETTING TASK AND COMPLETE TASKS FROM LOCALSTORAGE
 
   useEffect(() => {
     const storedTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
@@ -46,6 +46,8 @@ const TaskPage = () => {
     }
   }, []);
 
+  // SETTTING TASK AND COMPLETE TASKS IN LOCALSTORAGE
+
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
@@ -54,11 +56,12 @@ const TaskPage = () => {
     localStorage.setItem("completeTask", JSON.stringify(completeTask));
   }, [completeTask]);
 
+  // SETTING TASK
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     const unique_id = uuidv4();
 
-    // upating task details
     setTask({
       id: unique_id,
       title: event.target.value,
@@ -66,6 +69,8 @@ const TaskPage = () => {
       isTaskComplete: false,
     });
   };
+
+  // ADDING TASK IN TASK LIST
 
   const handleAddTask = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -78,6 +83,7 @@ const TaskPage = () => {
         sendNotification("success", "Task Added Successfully");
         setTasks([...tasks, task]);
 
+        // RESETTING TASK
         setTask({
           id: "",
           title: "",
@@ -110,32 +116,29 @@ const TaskPage = () => {
     let active = tasks.slice();
     let complete = completeTask.slice();
 
-    // Get the task that is being dragged
     const draggedTask =
       source.droppableId === "activeTask"
         ? active[source.index]
         : complete[source.index];
 
-    // Remove the task from its source list
     if (source.droppableId === "activeTask") {
       active.splice(source.index, 1);
     } else {
       complete.splice(source.index, 1);
     }
 
-    // If the destination is activeTask, insert the task into the active list
     if (destination.droppableId === "activeTask") {
       active.splice(destination.index, 0, draggedTask);
     } else {
-      // Otherwise, insert the task into the complete list
       complete.splice(destination.index, 0, draggedTask);
       sendNotification("success", "task is completed");
     }
 
-    // Update the state with the modified lists
     setTasks(active);
     setCompleteTask(complete);
   };
+
+  // REMOVING TASK FROM COMLETE TASK
 
   const removeCompleteTask = (id: string) => {
     const task = completeTask.find((task, i) => task.id === id);
@@ -145,6 +148,7 @@ const TaskPage = () => {
       task.isTaskComplete = false;
       copiedTaskList.push(task);
 
+      // ADDING REMOVED TASK INTO TASKS
       setTasks(copiedTaskList);
     }
 
@@ -153,6 +157,8 @@ const TaskPage = () => {
 
     sendNotification("warning", "Task is Pending");
   };
+
+  // REMOVING TASK FROM COMLETE TASK AFTER COMPLETION
 
   const taskCompleted = (id: string) => {
     const filterdTasks = completeTask.filter((task, i) => task.id !== id);
@@ -164,7 +170,7 @@ const TaskPage = () => {
   if (isLoading) return <div>Loading..........</div>;
   return (
     <section className="bg-slate-500 h-screen">
-      <div className="custom__container py-20 flex__center  flex-col mb-3">
+      <div className="custom__container py-32 mb-3">
         <div>
           <h1 className="text-4xl sm:text-5xl mb-20 text-white font-semibold text-center">
             Welcome {user?.nickname} to{" "}

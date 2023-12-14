@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
-import { routes } from "../../routes";
 import { useAuth0 } from "@auth0/auth0-react";
+import { menuItems } from "../../utils/constants";
 
 const Header = () => {
   const { logout, isAuthenticated } = useAuth0();
@@ -15,7 +15,7 @@ const Header = () => {
 
         <nav>
           <ul className="flex gap-x-6 text-md">
-            {routes
+            {menuItems
               .filter((route) => route.path !== "*")
               .map((route: { path: string; id: string }) => {
                 return isAuthenticated ? (
