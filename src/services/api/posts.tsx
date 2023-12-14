@@ -8,3 +8,12 @@ export const fetchPost = async (): Promise<any> => {
     return error;
   }
 };
+
+export const deletePost = async (id: string): Promise<any> => {
+  try {
+    let response = await api.delete(`/posts/${id}`);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};

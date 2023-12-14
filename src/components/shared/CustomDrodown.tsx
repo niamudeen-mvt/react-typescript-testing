@@ -6,6 +6,7 @@ type Props = {
   setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
   dropMenu: any;
   setPostId: React.Dispatch<React.SetStateAction<string>>;
+  setContentTitle: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const CustomDrodown = ({
@@ -13,6 +14,7 @@ const CustomDrodown = ({
   showMenu,
   dropMenu,
   setShowComments,
+  setContentTitle,
 }: Props) => {
   return (
     <div className="group relative cursor-pointer">
@@ -34,7 +36,7 @@ const CustomDrodown = ({
                   key={e.id}
                   onClick={() => {
                     setShowComments(true);
-                    console.log("comments");
+                    setContentTitle("Comments");
                   }}
                   className="flex gap-x-2 hover:bg-blue-300 px-3 py-1 rounded-md transition-all duration-300 text-black"
                 >

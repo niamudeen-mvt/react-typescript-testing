@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { fetchPost } from "../services/api/posts";
+import { deletePost, fetchPost } from "../services/api/posts";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import SinglePost from "./SinglePost";
 import PostComments from "./PostComments";
+import { sendNotification } from "../utils/notifications";
 
 const Posts = () => {
   const [posts, setPosts] = useState<{ id: string; title: string }[]>([]);
@@ -11,6 +12,7 @@ const Posts = () => {
   const [postId, setPostId] = useState("");
   const [showPost, setShowPost] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const [contentTitle, setContentTitle] = useState("Posts");
 
   useEffect(() => {
     loadPosts();
@@ -31,19 +33,17 @@ const Posts = () => {
     }
   };
 
-  console.log(showPost, "showPost");
-  console.log(showComments, "showComments");
+  // console.log(showPost, "showPost");
+  // console.log(showComments, "showComments");
 
-  const dropMenu = [
-    {
-      id: 1,
-      title: "View Post",
-    },
-    {
-      id: 1,
-      title: "See Comments",
-    },
-  ];
+  const handleDeltePost = async (id: string) => {
+    let res = await deletePost(id);
+    console.log("deltePost", res);
+
+    if (res.status === 200) {
+      sendNotification("success", "Post deleted succesfully");
+    }
+  };
 
   return (
     <section
@@ -52,7 +52,9 @@ const Posts = () => {
     >
       <div className="custom__container">
         <div className="flex__SB mb-10">
-          <h1 className="text-5xl text-center font-medium text-white">POSTS</h1>
+          <h1 className="text-5xl text-center font-medium text-white">
+            {contentTitle}
+          </h1>
         </div>
         {isLoading ? (
           <div>Loading..........</div>
@@ -62,6 +64,7 @@ const Posts = () => {
             setPostId={setPostId}
             postId={postId}
             setShowComments={setShowComments}
+            setContentTitle={setContentTitle}
           />
         ) : showPost && showComments ? (
           <PostComments
@@ -69,6 +72,7 @@ const Posts = () => {
             postId={postId}
             setShowPost={setShowPost}
             setShowComments={setShowComments}
+            setContentTitle={setContentTitle}
           />
         ) : (
           // POSTS
@@ -94,19 +98,23 @@ const Posts = () => {
                     <BsThreeDotsVertical className="font-medium text-black" />
                   </span>
                   {showMenu && postId === post.id ? (
-                    <div className="bg-white h-full min-w-[150px] min-h-[50px]  rounded-lg text-sm absolute top-8 -translate-x-[80%] p-3 transition-all duration-500 active:block shadow-2xl z-10">
+                    <div className="bg-white rounded-lg text-sm absolute top-8 -translate-x-[80%] p-3 transition-all duration-500 active:block shadow-2xl z-10 min-w-[150px]">
                       <ul className="h-full flex flex-col justify-between w-full">
-                        {["V"].map((e) => {
-                          return (
-                            <li
-                              key={e}
-                              onClick={() => setShowPost(true)}
-                              className="flex gap-x-2 hover:bg-blue-300 px-3 py-1 rounded-md transition-all duration-300 text-black"
-                            >
-                              <span className="text-xs">View Post</span>
-                            </li>
-                          );
-                        })}
+                        <li
+                          onClick={() => {
+                            setShowPost(true);
+                            setContentTitle("Post");
+                          }}
+                          className="flex gap-x-2 hover:bg-blue-300 px-3 py-1 rounded-md transition-all duration-300 text-black"
+                        >
+                          <span className="text-xs">View Post</span>
+                        </li>
+                        <li
+                          onClick={() => handleDeltePost(post.id)}
+                          className="flex gap-x-2 hover:bg-blue-300 px-3 py-1 rounded-md transition-all duration-300 text-black"
+                        >
+                          <span className="text-xs">Delete Post</span>
+                        </li>
                       </ul>
                     </div>
                   ) : null}

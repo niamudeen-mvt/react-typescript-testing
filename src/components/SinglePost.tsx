@@ -7,6 +7,7 @@ type Props = {
   setShowPost: React.Dispatch<React.SetStateAction<boolean>>;
   setPostId: React.Dispatch<React.SetStateAction<string>>;
   setShowComments: React.Dispatch<React.SetStateAction<boolean>>;
+  setContentTitle: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const SinglePost = ({
@@ -14,6 +15,7 @@ const SinglePost = ({
   setPostId,
   postId,
   setShowComments,
+  setContentTitle,
 }: Props) => {
   const [showMenu, setShowMenu] = useState(false);
 
@@ -56,6 +58,7 @@ const SinglePost = ({
             onClick={() => {
               setShowPost(false);
               setPostId("");
+              setContentTitle("Posts");
             }}
           >
             Go Back
@@ -73,6 +76,7 @@ const SinglePost = ({
                     dropMenu={dropMenu}
                     setShowComments={setShowComments}
                     setPostId={setPostId}
+                    setContentTitle={setContentTitle}
                   />
                 </div>
                 <h1 className="text-3xl">Title : {post.title}</h1>

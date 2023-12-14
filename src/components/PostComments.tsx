@@ -7,9 +7,10 @@ type Props = {
   setPostId: React.Dispatch<React.SetStateAction<string>>;
   setShowPost: React.Dispatch<React.SetStateAction<boolean>>;
   setShowComments: React.Dispatch<React.SetStateAction<boolean>>;
+  setContentTitle: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const PostComments = ({ postId, setShowComments }: Props) => {
+const PostComments = ({ postId, setShowComments, setContentTitle }: Props) => {
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -38,6 +39,7 @@ const PostComments = ({ postId, setShowComments }: Props) => {
             className="mb-4"
             onClick={() => {
               setShowComments(false);
+              setContentTitle("Post");
             }}
           >
             Go Back
