@@ -5,7 +5,6 @@ import TaskPage from "./TaskPage";
 
 const Homepage: FC = () => {
   const { loginWithRedirect, isAuthenticated } = useAuth0();
-  console.log(isAuthenticated);
 
   return (
     <>
