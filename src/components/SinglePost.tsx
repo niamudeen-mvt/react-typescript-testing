@@ -30,8 +30,6 @@ const SinglePost = ({
   const fetchSinglePost = async () => {
     setIsLoading(true);
     let res = await api.get(`/posts/${postId}`);
-    console.log(res, "fetchsinglepost");
-
     if (res?.status === 200) {
       setPost(res?.data);
     }
@@ -68,8 +66,7 @@ const SinglePost = ({
               <div>Loading .......</div>
             ) : (
               <>
-                <div className="flex__SB">
-                  <p>id : {post.id}</p>
+                <div className="flex justify-end">
                   <CustomDrodown
                     showMenu={showMenu}
                     setShowMenu={setShowMenu}

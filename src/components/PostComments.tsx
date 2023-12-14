@@ -18,7 +18,6 @@ const PostComments = ({ postId, setShowComments, setContentTitle }: Props) => {
   const fetchPostComments = async () => {
     setIsLoading(true);
     let res = await api.get(`/posts/${postId}/comments`);
-    console.log(res, "fetchPostComments");
 
     if (res?.status === 200) {
       setComments(res?.data);

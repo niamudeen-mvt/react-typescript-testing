@@ -16,7 +16,6 @@ const Posts = () => {
 
   useEffect(() => {
     loadPosts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadPosts = async () => {
@@ -32,9 +31,6 @@ const Posts = () => {
       setIsLoading(false);
     }
   };
-
-  // console.log(showPost, "showPost");
-  // console.log(showComments, "showComments");
 
   const handleDeltePost = async (id: string) => {
     let res = await deletePost(id);
@@ -55,6 +51,30 @@ const Posts = () => {
           <h1 className="text-5xl text-center font-medium text-white">
             {contentTitle}
           </h1>
+          {/* <div>
+            <button
+              className="group relative"
+              onClick={() => setShowFilterMenu(!showFilterMenu)}
+            >
+              <BsThreeDotsVertical className="text-white" />
+              {showFilterMenu ? (
+                <div className="bg-white rounded-lg text-sm absolute top-8 -translate-x-[80%] p-3 transition-all duration-500  shadow-2xl z-10 min-w-[150px] active:block">
+                  <ul>
+                    {[1, 2, 3, 4, 5].map((e) => {
+                      return (
+                        <li
+                          key={e}
+                          className="flex gap-x-2 hover:bg-blue-300 px-3 py-1 rounded-md transition-all duration-300 text-black"
+                        >
+                          {e}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ) : null}
+            </button>
+          </div> */}
         </div>
         {isLoading ? (
           <div>Loading..........</div>
