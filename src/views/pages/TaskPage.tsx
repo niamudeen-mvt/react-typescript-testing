@@ -31,6 +31,8 @@ const TaskPage = () => {
     isTaskComplete: false,
   });
 
+  console.log(user, "user");
+
   useEffect(() => {
     const storedTasks = JSON.parse(localStorage.getItem("tasks") || "[]");
     const storedCompleteTask = JSON.parse(
@@ -159,12 +161,13 @@ const TaskPage = () => {
     sendNotification("success", "Task is completed");
   };
 
+  if (isLoading) return <div>Loading..........</div>;
   return (
     <section className="bg-slate-500 h-screen">
       <div className="custom__container py-20 flex__center  flex-col mb-3">
         <div>
           <h1 className="text-4xl sm:text-5xl mb-20 text-white font-semibold text-center">
-            Welcome {user?.given_name} to{" "}
+            Welcome {user?.nickname} to{" "}
             <ReactTyped strings={["Taskify"]} typeSpeed={100} loop />
           </h1>
         </div>

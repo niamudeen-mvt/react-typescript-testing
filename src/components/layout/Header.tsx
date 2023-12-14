@@ -16,14 +16,14 @@ const Header = () => {
           <ul className="flex gap-x-6 text-md">
             {isAuthenticated ? (
               <>
-                <Link to={"/login"}>
+                <Link to={"/tasks"}>
                   <li
                     className={`cursor-pointer capitalize  px-2 text-sm py-1 rounded-md hover:bg-slate-100 `}
                   >
                     Task
                   </li>
                 </Link>{" "}
-                <Link to={"/login"}>
+                <Link to={"/posts"}>
                   <li
                     className={`cursor-pointer capitalize  px-2 text-sm py-1 rounded-md hover:bg-slate-100 `}
                   >
@@ -46,7 +46,7 @@ const Header = () => {
                 <li
                   className={`cursor-pointer capitalize  px-2 text-sm py-1 rounded-md hover:bg-slate-100 `}
                 >
-                  Login
+                  Home
                 </li>
               </Link>
             )}

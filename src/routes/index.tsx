@@ -1,17 +1,17 @@
 import { Route, Routes } from "react-router-dom";
 import Posts from "../components/Posts";
 import TaskPage from "../views/pages/TaskPage";
-import LoginPage from "../views/pages/Login";
+import Login from "../views/pages/Login";
 
 export const routes = [
   {
     id: "login",
-    path: "/login",
-    element: <LoginPage />,
+    path: "/",
+    element: <Login />,
   },
   {
     id: "tasks",
-    path: "/",
+    path: "/tasks",
     element: <TaskPage />,
   },
   {
