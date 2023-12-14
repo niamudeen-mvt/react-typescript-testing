@@ -1,22 +1,9 @@
 import { useEffect, useState } from "react";
 import api from "../utils/axios";
 import CustomDrodown from "./shared/CustomDrodown";
+import { usePost } from "../context/postContext";
 
-type Props = {
-  postId: string;
-  setShowPost: React.Dispatch<React.SetStateAction<boolean>>;
-  setPostId: React.Dispatch<React.SetStateAction<string>>;
-  setShowComments: React.Dispatch<React.SetStateAction<boolean>>;
-  setContentTitle: React.Dispatch<React.SetStateAction<string>>;
-};
-
-const SinglePost = ({
-  setShowPost,
-  setPostId,
-  postId,
-  setShowComments,
-  setContentTitle,
-}: Props) => {
+const SinglePost = () => {
   const [showMenu, setShowMenu] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -25,6 +12,9 @@ const SinglePost = ({
     title: "",
     body: "",
   });
+
+  const { postId, handlePostId, handleShowPost, handleContentTitle } =
+    usePost();
 
   // FETCHING SINGLE POST ================
   const fetchSinglePost = async () => {
@@ -54,9 +44,9 @@ const SinglePost = ({
           <button
             className="mb-4"
             onClick={() => {
-              setShowPost(false);
-              setPostId("");
-              setContentTitle("Posts");
+              handleShowPost(false);
+              handlePostId("");
+              handleContentTitle("Posts");
             }}
           >
             Go Back
@@ -71,9 +61,6 @@ const SinglePost = ({
                     showMenu={showMenu}
                     setShowMenu={setShowMenu}
                     dropMenu={dropMenu}
-                    setShowComments={setShowComments}
-                    setPostId={setPostId}
-                    setContentTitle={setContentTitle}
                   />
                 </div>
                 <h1 className="text-3xl">Title : {post.title}</h1>

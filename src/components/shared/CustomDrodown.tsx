@@ -1,21 +1,14 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { usePost } from "../../context/postContext";
 
 type Props = {
   showMenu: boolean;
-  setShowComments: React.Dispatch<React.SetStateAction<boolean>>;
-  setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
   dropMenu: any;
-  setPostId: React.Dispatch<React.SetStateAction<string>>;
-  setContentTitle: React.Dispatch<React.SetStateAction<string>>;
+  setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const CustomDrodown = ({
-  setShowMenu,
-  showMenu,
-  dropMenu,
-  setShowComments,
-  setContentTitle,
-}: Props) => {
+const CustomDrodown = ({ setShowMenu, showMenu, dropMenu }: Props) => {
+  const { handleShowComments, handleContentTitle } = usePost();
   return (
     <div className="group relative cursor-pointer">
       <span
@@ -35,8 +28,8 @@ const CustomDrodown = ({
                 <li
                   key={e.id}
                   onClick={() => {
-                    setShowComments(true);
-                    setContentTitle("Comments");
+                    handleShowComments(true);
+                    handleContentTitle("Comments");
                   }}
                   className="flex gap-x-2 hover:bg-blue-300 px-3 py-1 rounded-md transition-all duration-300 text-black"
                 >

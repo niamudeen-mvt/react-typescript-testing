@@ -4,15 +4,22 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import SinglePost from "./SinglePost";
 import PostComments from "./PostComments";
 import { sendNotification } from "../utils/notifications";
+import { usePost } from "../context/postContext";
 
 const Posts = () => {
   const [posts, setPosts] = useState<{ id: string; title: string }[]>([]);
   const [showMenu, setShowMenu] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [postId, setPostId] = useState("");
-  const [showPost, setShowPost] = useState(false);
-  const [showComments, setShowComments] = useState(false);
-  const [contentTitle, setContentTitle] = useState("Posts");
+
+  const {
+    postId,
+    showPost,
+    showComments,
+    contentTitle,
+    handlePostId,
+    handleShowPost,
+    handleContentTitle,
+  } = usePost();
 
   useEffect(() => {
     loadPosts();
@@ -51,49 +58,13 @@ const Posts = () => {
           <h1 className="text-5xl text-center font-medium text-white">
             {contentTitle}
           </h1>
-          {/* <div>
-            <button
-              className="group relative"
-              onClick={() => setShowFilterMenu(!showFilterMenu)}
-            >
-              <BsThreeDotsVertical className="text-white" />
-              {showFilterMenu ? (
-                <div className="bg-white rounded-lg text-sm absolute top-8 -translate-x-[80%] p-3 transition-all duration-500  shadow-2xl z-10 min-w-[150px] active:block">
-                  <ul>
-                    {[1, 2, 3, 4, 5].map((e) => {
-                      return (
-                        <li
-                          key={e}
-                          className="flex gap-x-2 hover:bg-blue-300 px-3 py-1 rounded-md transition-all duration-300 text-black"
-                        >
-                          {e}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              ) : null}
-            </button>
-          </div> */}
         </div>
         {isLoading ? (
           <div>Loading..........</div>
         ) : showPost && !showComments ? (
-          <SinglePost
-            setShowPost={setShowPost}
-            setPostId={setPostId}
-            postId={postId}
-            setShowComments={setShowComments}
-            setContentTitle={setContentTitle}
-          />
+          <SinglePost />
         ) : showPost && showComments ? (
-          <PostComments
-            setPostId={setPostId}
-            postId={postId}
-            setShowPost={setShowPost}
-            setShowComments={setShowComments}
-            setContentTitle={setContentTitle}
-          />
+          <PostComments />
         ) : (
           // POSTS
           <ul className="flex flex-col gap-y-4">
@@ -112,7 +83,7 @@ const Posts = () => {
                     onClick={(event) => {
                       event.stopPropagation();
                       setShowMenu(!showMenu);
-                      setPostId(post.id);
+                      handlePostId(post.id);
                     }}
                   >
                     <BsThreeDotsVertical className="font-medium text-black" />
@@ -122,8 +93,8 @@ const Posts = () => {
                       <ul className="h-full flex flex-col justify-between w-full">
                         <li
                           onClick={() => {
-                            setShowPost(true);
-                            setContentTitle("Post");
+                            handleShowPost(true);
+                            handleContentTitle("Post");
                           }}
                           className="flex gap-x-2 hover:bg-blue-300 px-3 py-1 rounded-md transition-all duration-300 text-black"
                         >

@@ -1,20 +1,13 @@
 import { useEffect, useState } from "react";
 import api from "../utils/axios";
-// import CustomDrodown from "./shared/CustomDrodown";
+import { usePost } from "../context/postContext";
 
-type Props = {
-  postId: string;
-  setPostId: React.Dispatch<React.SetStateAction<string>>;
-  setShowPost: React.Dispatch<React.SetStateAction<boolean>>;
-  setShowComments: React.Dispatch<React.SetStateAction<boolean>>;
-  setContentTitle: React.Dispatch<React.SetStateAction<string>>;
-};
-
-const PostComments = ({ postId, setShowComments, setContentTitle }: Props) => {
+const PostComments = () => {
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // FETCHING SINGLE POST ================
+  const { postId, handleShowComments, handleContentTitle } = usePost();
+
   const fetchPostComments = async () => {
     setIsLoading(true);
     let res = await api.get(`/posts/${postId}/comments`);
@@ -25,7 +18,6 @@ const PostComments = ({ postId, setShowComments, setContentTitle }: Props) => {
     setIsLoading(false);
   };
 
-  // USEEFFECT ON FIRST RENDER ===================
   useEffect(() => {
     fetchPostComments();
   }, []);
@@ -37,8 +29,8 @@ const PostComments = ({ postId, setShowComments, setContentTitle }: Props) => {
           <button
             className="mb-4"
             onClick={() => {
-              setShowComments(false);
-              setContentTitle("Post");
+              handleShowComments(false);
+              handleContentTitle("Post");
             }}
           >
             Go Back
@@ -54,7 +46,6 @@ const PostComments = ({ postId, setShowComments, setContentTitle }: Props) => {
                       el: { name: string; email: string; body: string },
                       index
                     ) => {
-                      console.log(el, "el");
                       return (
                         <div className="mb-4 grid gap-y-2">
                           <p className="text-black font-semibold">
