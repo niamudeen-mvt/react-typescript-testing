@@ -1,5 +1,5 @@
-import Posts from "../../components/Posts";
 import Homepage from "../../views/pages/Homepage";
+import PostsPage from "../../views/pages/posts";
 
 export const menuItems = [
   {
@@ -10,6 +10,6 @@ export const menuItems = [
   {
     id: "posts",
     path: "/posts",
-    element: <Posts />,
+    element: <PostsPage />,
   },
 ];

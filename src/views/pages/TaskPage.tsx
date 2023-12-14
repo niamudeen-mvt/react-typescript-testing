@@ -172,7 +172,7 @@ const TaskPage = () => {
     <section className="bg-slate-500 h-screen">
       <div className="custom__container py-32 mb-3">
         <div>
-          <h1 className="text-4xl sm:text-5xl mb-20 text-white font-semibold text-center">
+          <h1 className="text-2xl sm:text-5xl mb-20 text-white font-semibold text-center">
             Welcome {user?.nickname} to{" "}
             <ReactTyped strings={["Taskify"]} typeSpeed={100} loop />
           </h1>

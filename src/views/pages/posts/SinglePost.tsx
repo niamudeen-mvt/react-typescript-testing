@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import api from "../utils/axios";
-import CustomDrodown from "./shared/CustomDrodown";
-import { usePost } from "../context/postContext";
+import api from "../../../utils/axios";
+import CustomDrodown from "../../../components/shared/CustomDrodown";
+import { usePost } from "../../../context/postContext";
 
 const SinglePost = () => {
   const [showMenu, setShowMenu] = useState(false);
