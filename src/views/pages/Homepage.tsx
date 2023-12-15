@@ -4,8 +4,8 @@ import ReactTyped from "react-typed";
 import TaskPage from "./tasks";
 
 const Homepage: FC = () => {
-  const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();
-  console.log("signup page rendered");
+  const { loginWithRedirect, isAuthenticated, isLoading, user } = useAuth0();
+  console.log("signup page rendered", user);
 
   if (isLoading)
     return (

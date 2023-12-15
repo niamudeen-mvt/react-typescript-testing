@@ -12,8 +12,6 @@ const Header = () => {
   const routeName = useLocation().pathname;
 
   const windowSize = useWindowSize();
-
-  console.log(windowSize);
   useEffect(() => {
     if (windowSize.width >= 768) {
       setShowModal(false);
