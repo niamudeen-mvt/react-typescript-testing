@@ -53,7 +53,7 @@ const PostComments = () => {
                             {el.name}
                           </p>
                           <p className="text-slate-500 text-xs">{el.email}</p>
-                          <p>{el.body}</p>
+                          <p className="text-black text-xs">{el.body}</p>
                         </div>
                       );
                     }

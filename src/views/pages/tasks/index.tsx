@@ -12,6 +12,9 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { IoMdThumbsUp } from "react-icons/io";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useTheme } from "../../../context/themeContext";
+import { GoSun } from "react-icons/go";
+import { FaMoon } from "react-icons/fa";
 
 interface ITask {
   id: string;
@@ -30,6 +33,7 @@ const TaskPage = () => {
     isEdit: false,
     isTaskComplete: false,
   });
+  const { isThemeLight, setIsThemeLight } = useTheme();
 
   // GETTING TASK AND COMPLETE TASKS FROM LOCALSTORAGE
 
@@ -169,8 +173,22 @@ const TaskPage = () => {
 
   if (isLoading) return <div>Loading..........</div>;
   return (
-    <section className="bg-slate-500 h-screen">
+    <section
+      className={` h-screen ${isThemeLight ? "bg-slate-500" : "dark__mode"}`}
+    >
       <div className="custom__container py-32 mb-3">
+        <div className="mb-16 flex gap-x-4 justify-end">
+          <FaMoon
+            size={25}
+            onClick={() => setIsThemeLight(false)}
+            className="cursor-pointer"
+          />
+          <GoSun
+            size={25}
+            onClick={() => setIsThemeLight(true)}
+            className="cursor-pointer"
+          />
+        </div>
         <div>
           <h1 className="text-2xl sm:text-5xl mb-20 text-white font-semibold text-center">
             Welcome {user?.nickname} to{" "}

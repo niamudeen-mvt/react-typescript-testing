@@ -34,3 +34,7 @@ body {
 .custom__container {
   @apply max-w-[1200px] w-full mx-auto px-10 min-h-full;
 }
+
+.dark__mode {
+  @apply bg-black text-white;
+}

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../../../utils/axios";
 import CustomDrodown from "../../../components/shared/CustomDrodown";
 import { usePost } from "../../../context/postContext";
+import { useTheme } from "../../../context/themeContext";
 
 const SinglePost = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -15,6 +16,8 @@ const SinglePost = () => {
 
   const { postId, handlePostId, handleShowPost, handleContentTitle } =
     usePost();
+
+  const { isThemeLight } = useTheme();
 
   // FETCHING SINGLE POST ================
   const fetchSinglePost = async () => {
@@ -40,7 +43,7 @@ const SinglePost = () => {
   return (
     <>
       {post ? (
-        <section className="custom__contianer">
+        <section className={`custom__contianer `}>
           <button
             className="mb-4"
             onClick={() => {
@@ -51,7 +54,11 @@ const SinglePost = () => {
           >
             Go Back
           </button>
-          <div className="bg-white p-10 grid gap-y-4 rounded-lg shadow-2xl">
+          <div
+            className={`${
+              isThemeLight ? "bg-white" : "bg-white text-black"
+            } p-10 grid gap-y-4 rounded-lg shadow-2xl`}
+          >
             {isLoading ? (
               <div>Loading .......</div>
             ) : (
