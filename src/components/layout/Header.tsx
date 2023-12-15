@@ -8,7 +8,7 @@ import useWindowSize from "../../hooks/useWindowSize";
 import { MENU_ITEMS } from "../../utils/menuItems";
 
 const Header = () => {
-  const { logout, isAuthenticated } = useAuth0();
+  const { logout, isAuthenticated, isLoading } = useAuth0();
   const [showModal, setShowModal] = useState(false);
   const routeName = useLocation().pathname;
 
@@ -38,55 +38,59 @@ const Header = () => {
           {project.PROJECT_NAME}
         </a>
 
-        <nav
-          className={`md:block hidden ${
-            showModal
-              ? "fixed w-full bg-slate-900 top-0 left-0 z-50 flex__center h-full"
-              : ""
-          }`}
-        >
-          <ul
-            className={`flex ${
+        {isLoading ? null : (
+          <nav
+            className={`md:block hidden ${
               showModal
-                ? "flex-col gap-y-6 w-full bg-slate-900 top-0 left-0 flex__center h-full"
-                : "gap-x-6 "
+                ? "fixed w-full bg-slate-900 top-0 left-0 z-50 flex__center h-full"
+                : ""
             }`}
           >
-            {routes?.map((route: { path: string; id: string }) => {
-              return (
-                <Link
-                  key={route.id}
-                  to={route.path}
-                  onClick={() => setShowModal(false)}
-                >
-                  <li
-                    className={`cursor-pointer capitalize  px-2 text-sm py-1 rounded-md ${
-                      showModal ? "text-white" : "hover:bg-slate-100 text-black"
-                    }  ${routeName === route.path ? "font-semibold" : ""}  ${
-                      showModal ? "" : ""
-                    }`}
+            <ul
+              className={`flex ${
+                showModal
+                  ? "flex-col gap-y-6 w-full bg-slate-900 top-0 left-0 flex__center h-full"
+                  : "gap-x-6 "
+              }`}
+            >
+              {routes?.map((route: { path: string; id: string }) => {
+                return (
+                  <Link
+                    key={route.id}
+                    to={route.path}
+                    onClick={() => setShowModal(false)}
                   >
-                    {route.id}
-                  </li>
-                </Link>
-              );
-            })}
-            {isAuthenticated ? (
-              <li
-                onClick={() =>
-                  logout({
-                    logoutParams: { returnTo: window.location.origin },
-                  })
-                }
-                className={`cursor-pointer capitalize  px-2 text-sm py-1 rounded-md ${
-                  showModal ? " text-white" : "text-black hover:bg-slate-100"
-                } `}
-              >
-                {project.LOGOUT.id}
-              </li>
-            ) : null}
-          </ul>
-        </nav>
+                    <li
+                      className={`cursor-pointer capitalize  px-2 text-sm py-1 rounded-md ${
+                        showModal
+                          ? "text-white"
+                          : "hover:bg-slate-100 text-black"
+                      }  ${routeName === route.path ? "font-semibold" : ""}  ${
+                        showModal ? "" : ""
+                      }`}
+                    >
+                      {route.id}
+                    </li>
+                  </Link>
+                );
+              })}
+              {isAuthenticated ? (
+                <li
+                  onClick={() =>
+                    logout({
+                      logoutParams: { returnTo: window.location.origin },
+                    })
+                  }
+                  className={`cursor-pointer capitalize  px-2 text-sm py-1 rounded-md ${
+                    showModal ? " text-white" : "text-black hover:bg-slate-100"
+                  } `}
+                >
+                  {project.LOGOUT.id}
+                </li>
+              ) : null}
+            </ul>
+          </nav>
+        )}
 
         {showModal ? (
           <IoCloseSharp
