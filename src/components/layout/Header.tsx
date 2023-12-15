@@ -64,10 +64,8 @@ const Header = () => {
                       className={`cursor-pointer capitalize  px-2 text-sm py-1 rounded-md ${
                         showModal
                           ? "text-white"
-                          : "hover:bg-slate-100 text-black"
-                      }  ${routeName === route.path ? "font-semibold" : ""}  ${
-                        showModal ? "" : ""
-                      }`}
+                          : "hover:bg-slate-100 text-slate-500"
+                      }  ${routeName === route.path ? "font-semibold" : ""}`}
                     >
                       {route.id}
                     </li>
@@ -82,7 +80,9 @@ const Header = () => {
                     })
                   }
                   className={`cursor-pointer capitalize  px-2 text-sm py-1 rounded-md ${
-                    showModal ? " text-white" : "text-black hover:bg-slate-100"
+                    showModal
+                      ? " text-white"
+                      : "text-slate-500 hover:bg-slate-100"
                   } `}
                 >
                   {project.LOGOUT.id}

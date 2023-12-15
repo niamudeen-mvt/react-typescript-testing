@@ -20,11 +20,13 @@ export const useTheme = () => {
 const PRIVATE_ROUTES = ["/posts"];
 
 const ThemeProvider = ({ children }: any) => {
-  const [isThemeLight, setIsThemeLight] = useState(false);
+  const [isThemeLight, setIsThemeLight] = useState(true);
   const { isAuthenticated } = useAuth0();
 
   const navigate = useNavigate();
   const routeName = useLocation().pathname;
+
+  console.log(isThemeLight, "isThemeLight");
 
   useEffect(() => {
     if (!isAuthenticated && PRIVATE_ROUTES.includes(routeName)) {
