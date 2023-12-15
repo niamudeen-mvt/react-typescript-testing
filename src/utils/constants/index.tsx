@@ -1,15 +1,19 @@
-import Homepage from "../../views/pages/Homepage";
-import PostsPage from "../../views/pages/posts";
+export const project = {
+  PROJECT_NAME: "Taskify",
 
-export const menuItems = [
-  {
+  LOGIN: {
+    id: "login",
+    path: "/",
+  },
+  TASKS: {
     id: "tasks",
     path: "/",
-    element: <Homepage />,
   },
-  {
+  POSTS: {
     id: "posts",
     path: "/posts",
-    element: <PostsPage />,
   },
-];
+  LOGOUT: {
+    id: "logout",
+  },
+};

@@ -1,13 +1,14 @@
 import { BrowserRouter } from "react-router-dom";
 import Header from "./components/layout/Header";
-import { renderRoutes, routes } from "./routes";
+import { renderRoutes } from "./routes";
 import { ToastContainerNotification } from "./utils/notifications";
+import { MENU_ITEMS } from "./utils/menuItems";
 
 function App() {
   return (
     <BrowserRouter>
       <Header />
-      {renderRoutes(routes)}
+      {renderRoutes(MENU_ITEMS)}
       <ToastContainerNotification />
     </BrowserRouter>
   );

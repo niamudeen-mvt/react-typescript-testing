@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-import { menuItems } from "../../utils/constants";
+import { project } from "../../utils/constants";
 import { AiOutlineMenu } from "react-icons/ai";
 import { IoCloseSharp } from "react-icons/io5";
 import useWindowSize from "../../hooks/useWindowSize";
+import { MENU_ITEMS } from "../../utils/menuItems";
 
 const Header = () => {
   const { logout, isAuthenticated } = useAuth0();
@@ -18,11 +19,23 @@ const Header = () => {
     }
   }, [windowSize.width]);
 
+  const routes = MENU_ITEMS?.filter((route) => {
+    if (isAuthenticated && route.id !== project.LOGIN.id) {
+      return route;
+    } else if (
+      !isAuthenticated &&
+      route.id !== project.TASKS.id &&
+      route.id !== project.POSTS.id
+    ) {
+      return route;
+    }
+  });
+
   return (
     <header>
       <div className="max-w-[1200px] mx-auto  h-20 flex__SB px-10">
         <a href="/" className="text-2xl  font-bold text-slate-500">
-          Taskify
+          {project.PROJECT_NAME}
         </a>
 
         <nav
@@ -39,31 +52,25 @@ const Header = () => {
                 : "gap-x-6 "
             }`}
           >
-            {menuItems
-              .filter((route) => route.path !== "*")
-              .map((route: { path: string; id: string }) => {
-                return isAuthenticated ? (
-                  <>
-                    <Link
-                      key={route.id}
-                      to={route.path}
-                      onClick={() => setShowModal(false)}
-                    >
-                      <li
-                        className={`cursor-pointer capitalize  px-2 text-sm py-1 rounded-md ${
-                          showModal
-                            ? "text-white"
-                            : "hover:bg-slate-100 text-black"
-                        }  ${
-                          routeName === route.path ? "font-semibold" : ""
-                        }  ${showModal ? "" : ""}`}
-                      >
-                        {route.id}
-                      </li>
-                    </Link>
-                  </>
-                ) : null;
-              })}
+            {routes?.map((route: { path: string; id: string }) => {
+              return (
+                <Link
+                  key={route.id}
+                  to={route.path}
+                  onClick={() => setShowModal(false)}
+                >
+                  <li
+                    className={`cursor-pointer capitalize  px-2 text-sm py-1 rounded-md ${
+                      showModal ? "text-white" : "hover:bg-slate-100 text-black"
+                    }  ${routeName === route.path ? "font-semibold" : ""}  ${
+                      showModal ? "" : ""
+                    }`}
+                  >
+                    {route.id}
+                  </li>
+                </Link>
+              );
+            })}
             {isAuthenticated ? (
               <li
                 onClick={() =>
@@ -75,19 +82,9 @@ const Header = () => {
                   showModal ? " text-white" : "text-black hover:bg-slate-100"
                 } `}
               >
-                Logout
+                {project.LOGOUT.id}
               </li>
-            ) : (
-              <Link to="/" onClick={() => setShowModal(false)}>
-                <li
-                  className={`cursor-pointer capitalize  px-2 text-sm py-1 rounded-md ${
-                    showModal ? "" : "hover:bg-slate-100"
-                  } ${showModal ? "text-white" : "text-black"}`}
-                >
-                  Login
-                </li>
-              </Link>
-            )}
+            ) : null}
           </ul>
         </nav>
 

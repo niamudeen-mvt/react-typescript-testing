@@ -1,19 +1,4 @@
 import { Route, Routes } from "react-router-dom";
-import Homepage from "../views/pages/Homepage";
-import PostsContainer from "../views/pages/posts";
-
-export const routes = [
-  {
-    id: "tasks",
-    path: "/",
-    element: <Homepage />,
-  },
-  {
-    id: "posts",
-    path: "/posts",
-    element: <PostsContainer />,
-  },
-];
 
 interface IRoutes {
   id: string;
