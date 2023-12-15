@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import Homepage from "../views/pages/Homepage";
-import PostsPage from "../views/pages/posts";
+import PostsContainer from "../views/pages/posts";
 
 export const routes = [
   {
@@ -11,7 +11,7 @@ export const routes = [
   {
     id: "posts",
     path: "/posts",
-    element: <PostsPage />,
+    element: <PostsContainer />,
   },
 ];
 

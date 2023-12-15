@@ -39,6 +39,11 @@ const AllPosts = ({ showMenu, setShowMenu, handleDeltePost }: IProps) => {
         <li
           key={post.id}
           className="bg-white rounded-lg px-3 text-slate-500 h-12 outline-none cursor-pointer flex__SB gap-x-4"
+          onClick={() => {
+            handleShowPost(true);
+            handleContentTitle("Post");
+            handlePostId(post.id);
+          }}
         >
           <p className="text-xs sm:text-sm">
             {post.id}.{`  `}
