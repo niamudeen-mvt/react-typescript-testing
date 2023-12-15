@@ -12,10 +12,11 @@ export const sendNotification = (type: string, msg: string) => {
       autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
+      pauseOnHover: false,
+      draggable: false,
       progress: undefined,
       theme: THEME_COLOR,
+      icon: false,
     });
   } else if (type === "warning") {
     return toast.warning(`${msg}`, {
@@ -23,10 +24,11 @@ export const sendNotification = (type: string, msg: string) => {
       autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
+      pauseOnHover: false,
+      draggable: false,
       progress: undefined,
       theme: THEME_COLOR,
+      icon: false,
     });
   } else {
     return toast.error(`${msg}`, {
@@ -34,10 +36,11 @@ export const sendNotification = (type: string, msg: string) => {
       autoClose: 2000,
       hideProgressBar: false,
       closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
+      pauseOnHover: false,
+      draggable: false,
       progress: undefined,
       theme: THEME_COLOR,
+      icon: false,
     });
   }
 };

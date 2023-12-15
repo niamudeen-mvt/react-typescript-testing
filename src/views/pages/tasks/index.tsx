@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import Listing from "../../components/Listing";
+import ActiveTasks from "./ActvieTask";
 import { MdDelete } from "react-icons/md";
 import ReactTyped from "react-typed";
-import { sendNotification } from "../../utils/notifications";
+import { sendNotification } from "../../../utils/notifications";
 import {
   DragDropContext,
   Draggable,
@@ -131,7 +131,7 @@ const TaskPage = () => {
       active.splice(destination.index, 0, draggedTask);
     } else {
       complete.splice(destination.index, 0, draggedTask);
-      sendNotification("success", "task is completed");
+      sendNotification("success", "Task is completed");
     }
 
     setTasks(active);
@@ -177,73 +177,85 @@ const TaskPage = () => {
             <ReactTyped strings={["Taskify"]} typeSpeed={100} loop />
           </h1>
         </div>
-        <div className="flex gap-6 mb-5 w-full">
-          <form onSubmit={handleAddTask} className="flex gap-6 w-full">
-            <input
-              type="text"
-              placeholder="Enter Task...."
-              className="bg-white w-full rounded-lg px-3 text-black h-12 outline-none"
-              value={task.title}
-              onChange={handleChange}
-              spellCheck={false}
-            />
-            <button
-              type="submit"
-              className="h-12 bg-slate-900 rounded-md text-sm w-32 uppercase font-semibold text-white hover:bg-slate-700"
-            >
-              <p className="w-full">Add Task</p>
-            </button>
-          </form>
-        </div>
+
+        {/* Adding task tab */}
+
+        <form onSubmit={handleAddTask} className="flex gap-6 mb-10 w-full">
+          <input
+            type="text"
+            placeholder="Enter Task...."
+            className="bg-white w-full rounded-lg px-3 text-black h-12 outline-none"
+            value={task.title}
+            onChange={handleChange}
+            spellCheck={false}
+          />
+          <button
+            type="submit"
+            className="h-12 bg-slate-900 rounded-md text-sm w-32 uppercase font-semibold text-white hover:bg-slate-700"
+          >
+            <p className="w-full">Add Task</p>
+          </button>
+        </form>
+
         <DragDropContext onDragEnd={handleAfterDrop}>
           <div className="grid  grid-cols-1 sm:grid-cols-2 mx-auto w-full gap-10 max-h-[90vh] sm:h-full overflow-auto sm:overflow-auto">
-            <Listing tasks={tasks} setTasks={setTasks} />
-            <div className="bg-slate-300/25 p-3 rounded-lg">
-              <p className="text-white text-center">Completed Tasks</p>
+            {/* Active task list */}
+            <ActiveTasks tasks={tasks} setTasks={setTasks} />
+
+            <div>
+              <p className="text-white text-center mb-3">Completed Tasks</p>
               <Droppable droppableId="completeTask">
-                {(provided) => (
+                {(provided, snaphsot) => (
                   <div
                     ref={provided.innerRef}
                     {...provided.droppableProps}
-                    className="w-full flex flex-col gap-y-3  min-w-[300px] flex__center p-3"
+                    className={`w-full flex flex-col gap-y-3 min-h-[50px]  min-w-[300px] flex__center p-3 rounded-lg transition-all duration-300 ${
+                      snaphsot.isDraggingOver
+                        ? "bg-green-400"
+                        : "bg-slate-300/25"
+                    }`}
                   >
-                    {completeTask.map((el, index) => {
-                      return (
-                        <Draggable
-                          key={el.id}
-                          draggableId={el.id}
-                          index={index}
-                        >
-                          {(provided) => (
-                            <div
-                              className="rounded-lg p-3 text-black shadow-sm w-full bg-white flex__SB"
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              ref={provided.innerRef}
-                            >
-                              <p>
-                                {index + 1}.{` `}
-                                {el.title}
-                              </p>
-                              <div className="flex items-center gap-4 text-black">
-                                <span
-                                  className="cursor-pointer"
-                                  onClick={() => taskCompleted(el.id)}
-                                >
-                                  <IoMdThumbsUp size={22} />
-                                </span>
-                                <span className="cursor-pointer">
-                                  <MdDelete
-                                    size={20}
-                                    onClick={() => removeCompleteTask(el.id)}
-                                  />
-                                </span>
+                    {completeTask?.length ? (
+                      completeTask.map((el, index) => {
+                        return (
+                          <Draggable
+                            key={el.id}
+                            draggableId={el.id}
+                            index={index}
+                          >
+                            {(provided) => (
+                              <div
+                                className="rounded-lg p-3 text-black shadow-sm w-full bg-white flex__SB"
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                ref={provided.innerRef}
+                              >
+                                <p>
+                                  {index + 1}.{` `}
+                                  {el.title}
+                                </p>
+                                <div className="flex items-center gap-4 text-black">
+                                  <span
+                                    className="cursor-pointer"
+                                    onClick={() => taskCompleted(el.id)}
+                                  >
+                                    <IoMdThumbsUp size={22} />
+                                  </span>
+                                  <span className="cursor-pointer">
+                                    <MdDelete
+                                      size={20}
+                                      onClick={() => removeCompleteTask(el.id)}
+                                    />
+                                  </span>
+                                </div>
                               </div>
-                            </div>
-                          )}
-                        </Draggable>
-                      );
-                    })}
+                            )}
+                          </Draggable>
+                        );
+                      })
+                    ) : snaphsot.isDraggingOver ? null : (
+                      <div>No complete tasks to show</div>
+                    )}
                     {provided.placeholder}
                   </div>
                 )}

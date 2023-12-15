@@ -1,12 +1,18 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { FC } from "react";
 import ReactTyped from "react-typed";
-import TaskPage from "./TaskPage";
+import TaskPage from "./tasks";
 
 const Homepage: FC = () => {
-  const { loginWithRedirect, isAuthenticated } = useAuth0();
+  const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();
   console.log("signup page rendered");
 
+  if (isLoading)
+    return (
+      <div className="flex__center h-screen text-white bg-slate-500">
+        Loading............
+      </div>
+    );
   return (
     <>
       {isAuthenticated ? (
