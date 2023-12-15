@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import Homepage from "../views/pages/Homepage";
 
 interface IRoutes {
   id: string;
@@ -20,6 +21,7 @@ export const renderRoutes = (routes: IRoutes[]) => {
           );
         }
       )}
+      <Route path="*" element={<Homepage />} />
     </Routes>
   );
 };

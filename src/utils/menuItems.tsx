@@ -1,5 +1,4 @@
 import Homepage from "../views/pages/Homepage";
-// import Test from "../views/pages/Test";
 import PostsContainer from "../views/pages/posts";
 import { project } from "./constants";
 
@@ -19,9 +18,4 @@ export const MENU_ITEMS = [
     path: project.POSTS.path,
     element: <PostsContainer />,
   },
-  // {
-  //   id: "test",
-  //   path: "/test",
-  //   element: <Test />,
-  // },
 ];
