@@ -8,6 +8,7 @@ import TaskPage from "./views/pages/tasks";
 import PostsContainer from "./views/pages/posts";
 import SignupPage from "./views/pages/Signup";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
+import ThemeContainer from "./components/layout/ThemeContainer";
 
 const App = () => {
   return (

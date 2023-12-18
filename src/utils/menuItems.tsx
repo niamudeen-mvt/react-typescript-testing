@@ -11,14 +11,14 @@ export const MENU_ITEMS = [
     element: <Homepage />,
   },
   {
-    id: "login",
-    path: "/login",
-    element: <LoginPage />,
-  },
-  {
     id: "signup",
     path: "/signup",
     element: <SignupPage />,
+  },
+  {
+    id: "login",
+    path: "/login",
+    element: <LoginPage />,
   },
   {
     id: "tasks",

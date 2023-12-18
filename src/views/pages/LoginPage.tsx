@@ -1,12 +1,11 @@
 import { useForm } from "react-hook-form";
-import ThemeContainer from "../../components/layout/ThemeContainer";
 import TextError from "../../components/shared/TextError";
-import api from "../../utils/axios";
 import { sendNotification } from "../../utils/notifications";
 import { useNavigate } from "react-router-dom";
 import { storeAccessTokenLS, storeRefreshTokenLS } from "../../utils/helper";
 import { useAuth } from "../../context/authContext";
 import { loginUser } from "../../services/api/auth";
+import ThemeContainer from "../../components/layout/ThemeContainer";
 
 const LoginPage = () => {
   const {
@@ -34,7 +33,7 @@ const LoginPage = () => {
   };
 
   return (
-    <ThemeContainer>
+    <ThemeContainer isCenter={true}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="min-h-[500px] text-white border p-10 rounded-md relative -z-0"

@@ -10,7 +10,6 @@ const Header = () => {
   const { userLogout, isLoggedIn } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const routeName = useLocation().pathname;
-
   const windowSize = useWindowSize();
 
   useEffect(() => {
@@ -79,7 +78,6 @@ const Header = () => {
             )}
           </ul>
         </nav>
-
         {showModal ? (
           <IoCloseSharp
             className={`cursor-pointer md:hidden h-6 w-6 z-50 fixed right-5 ${

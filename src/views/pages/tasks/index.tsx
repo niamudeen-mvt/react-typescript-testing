@@ -11,11 +11,8 @@ import {
 } from "react-beautiful-dnd";
 import { v4 as uuidv4 } from "uuid";
 import { IoMdThumbsUp } from "react-icons/io";
-import { useAuth0 } from "@auth0/auth0-react";
-import { useTheme } from "../../../context/themeContext";
-import { GoSun } from "react-icons/go";
-import { FaMoon } from "react-icons/fa";
 import { useAuth } from "../../../context/authContext";
+import ThemeContainer from "../../../components/layout/ThemeContainer";
 
 interface ITask {
   id: string;
@@ -25,17 +22,15 @@ interface ITask {
 }
 
 const TaskPage = () => {
-  // const { user, isLoading } = useAuth0();
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [completeTask, setCompleteTask] = useState<ITask[]>([]);
+  const { authUser } = useAuth();
   const [task, setTask] = useState({
     id: "",
     title: "",
     isEdit: false,
     isTaskComplete: false,
   });
-  const { isThemeLight, setIsThemeLight } = useTheme();
-  const { authUser } = useAuth();
 
   // GETTING TASK AND COMPLETE TASKS FROM LOCALSTORAGE
 
@@ -62,8 +57,6 @@ const TaskPage = () => {
     localStorage.setItem("completeTask", JSON.stringify(completeTask));
   }, [completeTask]);
 
-  // SETTING TASK
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     const unique_id = uuidv4();
@@ -75,8 +68,6 @@ const TaskPage = () => {
       isTaskComplete: false,
     });
   };
-
-  // ADDING TASK IN TASK LIST
 
   const handleAddTask = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -144,8 +135,6 @@ const TaskPage = () => {
     setCompleteTask(complete);
   };
 
-  // REMOVING TASK FROM COMLETE TASK
-
   const removeCompleteTask = (id: string) => {
     const task = completeTask.find((task, i) => task.id === id);
     if (task) {
@@ -164,8 +153,6 @@ const TaskPage = () => {
     sendNotification("warning", "Task is Pending");
   };
 
-  // REMOVING TASK FROM COMLETE TASK AFTER COMPLETION
-
   const taskCompleted = (id: string) => {
     const filterdTasks = completeTask.filter((task, i) => task.id !== id);
     setCompleteTask(filterdTasks);
@@ -175,30 +162,12 @@ const TaskPage = () => {
 
   // if (isLoading) return <div>Loading..........</div>;
   return (
-    <section
-      className={` h-screen ${isThemeLight ? "bg-slate-500" : "dark__mode"}`}
-    >
-      <div className="custom__container py-32 mb-3">
-        <div className="mb-16 flex gap-x-4 justify-end">
-          <FaMoon
-            size={25}
-            onClick={() => setIsThemeLight(false)}
-            className="cursor-pointer"
-          />
-          <GoSun
-            size={25}
-            onClick={() => setIsThemeLight(true)}
-            className="cursor-pointer"
-          />
-        </div>
-        <div>
-          <h1 className="text-2xl sm:text-5xl mb-20 text-white font-semibold text-center">
-            Welcome {authUser?.name} to{" "}
-            <ReactTyped strings={["Taskify"]} typeSpeed={100} loop />
-          </h1>
-        </div>
-
-        {/* Adding task tab */}
+    <ThemeContainer>
+      <div className="py-32">
+        <h1 className="text-2xl sm:text-5xl mb-20 text-white font-semibold text-center">
+          Welcome {authUser?.name} to{" "}
+          <ReactTyped strings={["Taskify"]} typeSpeed={100} loop />
+        </h1>
 
         <form onSubmit={handleAddTask} className="flex gap-6 mb-10 w-full">
           <input
@@ -284,7 +253,7 @@ const TaskPage = () => {
           </div>
         </DragDropContext>
       </div>
-    </section>
+    </ThemeContainer>
   );
 };
 

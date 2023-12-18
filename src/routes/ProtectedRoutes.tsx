@@ -1,19 +1,23 @@
-import { useEffect } from "react";
 import { useAuth } from "../context/authContext";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import Homepage from "../views/pages/Homepage";
+
+// const PRIVATE_ROUTES = ["/tasks"];
+// const PUBLIC_ROUTES = ["/login"];
 
 const ProtectedRoutes = () => {
   const { isLoggedIn } = useAuth();
 
   // const navigate = useNavigate();
+  // const routeName = useLocation().pathname;
+
   // useEffect(() => {
-  //   if (isLoggedIn) {
+  //   if (PUBLIC_ROUTES.includes(routeName) && isLoggedIn) {
   //     navigate("/tasks");
-  //   } else {
+  //   } else if (PRIVATE_ROUTES.includes(routeName) && !isLoggedIn) {
   //     navigate("/");
   //   }
-  // }, [isLoggedIn]);
+  // }, [routeName]);
 
   return <>{isLoggedIn ? <Outlet /> : <Homepage />}</>;
 };

@@ -1,6 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { getUser } from "../services/api/user";
-import { sendNotification } from "../utils/notifications";
 
 type AuthStateTypes = {
   isLoggedIn: boolean;
@@ -29,8 +28,6 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authUser, setAuthUser] = useState({ name: "" });
-  console.log(isLoggedIn, "isLoggedIn");
-  console.log(authUser, "authUser");
 
   const userLogout = async () => {
     setIsLoggedIn(false);

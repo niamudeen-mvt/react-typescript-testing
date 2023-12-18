@@ -1,6 +1,4 @@
-import { useAuth0 } from "@auth0/auth0-react";
-import { createContext, useContext, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { createContext, useContext, useState } from "react";
 
 type ThemeState = {
   isThemeLight: boolean;
@@ -17,20 +15,8 @@ export const useTheme = () => {
   return useContext(ThemeContext);
 };
 
-const PRIVATE_ROUTES = ["/posts"];
-
 const ThemeProvider = ({ children }: any) => {
   const [isThemeLight, setIsThemeLight] = useState(true);
-  const { isAuthenticated } = useAuth0();
-
-  const navigate = useNavigate();
-  const routeName = useLocation().pathname;
-
-  useEffect(() => {
-    if (!isAuthenticated && PRIVATE_ROUTES.includes(routeName)) {
-      navigate("/");
-    }
-  }, []);
 
   return (
     <ThemeContext.Provider value={{ isThemeLight, setIsThemeLight }}>

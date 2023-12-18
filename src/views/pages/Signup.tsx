@@ -32,7 +32,7 @@ const SignupPage = () => {
   };
 
   return (
-    <ThemeContainer>
+    <ThemeContainer isCenter={true}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="min-h-[500px] text-white border p-10 rounded-md"
