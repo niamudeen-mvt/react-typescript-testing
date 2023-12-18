@@ -1,21 +1,23 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import {
-  getAccessToken,
-  removeAccessToken,
-  storeAccessTokenLS,
-} from "../utils/helper";
-import { useNavigate } from "react-router-dom";
+import { getUser } from "../services/api/user";
+import { sendNotification } from "../utils/notifications";
 
 type AuthStateTypes = {
   isLoggedIn: boolean;
   userLogout: () => void;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  authUser: {
+    name: string;
+  };
 };
 
 const defaultContextValues: AuthStateTypes = {
   isLoggedIn: false,
   userLogout: () => {},
   setIsLoggedIn: () => {},
+  authUser: {
+    name: "",
+  },
 };
 
 const AuthContext = createContext(defaultContextValues);
@@ -26,18 +28,16 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const [authUser, setAuthUser] = useState({ name: "" });
   console.log(isLoggedIn, "isLoggedIn");
+  console.log(authUser, "authUser");
+
   const userLogout = async () => {
-    console.log("user logout");
     setIsLoggedIn(false);
     localStorage.removeItem("access_token");
-    // removeAccessToken();
   };
 
   const storedAccessToken = localStorage.getItem("access_token");
-
-  console.log(storedAccessToken);
 
   useEffect(() => {
     if (storedAccessToken) {
@@ -49,10 +49,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const updateTokenFromLocalStorage = () => {
     if (storedAccessToken) {
-      console.log("/////////////////");
       setIsLoggedIn(true);
     } else {
-      console.log("22222222");
       setIsLoggedIn(false);
     }
   };
@@ -67,8 +65,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, []);
 
+  const fetchUserDetails = async () => {
+    let res = await getUser();
+    console.log(res, "es");
+    if (res.status === 200) {
+      setAuthUser(res.data.user);
+      sendNotification("success", res.data.message);
+    }
+  };
+  useEffect(() => {
+    fetchUserDetails();
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, userLogout, setIsLoggedIn }}>
+    <AuthContext.Provider
+      value={{ isLoggedIn, userLogout, setIsLoggedIn, authUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

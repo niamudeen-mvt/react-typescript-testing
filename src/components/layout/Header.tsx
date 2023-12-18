@@ -24,7 +24,7 @@ const Header = () => {
   );
 
   return (
-    <header className="z-50">
+    <header className="bg-white fixed w-full z-50">
       <div className="max-w-[1200px] mx-auto  h-20 flex__SB px-10">
         <a href="/" className="text-2xl  font-bold text-slate-500">
           Taskfiy

@@ -6,6 +6,7 @@ import { sendNotification } from "../../utils/notifications";
 import { useNavigate } from "react-router-dom";
 import { storeAccessTokenLS, storeRefreshTokenLS } from "../../utils/helper";
 import { useAuth } from "../../context/authContext";
+import { loginUser } from "../../services/api/auth";
 
 const LoginPage = () => {
   const {
@@ -20,7 +21,7 @@ const LoginPage = () => {
 
   const onSubmit = async (data: any) => {
     try {
-      let res = await api.post("/auth/login", { ...data });
+      let res = await loginUser(data);
 
       if (res.status === 200) {
         sendNotification("success", res.data.message);
@@ -28,7 +29,6 @@ const LoginPage = () => {
         storeAccessTokenLS(res.data.access_token);
         storeRefreshTokenLS(res.data.refresh_token);
         navigate("/tasks");
-      } else {
       }
     } catch (error) {}
   };
@@ -37,7 +37,7 @@ const LoginPage = () => {
     <ThemeContainer>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="min-h-[500px] text-white border p-10 rounded-md z-10"
+        className="min-h-[500px] text-white border p-10 rounded-md relative -z-0"
       >
         <h1 className="text-3xl mb-10">Login Form</h1>
         <div className="form-control mb-6 flex flex-col">

@@ -15,6 +15,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useTheme } from "../../../context/themeContext";
 import { GoSun } from "react-icons/go";
 import { FaMoon } from "react-icons/fa";
+import { useAuth } from "../../../context/authContext";
 
 interface ITask {
   id: string;
@@ -24,7 +25,7 @@ interface ITask {
 }
 
 const TaskPage = () => {
-  const { user, isLoading } = useAuth0();
+  // const { user, isLoading } = useAuth0();
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [completeTask, setCompleteTask] = useState<ITask[]>([]);
   const [task, setTask] = useState({
@@ -34,6 +35,7 @@ const TaskPage = () => {
     isTaskComplete: false,
   });
   const { isThemeLight, setIsThemeLight } = useTheme();
+  const { authUser } = useAuth();
 
   // GETTING TASK AND COMPLETE TASKS FROM LOCALSTORAGE
 
@@ -191,7 +193,7 @@ const TaskPage = () => {
         </div>
         <div>
           <h1 className="text-2xl sm:text-5xl mb-20 text-white font-semibold text-center">
-            Welcome {user?.nickname} to{" "}
+            Welcome {authUser?.name} to{" "}
             <ReactTyped strings={["Taskify"]} typeSpeed={100} loop />
           </h1>
         </div>
