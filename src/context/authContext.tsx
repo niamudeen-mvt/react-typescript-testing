@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { getUser } from "../services/api/user";
+import { removeAccessToken } from "../utils/helper";
 
 type AuthStateTypes = {
   isLoggedIn: boolean;
@@ -30,8 +31,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [authUser, setAuthUser] = useState({ name: "" });
 
   const userLogout = async () => {
+    removeAccessToken();
     setIsLoggedIn(false);
-    localStorage.removeItem("access_token");
   };
 
   const storedAccessToken = localStorage.getItem("access_token");

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAccessToken, storeAccessTokenLS } from "./helper";
+import { getAccessToken, getRefreshToken, storeAccessTokenLS } from "./helper";
 import { refreshTokenApi } from "../services/api/auth";
 
 // const BASE_URL = "http://localhost:8000/api/v1";
@@ -34,7 +34,8 @@ api.interceptors.response.use(
 
     if (error.response && error.response.status === 401) {
       try {
-        const refresh_token = localStorage.getItem("refresh_token");
+        const refresh_token = getRefreshToken();
+        // const refresh_token = localStorage.getItem("refresh_token");
         if (refresh_token) {
           const res = await refreshTokenApi({
             refresh_token: refresh_token,

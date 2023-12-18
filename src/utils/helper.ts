@@ -8,17 +8,11 @@ export const storeAccessTokenLS = (accessToken: string) => {
 };
 
 export const getAccessToken = () => {
-  if (config.ACCESS_TOKEN_KEY) {
-    console.log(config.ACCESS_TOKEN_KEY, "..................................");
-    return localStorage.getItem(config.ACCESS_TOKEN_KEY);
-  } else {
-    return;
-  }
+  return localStorage.getItem("access_token");
 };
 
 export const removeAccessToken = () => {
-  if (config.ACCESS_TOKEN_KEY)
-    return localStorage.removeItem(config.ACCESS_TOKEN_KEY);
+  return localStorage.removeItem("access_token");
 };
 
 // Refresh token
