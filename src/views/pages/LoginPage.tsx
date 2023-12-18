@@ -37,7 +37,7 @@ const LoginPage = () => {
     <ThemeContainer>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="min-h-[500px] text-white border p-10 rounded-md"
+        className="min-h-[500px] text-white border p-10 rounded-md z-10"
       >
         <h1 className="text-3xl mb-10">Login Form</h1>
         <div className="form-control mb-6 flex flex-col">
