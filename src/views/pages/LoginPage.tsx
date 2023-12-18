@@ -1,11 +1,15 @@
 import { useForm } from "react-hook-form";
 import TextError from "../../components/shared/TextError";
 import { sendNotification } from "../../utils/notifications";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { storeAccessTokenLS, storeRefreshTokenLS } from "../../utils/helper";
 import { useAuth } from "../../context/authContext";
 import { loginUser } from "../../services/api/auth";
 import ThemeContainer from "../../components/layout/ThemeContainer";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { RootState } from "../../store";
+import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 
 const LoginPage = () => {
   const {
@@ -15,21 +19,24 @@ const LoginPage = () => {
   } = useForm();
 
   const { setIsLoggedIn } = useAuth();
+  const isLoading = useSelector((state: RootState) => state.loading.isLoading);
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
   const onSubmit = async (data: any) => {
-    try {
-      let res = await loginUser(data);
-
-      if (res.status === 200) {
-        sendNotification("success", res.data.message);
-        setIsLoggedIn(true);
-        storeAccessTokenLS(res.data.access_token);
-        storeRefreshTokenLS(res.data.refresh_token);
-        navigate("/tasks");
-      }
-    } catch (error) {}
+    dispatch(startLoading());
+    let res = await loginUser(data);
+    if (res.status === 200) {
+      sendNotification("success", res.data.message);
+      setIsLoggedIn(true);
+      storeAccessTokenLS(res.data.access_token);
+      storeRefreshTokenLS(res.data.refresh_token);
+      navigate("/tasks");
+    } else {
+      sendNotification("warning", res.response.data.message);
+    }
+    dispatch(stopLoading());
   };
 
   return (
@@ -81,10 +88,17 @@ const LoginPage = () => {
         </div>
         <button
           type="submit"
-          className="bg-white text-black px-7 py-2 rounded-lg border w-full"
+          className="mb-10 bg-white text-black px-7 py-2 rounded-lg border w-full"
         >
-          Submit
+          {isLoading ? "Loading..." : "Submit"}
         </button>
+
+        <p className="text-sm text-center">
+          Dont't have an account ?{" "}
+          <Link to="/signup">
+            <span className="text-black">Signup</span>
+          </Link>
+        </p>
       </form>
     </ThemeContainer>
   );
