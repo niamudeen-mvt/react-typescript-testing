@@ -1,20 +1,13 @@
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import App from "./App";
-import { Auth0Provider } from "@auth0/auth0-react";
-import { configClient } from "./config";
+import AuthProvider from "./context/authContext";
+import "./index.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <Auth0Provider
-    domain={configClient.domain}
-    clientId={configClient.clientId}
-    authorizationParams={{
-      redirect_uri: window.location.origin,
-    }}
-  >
+  <AuthProvider>
     <App />
-  </Auth0Provider>
+  </AuthProvider>
 );

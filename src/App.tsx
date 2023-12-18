@@ -7,8 +7,9 @@ import LoginPage from "./views/pages/LoginPage";
 import TaskPage from "./views/pages/tasks";
 import PostsContainer from "./views/pages/posts";
 import SignupPage from "./views/pages/Singup";
+import ProtectedRoutes from "./routes/ProtectedRoutes";
 
-function App() {
+const App = () => {
   return (
     <BrowserRouter>
       <Header />
@@ -17,14 +18,16 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/tasks" element={<TaskPage />} />
-          <Route path="/posts" element={<PostsContainer />} />
+          <Route path="/" element={<ProtectedRoutes />}>
+            <Route path="tasks" element={<TaskPage />} />
+            <Route path="posts" element={<PostsContainer />} />
+          </Route>
           <Route path="*" element={<Homepage />} />
         </Routes>
       </ThemeProvider>
       <ToastContainerNotification />
     </BrowserRouter>
   );
-}
+};
 
 export default App;

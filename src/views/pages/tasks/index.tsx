@@ -171,7 +171,7 @@ const TaskPage = () => {
     sendNotification("success", "Task is completed");
   };
 
-  if (isLoading) return <div>Loading..........</div>;
+  // if (isLoading) return <div>Loading..........</div>;
   return (
     <section
       className={` h-screen ${isThemeLight ? "bg-slate-500" : "dark__mode"}`}

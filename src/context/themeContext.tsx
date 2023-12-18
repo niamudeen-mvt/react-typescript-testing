@@ -26,8 +26,6 @@ const ThemeProvider = ({ children }: any) => {
   const navigate = useNavigate();
   const routeName = useLocation().pathname;
 
-  console.log(isThemeLight, "isThemeLight");
-
   useEffect(() => {
     if (!isAuthenticated && PRIVATE_ROUTES.includes(routeName)) {
       navigate("/");
