@@ -1,6 +1,9 @@
 import { useForm } from "react-hook-form";
 import ThemeContainer from "../../components/layout/ThemeContainer";
 import TextError from "../../components/shared/TextError";
+import { useNavigate } from "react-router-dom";
+import api from "../../utils/axios";
+import { sendNotification } from "../../utils/notifications";
 
 const SignupPage = () => {
   const {
@@ -9,8 +12,23 @@ const SignupPage = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const navigate = useNavigate();
+
+  const onSubmit = async (data: any) => {
+    try {
+      let res = await api.post("/auth/register", { ...data });
+      console.log(res, "res<<<<<<<<<<<<<");
+
+      if (res.status === 201) {
+        sendNotification("success", res.data.message);
+        navigate("/login");
+      } else {
+        sendNotification("warning", res.data.message);
+      }
+    } catch (error: any) {
+      console.log(error);
+      sendNotification("warning", error.response.data.message);
+    }
   };
 
   return (
@@ -24,7 +42,7 @@ const SignupPage = () => {
           <label>Username</label>
           <input
             type="text"
-            {...register("username", {
+            {...register("name", {
               required: true,
               validate: (value) => isNaN(value),
             })}
@@ -32,10 +50,10 @@ const SignupPage = () => {
             autoComplete="off"
             spellCheck={false}
           />
-          {errors.username && errors.username.type === "required" && (
+          {errors.name && errors.name.type === "required" && (
             <TextError msg="Username is required" />
           )}
-          {errors.username && errors.username.type === "validate" && (
+          {errors.name && errors.name.type === "validate" && (
             <TextError msg="Numbers are not allowed" />
           )}
         </div>
@@ -64,7 +82,7 @@ const SignupPage = () => {
             type="password"
             {...register("password", {
               required: true,
-              minLength: 6,
+              minLength: 3,
             })}
             className="border-b border-black mb-4 outline-none bg-transparent text-white"
             autoComplete="off"
@@ -81,18 +99,18 @@ const SignupPage = () => {
           <label>Contact Number</label>
           <input
             type="text"
-            {...register("contact", {
+            {...register("phone", {
               required: true,
-              max: 10,
+              maxLength: 10,
             })}
             className="border-b border-black mb-4 outline-none bg-transparent text-white"
             autoComplete="off"
             spellCheck={false}
           />
-          {errors.contact && errors.contact.type === "required" && (
+          {errors.phone && errors.phone.type === "required" && (
             <TextError msg="Contact number is required" />
           )}
-          {errors.contact && errors.contact.type === "max" && (
+          {errors.phone && errors.phone.type === "maxLength" && (
             <TextError msg="Contact number should not contain more than 10 digits." />
           )}
         </div>

@@ -6,7 +6,7 @@ import Homepage from "./views/pages/Homepage";
 import LoginPage from "./views/pages/LoginPage";
 import TaskPage from "./views/pages/tasks";
 import PostsContainer from "./views/pages/posts";
-import SignupPage from "./views/pages/Singup";
+import SignupPage from "./views/pages/Signup";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 
 const App = () => {

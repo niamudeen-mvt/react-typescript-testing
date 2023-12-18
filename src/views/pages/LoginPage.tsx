@@ -19,18 +19,11 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const onSubmit = async (data: any) => {
-    console.log(data);
     try {
       let res = await api.post("/auth/login", { ...data });
 
-      console.log(res, "response");
-
       if (res.status === 200) {
         sendNotification("success", res.data.message);
-        console.log(res.data, 9);
-
-        // localStorage.setItem("access_token", res.data.access_token);
-        // localStorage.setItem("refresh_token", res.data.refresh_token);
         setIsLoggedIn(true);
         storeAccessTokenLS(res.data.access_token);
         storeRefreshTokenLS(res.data.refresh_token);

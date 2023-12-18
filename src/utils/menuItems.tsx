@@ -1,6 +1,6 @@
 import Homepage from "../views/pages/Homepage";
 import LoginPage from "../views/pages/LoginPage";
-import SignupPage from "../views/pages/Singup";
+import SignupPage from "../views/pages/Signup";
 import PostsContainer from "../views/pages/posts";
 import TaskPage from "../views/pages/tasks";
 
