@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-import { project } from "../../utils/constants";
 import { AiOutlineMenu } from "react-icons/ai";
 import { IoCloseSharp } from "react-icons/io5";
 import useWindowSize from "../../hooks/useWindowSize";
@@ -19,23 +18,11 @@ const Header = () => {
     }
   }, [windowSize.width]);
 
-  const routes = MENU_ITEMS?.filter((route) => {
-    if (isAuthenticated && route.id !== project.LOGIN.id) {
-      return route;
-    } else if (
-      !isAuthenticated &&
-      route.id !== project.TASKS.id &&
-      route.id !== project.POSTS.id
-    ) {
-      return route;
-    }
-  });
-
   return (
     <header>
       <div className="max-w-[1200px] mx-auto  h-20 flex__SB px-10">
         <a href="/" className="text-2xl  font-bold text-slate-500">
-          {project.PROJECT_NAME}
+          Taskfiy
         </a>
 
         {isLoading ? null : (
@@ -53,7 +40,7 @@ const Header = () => {
                   : "gap-x-6 "
               }`}
             >
-              {routes?.map((route: { path: string; id: string }) => {
+              {MENU_ITEMS?.map((route: { path: string; id: string }) => {
                 return (
                   <Link
                     key={route.id}
@@ -85,7 +72,7 @@ const Header = () => {
                       : "text-slate-500 hover:bg-slate-100"
                   } `}
                 >
-                  {project.LOGOUT.id}
+                  logout
                 </li>
               ) : null}
             </ul>

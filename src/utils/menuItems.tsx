@@ -1,21 +1,35 @@
 import Homepage from "../views/pages/Homepage";
+import LoginPage from "../views/pages/LoginPage";
+import SignupPage from "../views/pages/Singup";
 import PostsContainer from "../views/pages/posts";
-import { project } from "./constants";
+import TaskPage from "../views/pages/tasks";
 
 export const MENU_ITEMS = [
   {
-    id: project.LOGIN.id,
-    path: project.LOGIN.path,
+    id: "home",
+    path: "/",
     element: <Homepage />,
   },
   {
-    id: project.TASKS.id,
-    path: project.TASKS.path,
-    element: <Homepage />,
+    id: "login",
+    path: "/login",
+    element: <LoginPage />,
   },
   {
-    id: project.POSTS.id,
-    path: project.POSTS.path,
+    id: "signup",
+    path: "/signup",
+    element: <SignupPage />,
+  },
+  {
+    id: "tasks",
+    path: "/tasks",
+    type: "protected",
+    element: <TaskPage />,
+  },
+  {
+    id: "posts",
+    path: "/posts",
+    type: "protected",
     element: <PostsContainer />,
   },
 ];

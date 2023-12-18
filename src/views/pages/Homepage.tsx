@@ -2,6 +2,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { FC } from "react";
 import ReactTyped from "react-typed";
 import TaskPage from "./tasks";
+import { Link } from "react-router-dom";
 
 const Homepage: FC = () => {
   const { loginWithRedirect, isAuthenticated, isLoading, user } = useAuth0();
@@ -26,12 +27,11 @@ const Homepage: FC = () => {
                 <ReactTyped strings={[`Taskfiy`]} typeSpeed={200} loop />
               </h1>
               {isAuthenticated ? null : (
-                <button
-                  className="bg-slate-700 px-12 py-4 text-white rounded-lg hover:bg-slate-600"
-                  onClick={() => loginWithRedirect()}
-                >
-                  login
-                </button>
+                <Link to="/login">
+                  <button className="bg-slate-700 px-12 py-4 text-white rounded-lg hover:bg-slate-600">
+                    login
+                  </button>
+                </Link>
               )}
             </div>
           </div>

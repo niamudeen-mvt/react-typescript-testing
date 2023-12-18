@@ -1,15 +1,27 @@
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Header from "./components/layout/Header";
-import { renderRoutes } from "./routes";
 import { ToastContainerNotification } from "./utils/notifications";
-import { MENU_ITEMS } from "./utils/menuItems";
 import ThemeProvider from "./context/themeContext";
+import Homepage from "./views/pages/Homepage";
+import LoginPage from "./views/pages/LoginPage";
+import TaskPage from "./views/pages/tasks";
+import PostsContainer from "./views/pages/posts";
+import SignupPage from "./views/pages/Singup";
 
 function App() {
   return (
     <BrowserRouter>
       <Header />
-      <ThemeProvider>{renderRoutes(MENU_ITEMS)}</ThemeProvider>
+      <ThemeProvider>
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/tasks" element={<TaskPage />} />
+          <Route path="/posts" element={<PostsContainer />} />
+          <Route path="*" element={<Homepage />} />
+        </Routes>
+      </ThemeProvider>
       <ToastContainerNotification />
     </BrowserRouter>
   );
