@@ -8,6 +8,7 @@ import { RootState } from "../../store";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../../services/api/auth";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
+import { useTheme } from "../../context/themeContext";
 
 const SignupPage = () => {
   const {
@@ -18,6 +19,7 @@ const SignupPage = () => {
   const navigate = useNavigate();
   const isLoading = useSelector((state: RootState) => state.loading.isLoading);
   const dispatch = useDispatch();
+  const { isThemeLight } = useTheme();
 
   const onSubmit = async (data: any) => {
     dispatch(startLoading());
@@ -46,7 +48,9 @@ const SignupPage = () => {
               required: true,
               validate: (value) => isNaN(value),
             })}
-            className="border-b border-black mb-4 outline-none bg-transparent text-white"
+            className={`border-b mb-4 outline-none bg-transparent text-white ${
+              isThemeLight ? "border-black" : "border-white"
+            }`}
             autoComplete="off"
             spellCheck={false}
           />
@@ -65,7 +69,9 @@ const SignupPage = () => {
               required: true,
               pattern: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
             })}
-            className="border-b border-black mb-4 outline-none bg-transparent text-white"
+            className={`border-b mb-4 outline-none bg-transparent text-white ${
+              isThemeLight ? "border-black" : "border-white"
+            }`}
             autoComplete="off"
             spellCheck={false}
           />
@@ -84,7 +90,9 @@ const SignupPage = () => {
               required: true,
               minLength: 3,
             })}
-            className="border-b border-black mb-4 outline-none bg-transparent text-white"
+            className={`border-b mb-4 outline-none bg-transparent text-white ${
+              isThemeLight ? "border-black" : "border-white"
+            }`}
             autoComplete="off"
             spellCheck={false}
           />
@@ -103,7 +111,9 @@ const SignupPage = () => {
               required: true,
               maxLength: 10,
             })}
-            className="border-b border-black mb-4 outline-none bg-transparent text-white"
+            className={`border-b mb-4 outline-none bg-transparent text-white ${
+              isThemeLight ? "border-black" : "border-white"
+            }`}
             autoComplete="off"
             spellCheck={false}
           />
@@ -123,7 +133,9 @@ const SignupPage = () => {
         <p className="text-sm text-center">
           Already have an account ?{" "}
           <Link to="/login">
-            <span className="text-black">Signin</span>
+            <span className={`${isThemeLight ? "text-black" : "text-white"}`}>
+              Signin
+            </span>
           </Link>
         </p>
       </form>

@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
+import { useTheme } from "../../context/themeContext";
 
 const LoginPage = () => {
   const {
@@ -19,6 +20,7 @@ const LoginPage = () => {
   } = useForm();
 
   const { setIsLoggedIn } = useAuth();
+  const { isThemeLight } = useTheme();
   const isLoading = useSelector((state: RootState) => state.loading.isLoading);
   const dispatch = useDispatch();
 
@@ -62,7 +64,9 @@ const LoginPage = () => {
             })}
             autoComplete="off"
             spellCheck={false}
-            className="border-b border-black mb-4 outline-none bg-transparent text-white"
+            className={`border-b mb-4 outline-none bg-transparent text-white ${
+              isThemeLight ? "border-black" : "border-white"
+            }`}
           />
           {errors.email && <TextError msg={errors.email.message} />}
         </div>
@@ -82,7 +86,9 @@ const LoginPage = () => {
             })}
             autoComplete="off"
             spellCheck={false}
-            className="border-b border-black mb-4 outline-none bg-transparent text-white"
+            className={`border-b mb-4 outline-none bg-transparent text-white ${
+              isThemeLight ? "border-black" : "border-white"
+            }`}
           />
           {errors.password && <TextError msg={errors.password.message} />}
         </div>
@@ -96,7 +102,9 @@ const LoginPage = () => {
         <p className="text-sm text-center">
           Dont't have an account ?{" "}
           <Link to="/signup">
-            <span className="text-black">Signup</span>
+            <span className={`${isThemeLight ? "text-black" : "text-white"}`}>
+              Signup
+            </span>
           </Link>
         </p>
       </form>
