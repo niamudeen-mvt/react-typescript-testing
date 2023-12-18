@@ -1,5 +1,6 @@
 import axios from "axios";
-import { getAccessToken } from "./helper";
+import { getAccessToken, storeAccessTokenLS } from "./helper";
+import { refreshTokenApi } from "../services/api/auth";
 
 const BASE_URL = "http://localhost:8000/api/v1";
 
@@ -20,6 +21,39 @@ api.interceptors.request.use(
     return config;
   },
   function (error) {
+    return Promise.reject(error);
+  }
+);
+
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response && error.response.status === 401) {
+      try {
+        const refresh_token = localStorage.getItem("refresh_token");
+        if (refresh_token) {
+          const res = await refreshTokenApi({
+            refresh_token: refresh_token,
+          });
+
+          if (res?.status === 200) {
+            storeAccessTokenLS(res.data.access_token);
+
+            originalRequest.headers["Authorization"] =
+              `Bearer` + res.data.access_token;
+
+            return axios(originalRequest);
+          }
+        }
+      } catch (error) {
+        console.log("Refresh token failed");
+      }
+    }
+
     return Promise.reject(error);
   }
 );

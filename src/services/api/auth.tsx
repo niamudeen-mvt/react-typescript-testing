@@ -24,3 +24,14 @@ export const loginUser = async (body: {
     return error;
   }
 };
+
+export const refreshTokenApi = async (body: {
+  refresh_token: string;
+}): Promise<any> => {
+  try {
+    const response = await api.post("/auth/refresh-token", body);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};

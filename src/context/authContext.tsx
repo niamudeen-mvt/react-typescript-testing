@@ -70,7 +70,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     console.log(res, "es");
     if (res.status === 200) {
       setAuthUser(res.data.user);
-      sendNotification("success", res.data.message);
     }
   };
   useEffect(() => {
