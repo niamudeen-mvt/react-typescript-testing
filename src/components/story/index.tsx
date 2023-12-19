@@ -18,7 +18,10 @@ const Stories = () => {
   const [showStory, setShowStory] = useState({
     show: false,
     link: "",
+    message: "",
   });
+
+  console.log(showStory);
 
   const [showModal, setShowModal] = useState(false);
   const [story, setStory] = useState<any>({
@@ -87,7 +90,7 @@ const Stories = () => {
       }
     } else {
       setShowModal(true);
-      sendNotification("warning", "Please select and image");
+      sendNotification("warning", "Please enter story message");
     }
     dispatch(stopLoading());
   };
@@ -98,33 +101,42 @@ const Stories = () => {
     <div className="mt-32">
       <div className="grid grid-cols-6 gap-10">
         {stories?.map(
-          (story: { _id: string; image: string }, index: number) => {
+          (
+            story: { _id: string; image: string; message: string },
+            index: number
+          ) => {
             return (
-              <div
-                key={story?._id}
-                className="h-48 bg-white rounded-lg flex__center relative hover:scale-105 transition-all duration-300 cursor-pointer"
-                onClick={() =>
-                  setShowStory({
-                    show: true,
-                    link: story.image,
-                  })
-                }
-              >
+              <>
                 {index === 0 ? (
-                  <FaPlus
-                    size={25}
-                    onClick={() => setShowModal(true)}
-                    className="cursor-pointer text-slate-800"
-                  />
-                ) : (
-                  <img src={story.image} alt="story" />
-                )}
-                {index === 0 ? null : (
                   <div
-                    className={`bg-slate-800/50 absolute top-0 left-0 h-full w-full rounded-lg`}
-                  ></div>
+                    key={story?._id}
+                    className="h-48 bg-white rounded-lg flex__center relative cursor-pointer"
+                  >
+                    <FaPlus
+                      size={25}
+                      onClick={() => setShowModal(true)}
+                      className="cursor-pointer text-slate-800"
+                    />
+                  </div>
+                ) : (
+                  <div
+                    key={story?._id}
+                    className="h-48 bg-white rounded-lg flex__center relative hover:scale-105 transition-all duration-300 cursor-pointer"
+                    onClick={() =>
+                      setShowStory({
+                        show: true,
+                        link: story.image,
+                        message: story.message,
+                      })
+                    }
+                  >
+                    <img src={story.image} alt="story" />
+                    <div
+                      className={`bg-slate-800/50 absolute top-0 left-0 h-full w-full rounded-lg`}
+                    ></div>
+                  </div>
                 )}
-              </div>
+              </>
             );
           }
         )}
@@ -233,15 +245,17 @@ const Stories = () => {
         <div className="fixed top-0 left-0 h-full w-full bg-black/90 z-50 flex__center">
           <IoClose
             size={22}
-            className="text-white fixed top-10 right-10 cursor-pointer"
+            className="text-white fixed top-10 right-10 cursor-pointer borer-black"
             onClick={() =>
               setShowStory({
                 show: false,
                 link: "",
+                message: "",
               })
             }
           />
-          <div className="border w-[500px]">
+          <div className="w-[500px]">
+            <p className="text-white  mb-10">{showStory.message}</p>
             <img src={showStory.link} alt="story" className="w-full h-full" />
           </div>
         </div>
