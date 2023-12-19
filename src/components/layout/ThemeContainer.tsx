@@ -1,9 +1,6 @@
 import { FaMoon } from "react-icons/fa";
 import { GoSun } from "react-icons/go";
 import { useTheme } from "../../context/themeContext";
-// import { useLocation, useNavigate } from "react-router-dom";
-// import { useEffect } from "react";
-// import { useAuth } from "../../context/authContext";
 
 type Props = {
   children: React.ReactNode;
@@ -12,19 +9,6 @@ type Props = {
 
 const ThemeContainer = ({ children, isCenter }: Props) => {
   const { isThemeLight, setIsThemeLight } = useTheme();
-  // const { isLoggedIn } = useAuth();
-  // const PRIVATE_ROUTES = ["/tasks"];
-  // const PUBLIC_ROUTES = ["/login"];
-  // const navigate = useNavigate();
-  // const routeName = useLocation().pathname;
-
-  // useEffect(() => {
-  //   if (PUBLIC_ROUTES.includes(routeName) && isLoggedIn) {
-  //     navigate("/tasks");
-  //   } else if (PRIVATE_ROUTES.includes(routeName) && !isLoggedIn) {
-  //     navigate("/");
-  //   }
-  // }, [routeName]);
   return (
     <section
       className={`min-h-screen flex__center ${

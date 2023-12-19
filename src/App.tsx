@@ -9,6 +9,7 @@ import PostsContainer from "./views/pages/posts";
 import SignupPage from "./views/pages/Signup";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import Test from "./views/pages/Test";
+import GalleryPage from "./views/pages/GalleryPage";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
             <Route path="tasks" element={<TaskPage />} />
             <Route path="posts" element={<PostsContainer />} />
             <Route path="test" element={<Test />} />
+            <Route path="gallery" element={<GalleryPage />} />
           </Route>
           <Route path="*" element={<Homepage />} />
         </Routes>

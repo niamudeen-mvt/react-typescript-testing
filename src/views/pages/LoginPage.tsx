@@ -29,14 +29,15 @@ const LoginPage = () => {
   const onSubmit = async (data: any) => {
     dispatch(startLoading());
     let res = await loginUser(data);
-    if (res.status === 200) {
+
+    if (res?.status === 200) {
       sendNotification("success", res.data.message);
       setIsLoggedIn(true);
       storeAccessTokenLS(res.data.access_token);
       storeRefreshTokenLS(res.data.refresh_token);
       navigate("/tasks");
     } else {
-      sendNotification("warning", res.response.data.message);
+      sendNotification("warning", res?.response?.data?.message);
     }
     dispatch(stopLoading());
   };

@@ -24,11 +24,11 @@ const SignupPage = () => {
   const onSubmit = async (data: any) => {
     dispatch(startLoading());
     let res = await registerUser(data);
-    if (res.status === 201) {
+    if (res?.status === 201) {
       sendNotification("success", res.data.message);
       navigate("/login");
     } else {
-      sendNotification("warning", res.response.data.message);
+      sendNotification("warning", res?.response?.data?.message);
     }
     dispatch(stopLoading());
   };

@@ -1,3 +1,4 @@
+import GalleryPage from "../views/pages/GalleryPage";
 import Homepage from "../views/pages/Homepage";
 import LoginPage from "../views/pages/LoginPage";
 import SignupPage from "../views/pages/Signup";
@@ -33,10 +34,16 @@ export const MENU_ITEMS = [
     type: "protected",
     element: <PostsContainer />,
   },
-  // {
-  //   id: "test",
-  //   path: "/test",
-  //   type: "protected",
-  //   element: <Test />,
-  // },
+  {
+    id: "test",
+    path: "/test",
+    type: "protected",
+    element: <Test />,
+  },
+  {
+    id: "gallery",
+    path: "/gallery",
+    type: "protected",
+    element: <GalleryPage />,
+  },
 ];
