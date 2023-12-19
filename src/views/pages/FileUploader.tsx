@@ -62,6 +62,7 @@ const FileUploader = ({
         formData.append("image", image);
       }
       let res = await uploadFiles(formData);
+      console.log(res, "eres>>>>>>>");
 
       if (res.status === 200) {
         setUserImages(res?.data?.images?.images);

@@ -28,9 +28,10 @@ const GalleryPage = () => {
   const fetchFiles = async () => {
     dispatch(startLoading());
     let res = await getFiles();
+
     if (res.status === 200) {
       dispatch(stopLoading());
-      setUserImages(res?.data?.images[0]?.images);
+      setUserImages(res?.data?.images?.images);
     }
   };
 
