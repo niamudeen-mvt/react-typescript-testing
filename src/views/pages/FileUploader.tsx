@@ -1,22 +1,23 @@
 import { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
 import { useDropzone, DropzoneOptions, FileRejection } from "react-dropzone";
 import ThemeContainer from "../../components/layout/ThemeContainer";
-import api from "../../utils/axios";
 import { sendNotification } from "../../utils/notifications";
-import { deleteImage, getFiles } from "../../services/api/user";
 import { useDispatch } from "react-redux";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { RootState } from "../../store";
 import { useSelector } from "react-redux";
 import CustomLoader from "../../components/Loader";
 import { Link } from "react-router-dom";
+import { uploadFiles } from "../../services/api/user";
 
-const ALLOWED_IMAGES = ["image/jpg", "image/png", "image/jpeg", "image/avif"];
+const ALLOWED_IMAGES = ["image/jpg", "image/png", "image/jpeg", "image/webp"];
 
-const Test = ({
+const FileUploader = ({
   setShowModal,
+  setUserImages,
 }: {
   setShowModal: Dispatch<SetStateAction<boolean>>;
+  setUserImages: React.Dispatch<React.SetStateAction<never[]>>;
 }) => {
   const [images, setImages] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
@@ -26,14 +27,12 @@ const Test = ({
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-      // Filter out the accepted files
-
       const isImageNoteAllowed = acceptedFiles.some(
         (file) => !ALLOWED_IMAGES.includes(file.type)
       );
 
       if (isImageNoteAllowed) {
-        sendNotification("warning", "This image format not allowed");
+        sendNotification("warning", "This format is not supported");
       } else {
         const accepted = acceptedFiles.filter(
           (file) =>
@@ -56,43 +55,36 @@ const Test = ({
     useDropzone(dropzoneOptions);
 
   const handleUpload = async () => {
-    try {
-      dispatch(startLoading());
-      if (images?.length) {
-        const formData = new FormData();
-        for (const image of images) {
-          formData.append("image", image);
-        }
-        let res = await api.post("/auth/files/upload", formData, {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data",
-          },
-        });
+    dispatch(startLoading());
+    if (images?.length) {
+      const formData = new FormData();
+      for (const image of images) {
+        formData.append("image", image);
+      }
+      let res = await uploadFiles(formData);
 
-        if (res.status === 200) {
-          setShowModal(false);
-          sendNotification("warning", res.data.message);
-          setImages([]);
-          setPreviews([]);
-          if (inputRef.current) {
-            inputRef.current.value = "";
-          }
+      if (res.status === 200) {
+        setUserImages(res?.data?.images?.images);
+        setShowModal(false);
+        sendNotification("warning", res.data.message);
+        setImages([]);
+        setPreviews([]);
+        if (inputRef.current) {
+          inputRef.current.value = "";
         }
       } else {
-        setShowModal(true);
-        sendNotification("warning", "Please select and image");
+        sendNotification("error", res?.response?.data?.message);
+        setImages([]);
+        setPreviews([]);
+        if (inputRef.current) {
+          inputRef.current.value = "";
+        }
       }
-    } catch (error: any) {
-      sendNotification("error", error?.response?.data?.message);
-      setImages([]);
-      setPreviews([]);
-      if (inputRef.current) {
-        inputRef.current.value = "";
-      }
-    } finally {
-      dispatch(stopLoading());
+    } else {
+      setShowModal(true);
+      sendNotification("warning", "Please select and image");
     }
+    dispatch(stopLoading());
   };
 
   return (
@@ -123,7 +115,7 @@ const Test = ({
           )}
         </div>
         <span className="text-sm italic font-Montserrat">
-          Allowed JPG, PNG. Max file size 200KB.
+          Allowed JPG, JPEG, WEBP, PNG. Max file size 200KB.
         </span>
         <br />
         <span className="text-sm italic font-Montserrat">
@@ -160,4 +152,4 @@ const Test = ({
   );
 };
 
-export default Test;
+export default FileUploader;

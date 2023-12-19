@@ -164,7 +164,7 @@ const TaskPage = () => {
   return (
     <ThemeContainer>
       <div className="py-32">
-        <h1 className="text-2xl sm:text-5xl mb-20 text-white font-semibold text-center">
+        <h1 className="text-2xl sm:text-5xl mb-20 text-white font-semibold text-center capitalize">
           Welcome {authUser?.name} to{" "}
           <ReactTyped strings={["Taskify"]} typeSpeed={100} loop />
         </h1>

@@ -30,6 +30,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authUser, setAuthUser] = useState({ name: "" });
 
+  const fetchUserDetails = async () => {
+    let res = await getUser();
+    if (res.status === 200) {
+      setAuthUser(res.data.user);
+    }
+  };
+  useEffect(() => {
+    fetchUserDetails();
+  }, [isLoggedIn]);
+
   const userLogout = async () => {
     removeAccessToken();
     setIsLoggedIn(false);
@@ -61,17 +71,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => {
       window.removeEventListener("storage", updateTokenFromLocalStorage);
     };
-  }, []);
-
-  const fetchUserDetails = async () => {
-    let res = await getUser();
-    console.log(res, "es");
-    if (res.status === 200) {
-      setAuthUser(res.data.user);
-    }
-  };
-  useEffect(() => {
-    fetchUserDetails();
   }, []);
 
   return (

@@ -9,7 +9,8 @@ import { useDispatch } from "react-redux";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { FaPlus } from "react-icons/fa6";
 import CustomModal from "../../components/layout/CustomModal";
-import Test from "./Test";
+import Test from "./FileUploader";
+import { sendNotification } from "../../utils/notifications";
 
 const GalleryPage = () => {
   const [userImages, setUserImages] = useState([]);
@@ -17,9 +18,12 @@ const GalleryPage = () => {
   const [showModal, setShowModal] = useState(false);
 
   const dispatch = useDispatch();
+
   useEffect(() => {
     fetchFiles();
-  }, [showModal]);
+  }, []);
+
+  // fetching images
 
   const fetchFiles = async () => {
     dispatch(startLoading());
@@ -30,16 +34,19 @@ const GalleryPage = () => {
     }
   };
 
-  // const handleDelete = async (id: string) => {
-  //   dispatch(startLoading());
-  //   let res = await deleteImage(id);
-  //   if (res.status === 200) {
-  //     sendNotification("warning", res.data.message);
-  //   } else {
-  //     sendNotification("warning", res?.response?.data?.message);
-  //   }
-  //   dispatch(stopLoading());
-  // };
+  // deleting images
+
+  const handleDelete = async (id: string) => {
+    dispatch(startLoading());
+    let res = await deleteImage(id);
+    if (res.status === 200) {
+      setUserImages(res?.data?.images?.images);
+      sendNotification("warning", res.data.message);
+    } else {
+      sendNotification("warning", res?.response?.data?.message);
+    }
+    dispatch(stopLoading());
+  };
 
   return (
     <ThemeContainer>
@@ -56,11 +63,11 @@ const GalleryPage = () => {
                 key={file._id}
               >
                 <img src={file.image} alt="preview" className="h-full w-full" />
-                {/* <MdDelete
+                <MdDelete
                   size={22}
                   className="absolute top-3 right-3 text-red-700 cursor-pointer hover:scale-150 transition-all duration-300"
                   onClick={() => handleDelete(file._id)}
-                /> */}
+                />
               </div>
             );
           })}
@@ -68,14 +75,16 @@ const GalleryPage = () => {
       </div>
       <button
         className="fixed top-[85%] left-[50%] h-14 w-14 bg-slate-900 flex__center text-white rounded-full"
-        onClick={() => setShowModal(true)}
+        onClick={() => {
+          setShowModal(true);
+        }}
       >
         <FaPlus size={25} />
       </button>
 
       {showModal ? (
         <CustomModal showModal={showModal}>
-          <Test setShowModal={setShowModal} />
+          <Test setShowModal={setShowModal} setUserImages={setUserImages} />
         </CustomModal>
       ) : null}
     </ThemeContainer>

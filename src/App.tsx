@@ -8,7 +8,7 @@ import TaskPage from "./views/pages/tasks";
 import PostsContainer from "./views/pages/posts";
 import SignupPage from "./views/pages/Signup";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
-import Test from "./views/pages/Test";
+import Test from "./views/pages/FileUploader";
 import GalleryPage from "./views/pages/GalleryPage";
 
 const App = () => {
