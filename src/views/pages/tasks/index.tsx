@@ -13,6 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 import { IoMdThumbsUp } from "react-icons/io";
 import { useAuth } from "../../../context/authContext";
 import ThemeContainer from "../../../components/layout/ThemeContainer";
+import Stories from "../../../components/story";
 
 interface ITask {
   id: string;
@@ -160,9 +161,9 @@ const TaskPage = () => {
     sendNotification("success", "Task is completed");
   };
 
-  // if (isLoading) return <div>Loading..........</div>;
   return (
     <ThemeContainer>
+      <Stories />
       <div className="py-32">
         <h1 className="text-2xl sm:text-5xl mb-20 text-white font-semibold text-center capitalize">
           Welcome {authUser?.name} to{" "}

@@ -12,12 +12,12 @@ import { uploadFiles } from "../../services/api/user";
 
 const ALLOWED_IMAGES = ["image/jpg", "image/png", "image/jpeg", "image/webp"];
 
-const FileUploader = ({
+const CustomFileUploader = ({
   setShowModal,
   setUserImages,
 }: {
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  setUserImages: React.Dispatch<React.SetStateAction<never[]>>;
+  setUserImages?: React.Dispatch<React.SetStateAction<never[]>>;
 }) => {
   const [images, setImages] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
@@ -55,37 +55,36 @@ const FileUploader = ({
     useDropzone(dropzoneOptions);
 
   const handleUpload = async () => {
-    dispatch(startLoading());
-    if (images?.length) {
-      const formData = new FormData();
-      for (const image of images) {
-        formData.append("image", image);
-      }
-      let res = await uploadFiles(formData);
-      console.log(res, "eres>>>>>>>");
-
-      if (res.status === 200) {
-        setUserImages(res?.data?.images?.images);
-        setShowModal(false);
-        sendNotification("warning", res.data.message);
-        setImages([]);
-        setPreviews([]);
-        if (inputRef.current) {
-          inputRef.current.value = "";
-        }
-      } else {
-        sendNotification("error", res?.response?.data?.message);
-        setImages([]);
-        setPreviews([]);
-        if (inputRef.current) {
-          inputRef.current.value = "";
-        }
-      }
-    } else {
-      setShowModal(true);
-      sendNotification("warning", "Please select and image");
-    }
-    dispatch(stopLoading());
+    // dispatch(startLoading());
+    // if (images?.length) {
+    //   const formData = new FormData();
+    //   for (const image of images) {
+    //     formData.append("image", image);
+    //   }
+    //   let res = await uploadFiles(formData);
+    //   console.log(res, "eres>>>>>>>");
+    //   if (res.status === 200) {
+    //     setUserImages(res?.data?.images?.images);
+    //     setShowModal(false);
+    //     sendNotification("warning", res.data.message);
+    //     setImages([]);
+    //     setPreviews([]);
+    //     if (inputRef.current) {
+    //       inputRef.current.value = "";
+    //     }
+    //   } else {
+    //     sendNotification("error", res?.response?.data?.message);
+    //     setImages([]);
+    //     setPreviews([]);
+    //     if (inputRef.current) {
+    //       inputRef.current.value = "";
+    //     }
+    //   }
+    // } else {
+    //   setShowModal(true);
+    //   sendNotification("warning", "Please select and image");
+    // }
+    // dispatch(stopLoading());
   };
 
   return (
@@ -153,4 +152,4 @@ const FileUploader = ({
   );
 };
 
-export default FileUploader;
+export default CustomFileUploader;
