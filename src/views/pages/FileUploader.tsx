@@ -74,6 +74,9 @@ const FileUploader = ({
           inputRef.current.value = "";
         }
       } else {
+        // if (res?.response?.data?.message === "Unexpected field") {
+        //   sendNotification("error", "Maximum file upload is 5");
+        // }
         sendNotification("error", res?.response?.data?.message);
         setImages([]);
         setPreviews([]);
