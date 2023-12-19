@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
-import { getStories, postStories } from "../../services/api/user";
+import { deleteStory, getStories, postStories } from "../../services/api/user";
 import { FaPlus } from "react-icons/fa";
 import CustomLoader from "../Loader";
 import { useSelector } from "react-redux";
@@ -11,19 +11,21 @@ import { sendNotification } from "../../utils/notifications";
 import ThemeContainer from "../layout/ThemeContainer";
 import { useTheme } from "../../context/themeContext";
 import { IoClose } from "react-icons/io5";
+import Slider from "react-slick";
+// Import css files
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { useAuth } from "../../context/authContext";
 // const ALLOWED_IMAGES = ["image/jpg", "image/png", "image/jpeg", "image/webp"];
 
 const Stories = () => {
   const [stories, setStories] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   const [showStory, setShowStory] = useState({
     show: false,
     link: "",
     message: "",
   });
-
-  console.log(showStory);
-
-  const [showModal, setShowModal] = useState(false);
   const [story, setStory] = useState<any>({
     message: "",
     image: "",
@@ -34,6 +36,16 @@ const Stories = () => {
   const dispatch = useDispatch();
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const { authUser } = useAuth();
+
+  const personalStory: any = stories?.find(
+    (story: { userId: string }) => story.userId === authUser._id
+  );
+
+  const socialStories: any = stories?.filter(
+    (story: { userId: string }) => story.userId !== authUser._id
+  );
+
   useEffect(() => {
     fetchStories();
   }, []);
@@ -41,9 +53,6 @@ const Stories = () => {
   const fetchStories = async () => {
     dispatch(startLoading());
     let res = await getStories();
-
-    console.log(res, "stories");
-
     if (res.status === 200) {
       setStories(res?.data?.stories);
     }
@@ -73,7 +82,6 @@ const Stories = () => {
       formData.append("message", story.message);
 
       let res = await postStories(formData);
-      console.log(res, "postStories");
 
       if (res.status === 200) {
         fetchStories();
@@ -95,52 +103,99 @@ const Stories = () => {
     dispatch(stopLoading());
   };
 
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
+  const handleDelteStory = async () => {
+    let res = await deleteStory();
+    if (res.status === 200) {
+      fetchStories();
+      setShowStory({
+        show: false,
+        link: "",
+        message: "",
+      });
+      sendNotification("warning", res.data.message);
+    } else {
+      setShowStory({
+        show: false,
+        link: "",
+        message: "",
+      });
+      sendNotification("error", res?.response?.data?.message);
+    }
+  };
+
   if (isLoading) return <CustomLoader />;
 
   return (
-    <div className="mt-32">
-      <div className="grid grid-cols-6 gap-10">
-        {stories?.map(
-          (
-            story: { _id: string; image: string; message: string },
-            index: number
-          ) => {
-            return (
+    <>
+      <section className="mt-10">
+        <div className={`grid grid-cols-2 sm:grid-cols-12`}>
+          <div className={`sm:col-span-2 `}>
+            {personalStory ? (
               <>
-                {index === 0 ? (
-                  <div
-                    key={story?._id}
-                    className="h-48 bg-white rounded-lg flex__center relative cursor-pointer"
-                  >
-                    <FaPlus
-                      size={25}
-                      onClick={() => setShowModal(true)}
-                      className="cursor-pointer text-slate-800"
-                    />
-                  </div>
-                ) : (
-                  <div
-                    key={story?._id}
-                    className="h-48 bg-white rounded-lg flex__center relative hover:scale-105 transition-all duration-300 cursor-pointer"
+                <div className="h-44 flex__center relative">
+                  <img
+                    src={personalStory?.image}
+                    alt="story"
+                    className="h-28 w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300 cursor-pointer"
                     onClick={() =>
                       setShowStory({
                         show: true,
-                        link: story.image,
-                        message: story.message,
+                        link: personalStory.image,
+                        message: personalStory.message,
                       })
                     }
-                  >
-                    <img src={story.image} alt="story" />
-                    <div
-                      className={`bg-slate-800/50 absolute top-0 left-0 h-full w-full rounded-lg`}
-                    ></div>
-                  </div>
-                )}
+                  />
+                </div>
+                <p className="text-center">Your Story</p>
               </>
-            );
-          }
-        )}
-      </div>
+            ) : (
+              <>
+                <div key={story?._id} className="h-44 flex__center relative">
+                  <div className="cursor-pointer h-28 w-28 rounded-full absolute top-1/4 left-1/4 bg-white flex__center">
+                    <FaPlus size={25} onClick={() => setShowModal(true)} />
+                  </div>
+                </div>
+                <p className="text-center">Add Story</p>
+              </>
+            )}
+          </div>
+          <div className={`sm:col-span-2 `}>
+            <Slider {...settings}>
+              {socialStories?.map(
+                (story: { _id: string; image: string; message: string }) => {
+                  return (
+                    <div
+                      key={story?._id}
+                      className="cursor-pointer h-48 relative"
+                      onClick={() =>
+                        setShowStory({
+                          show: true,
+                          link: story.image,
+                          message: story.message,
+                        })
+                      }
+                    >
+                      <img
+                        src={story.image}
+                        alt="story"
+                        className="h-28 w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300"
+                      />
+                    </div>
+                  );
+                }
+              )}
+            </Slider>
+          </div>
+        </div>
+      </section>
 
       {showModal ? (
         <CustomModal showModal={showModal}>
@@ -152,12 +207,12 @@ const Stories = () => {
                 className="text-white border p-10 rounded-md relative -z-0"
               >
                 <div className="form-control mb-6 flex flex-col">
-                  <label>Message</label>
+                  <label className="mb-4">Message</label>
                   <input
                     type="text"
                     autoComplete="off"
                     spellCheck={false}
-                    className={`border-b mb-4 outline-none bg-transparent text-white ${
+                    className={`border-b mb-10 outline-none bg-transparent text-white ${
                       isThemeLight ? "border-black" : "border-white"
                     }`}
                     onChange={(event) =>
@@ -173,67 +228,6 @@ const Stories = () => {
                   {isLoading ? "Loading..." : "Submit"}
                 </button>
               </form>
-              {/* <div
-                {...getRootProps()}
-                className={`border min-h-[300px] p-5 mb-4 ${
-                  previews?.length === 0 ? "flex__center text-white" : ""
-                }`}
-              >
-                <input {...getInputProps()} ref={inputRef} />
-                {previews?.length ? (
-                  <div className="grid grid-cols-6 gap-3">
-                    {previews?.map((file) => {
-                      return (
-                        <div className="h-24 w-40 mx-auto">
-                          <img
-                            src={file}
-                            alt="preview"
-                            className="h-full w-full"
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                ) : isDragActive ? (
-                  <p>Drop the files here ...</p>
-                ) : (
-                  <p>Drag 'n' drop some files here, or click to select files</p>
-                )}
-              </div>
-              <span className="text-sm italic font-Montserrat">
-                Allowed JPG, JPEG, WEBP, PNG. Max file size 200KB.
-              </span>
-              <br />
-              <span className="text-sm italic font-Montserrat">
-                If your upload image is larger than 200KB allowed, reduce the
-                size of the image if you want to reduce the size of the image
-                click this link.
-              </span>
-              {`  `}
-              <a
-                href="https://picresize.com/"
-                className="text-sm italic font-Montserrat pointer-events-auto font-bold"
-                rel="noreferrer"
-                target="_blank"
-              >
-                Click Here To Convert
-              </a>
-              <div className="flex gap-x-4">
-                <Link to="/gallery">
-                  <button
-                    className="bg-slate-800 text-white px-10 py-2 my-5 rounded-lg"
-                    onClick={() => setShowModal(false)}
-                  >
-                    Go back
-                  </button>
-                </Link>
-                <button
-                  className="bg-white text-black px-10 py-2 my-5 rounded-lg"
-                  onClick={handleUpload}
-                >
-                  Upload
-                </button>
-              </div> */}
             </>
           </ThemeContainer>
         </CustomModal>
@@ -256,11 +250,22 @@ const Stories = () => {
           />
           <div className="w-[500px]">
             <p className="text-white  mb-10">{showStory.message}</p>
-            <img src={showStory.link} alt="story" className="w-full h-full" />
+            <img
+              src={showStory.link}
+              alt="story"
+              className="w-full h-full mb-10"
+            />
+
+            <button
+              className="bg-white text-black px-7 py-2 rounded-lg border"
+              onClick={() => handleDelteStory()}
+            >
+              {isLoading ? "Loading..." : "Delete Story"}
+            </button>
           </div>
         </div>
       ) : null}
-    </div>
+    </>
   );
 };
 

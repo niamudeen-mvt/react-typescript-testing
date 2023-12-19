@@ -7,6 +7,7 @@ type AuthStateTypes = {
   userLogout: () => void;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   authUser: {
+    _id?: string;
     name: string;
   };
 };
@@ -16,6 +17,7 @@ const defaultContextValues: AuthStateTypes = {
   userLogout: () => {},
   setIsLoggedIn: () => {},
   authUser: {
+    _id: "",
     name: "",
   },
 };

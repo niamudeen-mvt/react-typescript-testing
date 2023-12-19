@@ -62,12 +62,11 @@ const FileUploader = ({
         formData.append("image", image);
       }
       let res = await uploadFiles(formData);
-      console.log(res, "eres>>>>>>>");
 
       if (res.status === 200) {
         setUserImages(res?.data?.images?.images);
         setShowModal(false);
-        sendNotification("warning", res.data.message);
+        sendNotification("success", res.data.message);
         setImages([]);
         setPreviews([]);
         if (inputRef.current) {
@@ -83,7 +82,7 @@ const FileUploader = ({
       }
     } else {
       setShowModal(true);
-      sendNotification("warning", "Please select and image");
+      sendNotification("warning", "Please select an image");
     }
     dispatch(stopLoading());
   };

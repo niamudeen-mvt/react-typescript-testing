@@ -63,3 +63,12 @@ export const getStories = async (): Promise<any> => {
     return error;
   }
 };
+
+export const deleteStory = async (): Promise<any> => {
+  try {
+    let response = await api.delete(`/story/delete`);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
