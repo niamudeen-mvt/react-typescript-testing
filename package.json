@@ -19,6 +19,7 @@
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.3",
     "react-froala-wysiwyg": "^4.1.4",
     "react-hook-form": "^7.49.2",
     "react-icons": "^4.12.0",

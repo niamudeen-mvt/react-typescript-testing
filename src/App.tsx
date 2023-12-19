@@ -8,7 +8,7 @@ import TaskPage from "./views/pages/tasks";
 import PostsContainer from "./views/pages/posts";
 import SignupPage from "./views/pages/Signup";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
-import ThemeContainer from "./components/layout/ThemeContainer";
+import Test from "./views/pages/Test";
 
 const App = () => {
   return (
@@ -22,6 +22,7 @@ const App = () => {
           <Route path="/" element={<ProtectedRoutes />}>
             <Route path="tasks" element={<TaskPage />} />
             <Route path="posts" element={<PostsContainer />} />
+            <Route path="test" element={<Test />} />
           </Route>
           <Route path="*" element={<Homepage />} />
         </Routes>
