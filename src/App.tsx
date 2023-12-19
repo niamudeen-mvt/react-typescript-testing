@@ -23,7 +23,6 @@ const App = () => {
           <Route path="/" element={<ProtectedRoutes />}>
             <Route path="tasks" element={<TaskPage />} />
             <Route path="posts" element={<PostsContainer />} />
-            <Route path="test" element={<Test />} />
             <Route path="gallery" element={<GalleryPage />} />
           </Route>
           <Route path="*" element={<Homepage />} />

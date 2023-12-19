@@ -2,7 +2,6 @@ import GalleryPage from "../views/pages/GalleryPage";
 import Homepage from "../views/pages/Homepage";
 import LoginPage from "../views/pages/LoginPage";
 import SignupPage from "../views/pages/Signup";
-import Test from "../views/pages/Test";
 import PostsContainer from "../views/pages/posts";
 import TaskPage from "../views/pages/tasks";
 
@@ -33,12 +32,6 @@ export const MENU_ITEMS = [
     path: "/posts",
     type: "protected",
     element: <PostsContainer />,
-  },
-  {
-    id: "test",
-    path: "/test",
-    type: "protected",
-    element: <Test />,
   },
   {
     id: "gallery",

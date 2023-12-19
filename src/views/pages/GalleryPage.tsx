@@ -8,22 +8,25 @@ import { MdDelete } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { FaPlus } from "react-icons/fa6";
+import CustomModal from "../../components/layout/CustomModal";
+import Test from "./Test";
 
 const GalleryPage = () => {
   const [userImages, setUserImages] = useState([]);
   const isLoading = useSelector((state: RootState) => state.loading.isLoading);
+  const [showModal, setShowModal] = useState(false);
 
   const dispatch = useDispatch();
   useEffect(() => {
     fetchFiles();
-  }, []);
+  }, [showModal]);
 
   const fetchFiles = async () => {
     dispatch(startLoading());
     let res = await getFiles();
     if (res.status === 200) {
       dispatch(stopLoading());
-      setUserImages(res.data.images[0].images);
+      setUserImages(res?.data?.images[0]?.images);
     }
   };
 
@@ -40,10 +43,10 @@ const GalleryPage = () => {
 
   return (
     <ThemeContainer>
-      {/* {isLoading || userImages?.length === 0 ? <CustomLoader /> : null} */}
+      {isLoading ? <CustomLoader /> : null}
       <div>
         <h1 className="text-2xl text-white mb-10">
-          {isLoading || userImages?.length === 0 ? "" : "Gallery"}
+          {isLoading ? "" : "Gallery"}
         </h1>
         <div className="columns-3xs">
           {userImages?.map((file: { image: string; _id: string }) => {
@@ -63,9 +66,18 @@ const GalleryPage = () => {
           })}
         </div>
       </div>
-      <button className="fixed top-[85%] left-[50%] h-14 w-14 bg-slate-900 flex__center text-white rounded-full">
+      <button
+        className="fixed top-[85%] left-[50%] h-14 w-14 bg-slate-900 flex__center text-white rounded-full"
+        onClick={() => setShowModal(true)}
+      >
         <FaPlus size={25} />
       </button>
+
+      {showModal ? (
+        <CustomModal showModal={showModal}>
+          <Test setShowModal={setShowModal} />
+        </CustomModal>
+      ) : null}
     </ThemeContainer>
   );
 };
