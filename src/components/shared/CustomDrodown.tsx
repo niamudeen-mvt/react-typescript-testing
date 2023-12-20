@@ -3,7 +3,10 @@ import { usePost } from "../../context/postContext";
 
 type Props = {
   showMenu: boolean;
-  dropMenu: any;
+  dropMenu: {
+    id: number;
+    title: string;
+  }[];
   setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -23,7 +26,7 @@ const CustomDrodown = ({ setShowMenu, showMenu, dropMenu }: Props) => {
       {showMenu ? (
         <div className="bg-white h-full min-w-[150px] min-h-[50px]  rounded-lg text-sm absolute top-8 -translate-x-[80%] p-3 transition-all duration-500 active:block shadow-2xl z-10">
           <ul className="h-full flex flex-col justify-between w-full">
-            {dropMenu.map((e: any) => {
+            {dropMenu.map((e) => {
               return (
                 <li
                   key={e.id}

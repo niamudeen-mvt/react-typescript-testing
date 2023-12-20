@@ -1,4 +1,4 @@
-import React, { createContext, useState, FC, useContext } from "react";
+import { createContext, useState, useContext, ReactNode } from "react";
 
 type PostContextState = {
   postId: string;
@@ -28,7 +28,7 @@ export const usePost = () => {
   return useContext(PostContext);
 };
 
-const PostProvider = ({ children }: any) => {
+const PostProvider = ({ children }: { children: ReactNode }) => {
   const [postId, setPostId] = useState("");
   const [showPost, setShowPost] = useState(false);
   const [showComments, setShowComments] = useState(false);

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { ReactNode, createContext, useContext, useState } from "react";
 
 type ThemeState = {
   isThemeLight: boolean;
@@ -15,7 +15,7 @@ export const useTheme = () => {
   return useContext(ThemeContext);
 };
 
-const ThemeProvider = ({ children }: any) => {
+const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [isThemeLight, setIsThemeLight] = useState(true);
 
   return (

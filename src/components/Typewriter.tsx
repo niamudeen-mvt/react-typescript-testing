@@ -11,7 +11,7 @@ const Typewriter = ({ text, delay, infinite }: IProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    let timeout: any;
+    let timeout: string | number | NodeJS.Timeout | undefined;
 
     if (currentIndex <= text.length) {
       timeout = setTimeout(() => {
@@ -19,8 +19,8 @@ const Typewriter = ({ text, delay, infinite }: IProps) => {
         setCurrentIndex((prevIndex) => prevIndex + 1);
       }, delay);
     } else if (infinite) {
-      // setCurrentIndex(0);
-      // setCurrentText("");
+      setCurrentIndex(0);
+      setCurrentText("");
     }
 
     return () => clearTimeout(timeout);

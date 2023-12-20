@@ -18,6 +18,15 @@ import { FILE_VALIDATION } from "../../utils/constants";
 import { formattedDate } from "../../utils/helper";
 import { sendNotification } from "../../utils/notifications";
 
+type TStory = {
+  username?: string;
+  type: string;
+  show: boolean;
+  link?: string | undefined;
+  message: string;
+  postDate: string;
+};
+
 const Stories = () => {
   const [stories, setStories] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -25,7 +34,7 @@ const Stories = () => {
     message: "",
     image: "",
   });
-  const [showStory, setShowStory] = useState({
+  const [showStory, setShowStory] = useState<TStory>({
     username: "",
     type: "",
     show: false,

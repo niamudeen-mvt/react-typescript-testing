@@ -16,7 +16,7 @@ export const registerUser = async (body: {
 
 export const loginUser = async (body: {
   email: string;
-  pasword: string;
+  password: string;
 }): Promise<any> => {
   try {
     let response = await api.post(`/auth/login`, body);
