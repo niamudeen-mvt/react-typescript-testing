@@ -4,6 +4,7 @@ import { sendNotification } from "../../utils/notifications";
 import { Link } from "react-router-dom";
 import { FILE_VALIDATION } from "../../utils/constants";
 import { useTheme } from "../../context/themeContext";
+import FileValidationBox from "../shared/FileValidationBox";
 
 interface IProps {
   story: {
@@ -102,30 +103,11 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
           ref={inputRef}
         />
       </div>
-
       {/* file upload validation message */}
-      <div className="mb-8">
-        <span className="text-sm">
-          Allowed JPG, JPEG, WEBP, PNG. Max file size 200KB.
-        </span>
-        <span className="text-sm">
-          If your upload image is larger than 200KB allowed, reduce the size of
-          the image if you want to reduce the size of the image click this link.
-        </span>
-        {`  `}
-        <a
-          href="https://picresize.com/"
-          className="text-sm pointer-events-auto font-semibold"
-          rel="noreferrer"
-          target="_blank"
-        >
-          Click Here To Convert
-        </a>
-      </div>
-
+      <FileValidationBox />
       <button
         type="submit"
-        className="mb-6 bg-white text-black px-7 py-2 rounded-lg border w-full text-sm"
+        className="mb-6 bg-white text-black px-7 py-2 rounded-lg border w-full text-sm mt-8"
       >
         Submit
       </button>

@@ -3,8 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 import { AiOutlineMenu } from "react-icons/ai";
 import { IoCloseSharp } from "react-icons/io5";
 import useWindowSize from "../../hooks/useWindowSize";
-import { MENU_ITEMS } from "../../utils/menu-Items";
 import { useAuth } from "../../context/authContext";
+import { MENU_ITEMS } from "../../routes";
 
 const Header = () => {
   const { userLogout, isLoggedIn } = useAuth();
