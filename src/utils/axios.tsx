@@ -26,6 +26,8 @@ api.interceptors.request.use(
 
 // response interceptors
 
+let isRefreshing = false;
+
 api.interceptors.response.use(
   (response) => {
     return response;
@@ -33,10 +35,10 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response && error.response.status === 401) {
+    if (error.response && error.response.status === 401 && !isRefreshing) {
+      isRefreshing = true;
       try {
         const refresh_token = getRefreshToken();
-        // const refresh_token = localStorage.getItem("refresh_token");
         if (refresh_token) {
           const res = await refreshTokenApi({
             refresh_token: refresh_token,
@@ -52,7 +54,9 @@ api.interceptors.response.use(
           }
         }
       } catch (error) {
-        console.log("Refresh token failed");
+        console.log("Refresh token failed", error);
+      } finally {
+        isRefreshing = false;
       }
     }
 

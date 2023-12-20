@@ -9,8 +9,7 @@ import { useSelector } from "react-redux";
 import CustomLoader from "../../components/Loader";
 import { Link } from "react-router-dom";
 import { uploadFiles } from "../../services/api/user";
-
-const ALLOWED_IMAGES = ["image/jpg", "image/png", "image/jpeg", "image/webp"];
+import { FILE_VALIDATION } from "../../utils/constants";
 
 const FileUploader = ({
   setShowModal,
@@ -27,14 +26,33 @@ const FileUploader = ({
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
-      const isImageNoteAllowed = acceptedFiles.some(
-        (file) => !ALLOWED_IMAGES.includes(file.type)
-      );
+      const images = [];
+      for (const file of acceptedFiles) {
+        if (!FILE_VALIDATION.ALLOWED_IMAGES.includes(file.type)) {
+          sendNotification(
+            "warning",
+            `This format ${file.type} is not supported.`
+          );
 
-      if (isImageNoteAllowed) {
-        sendNotification("warning", "This format is not supported");
-      } else {
-        const accepted = acceptedFiles.filter(
+          if (inputRef.current) {
+            inputRef.current.value = "";
+          }
+        }
+        if (file.size > FILE_VALIDATION.MAX_FILE_SIZE) {
+          sendNotification("warning", `Allowed file size 200KB`);
+          if (inputRef.current) {
+            inputRef.current.value = "";
+          }
+        } else if (
+          FILE_VALIDATION.ALLOWED_IMAGES.includes(file.type) &&
+          file.size < FILE_VALIDATION.MAX_FILE_SIZE
+        ) {
+          images.push(file);
+        }
+      }
+
+      if (images?.length) {
+        const accepted = images.filter(
           (file) =>
             !fileRejections.find((rejectedFile) => rejectedFile.file === file)
         );

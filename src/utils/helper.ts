@@ -1,6 +1,7 @@
 // access token
 
 import { config } from "../config/index";
+import { daysOfWeek } from "./constants";
 
 export const storeAccessTokenLS = (accessToken: string) => {
   if (config.ACCESS_TOKEN_KEY)
@@ -25,3 +26,30 @@ export const getRefreshToken = () => {
   if (config.REFRESH_TOKEN_KEY)
     return localStorage.getItem(config.REFRESH_TOKEN_KEY);
 };
+
+export const formattedDate = (dateTime: number | Date | undefined) => {
+  const dateFormatter = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  return dateFormatter.format(dateTime);
+};
+
+// export const formattedTime = (dateTime: number | Date | undefined) => {
+//   const filterdDay = daysOfWeek
+//     .map((day) => {
+//       if (day.value === dateTime.toString().substring(0, 3)) {
+//         return day.label;
+//       }
+//     })
+//     .filter((label) => label !== undefined);
+
+//   const timeFormatter = new Intl.DateTimeFormat("en-US", {
+//     hour: "numeric",
+//     minute: "numeric",
+//     hour12: true,
+//   });
+
+//   return timeFormatter.format(dateTime) + "," + filterdDay;
+// };

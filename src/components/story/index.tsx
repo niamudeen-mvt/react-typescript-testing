@@ -16,22 +16,23 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
-
-const ALLOWED_IMAGES = ["image/jpg", "image/png", "image/jpeg", "image/webp"];
-const MAX_FILE_SIZE = 200 * 1024;
+import { FILE_VALIDATION } from "../../utils/constants";
+import useWindowSize from "../../hooks/useWindowSize";
+import { formattedDate } from "../../utils/helper";
 
 const Stories = () => {
   const [stories, setStories] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [story, setStory] = useState<any>({
+    message: "",
+    image: "",
+  });
   const [showStory, setShowStory] = useState({
     type: "",
     show: false,
     link: "",
     message: "",
-  });
-  const [story, setStory] = useState<any>({
-    message: "",
-    image: "",
+    postDate: "",
   });
 
   const { isThemeLight } = useTheme();
@@ -39,6 +40,7 @@ const Stories = () => {
   const dispatch = useDispatch();
   const inputRef = useRef<HTMLInputElement>(null);
   const { authUser } = useAuth();
+  const windowSize = useWindowSize();
 
   const personalStory: any = stories?.find(
     (story: { userId: string }) => story.userId === authUser._id
@@ -48,7 +50,7 @@ const Stories = () => {
     (story: { userId: string }) => story.userId !== authUser._id
   );
 
-  // fetching stories
+  // fetching stories =====================
   useEffect(() => {
     fetchStories();
   }, []);
@@ -62,14 +64,12 @@ const Stories = () => {
     dispatch(stopLoading());
   };
 
+  // uploading image ======================
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event?.target.files) {
       const file = event?.target.files[0];
-      console.log(file);
 
-      if (!ALLOWED_IMAGES.includes(file.type)) {
-        console.log("111111111");
-
+      if (!FILE_VALIDATION.ALLOWED_IMAGES.includes(file.type)) {
         sendNotification(
           "warning",
           `This format ${file.type} is not supported.`
@@ -79,18 +79,15 @@ const Stories = () => {
           inputRef.current.value = "";
         }
       }
-      if (file.size > MAX_FILE_SIZE) {
-        console.log("2222222");
-
+      if (file.size > FILE_VALIDATION.MAX_FILE_SIZE) {
         sendNotification("warning", `Allowed file size 200KB`);
         if (inputRef.current) {
           inputRef.current.value = "";
         }
       } else if (
-        ALLOWED_IMAGES.includes(file.type) &&
-        file.size < MAX_FILE_SIZE
+        FILE_VALIDATION.ALLOWED_IMAGES.includes(file.type) &&
+        file.size < FILE_VALIDATION.MAX_FILE_SIZE
       ) {
-        console.log("33333333");
         setStory({
           ...story,
           image: file,
@@ -99,6 +96,7 @@ const Stories = () => {
     }
   };
 
+  // posting story =================
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     dispatch(startLoading());
@@ -112,7 +110,7 @@ const Stories = () => {
       if (res.status === 200) {
         fetchStories();
         setShowModal(false);
-        sendNotification("warning", res.data.message);
+        sendNotification("success", res.data.message);
         if (inputRef.current) {
           inputRef.current.value = "";
         }
@@ -133,7 +131,16 @@ const Stories = () => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 1,
+    slidesToShow:
+      windowSize.width <= 546
+        ? 1
+        : windowSize.width >= 546 && windowSize.width <= 746
+        ? 2
+        : windowSize.width <= 992
+        ? 3
+        : socialStories.length > 4
+        ? 4
+        : socialStories.length,
     slidesToScroll: 1,
   };
 
@@ -147,6 +154,7 @@ const Stories = () => {
         show: false,
         link: "",
         message: "",
+        postDate: "",
       });
       sendNotification("success", res.data.message);
     } else {
@@ -155,6 +163,7 @@ const Stories = () => {
         show: false,
         link: "",
         message: "",
+        postDate: "",
       });
       sendNotification("error", res?.response?.data?.message);
     }
@@ -163,29 +172,39 @@ const Stories = () => {
 
   return (
     <>
+      {/* story section */}
       <section className="my-32">
-        <div className={`grid grid-cols-2 sm:grid-cols-12`}>
-          <div className={`sm:col-span-2 `}>
+        <div className={`grid grid-cols-2 lg:grid-cols-12 gap-5 lg:gap-10`}>
+          <div
+            className={` ${
+              windowSize.width < 992
+                ? ""
+                : socialStories?.length > 1
+                ? "col-span-2"
+                : "col-span-2"
+            }`}
+          >
             {personalStory ? (
               <>
-                <div className="h-44 flex__center relative cursor-pointer">
+                <div className="h-48 cursor-pointer relative">
                   {personalStory?.image ? (
                     <img
                       src={personalStory?.image}
                       alt="story"
-                      className="h-28 w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300 cursor-pointer"
+                      className="h-20 w-20 sm:h-28 sm:w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300 cursor-pointer border-4 border-green-500"
                       onClick={() =>
                         setShowStory({
                           type: "PERSONAL",
                           show: true,
                           link: personalStory.image,
                           message: personalStory.message,
+                          postDate: personalStory.createdAt,
                         })
                       }
                     />
                   ) : (
                     // if no story image added by user showing default image
-                    <div className="h-28 w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300 bg-white flex__center">
+                    <div className="h-20 w-20 sm:h-28 sm:w-28 rounded-full hover:scale-110 transition-all duration-300 bg-white flex__center border-4 border-green-500">
                       <RiChatHistoryFill
                         size={25}
                         onClick={() =>
@@ -194,43 +213,65 @@ const Stories = () => {
                             show: true,
                             link: "",
                             message: personalStory.message,
+                            postDate: personalStory.createdAt,
                           })
                         }
                       />
                     </div>
                   )}
                 </div>
-                <p className="text-center text-sm">Your Story</p>
               </>
             ) : (
               <>
-                <div key={story?._id} className="h-44 flex__center relative">
-                  <div className="cursor-pointer h-28 w-28 rounded-full absolute top-1/4 left-1/4 bg-white flex__center">
+                <div key={story?._id} className="h-48 flex__center">
+                  <div className="cursor-pointer h-20 w-20 sm:h-28 sm:w-28 rounded-full bg-white flex__center border-4 border-green-500">
                     <FaPlus
                       size={25}
                       onClick={() => setShowModal(true)}
-                      className="hover:scale-110 transition-all duration-300"
+                      className="hover:scale-110 transition-all duration-300 text-slate-600"
                     />
                   </div>
                 </div>
-                <p className="text-center text-sm">Add Story</p>
+                {/* <p className="text-center text-sm">Add Story</p> */}
               </>
             )}
           </div>
-          <div className={`sm:col-span-2 `}>
+          <div
+            className={` ${
+              windowSize.width < 992
+                ? ""
+                : socialStories?.length === 1
+                ? "col-span-2"
+                : socialStories?.length === 2
+                ? "col-span-4"
+                : socialStories?.length === 3
+                ? "col-span-6"
+                : socialStories?.length === 4
+                ? "col-span-8"
+                : socialStories?.length === 5
+                ? "col-span-10"
+                : "col-span-10"
+            }`}
+          >
             <Slider {...settings}>
               {socialStories?.map(
-                (story: { _id: string; image: string; message: string }) => {
+                (story: {
+                  _id: string;
+                  image: string;
+                  message: string;
+                  createdAt: string;
+                }) => {
                   return (
                     <div
                       key={story?._id}
-                      className="cursor-pointer h-48 relative"
+                      className="cursor-pointer h-44 relative"
                       onClick={() =>
                         setShowStory({
                           type: "SOCIAL",
                           show: true,
                           link: story.image,
                           message: story.message,
+                          postDate: story.createdAt,
                         })
                       }
                     >
@@ -238,10 +279,10 @@ const Stories = () => {
                         <img
                           src={story.image}
                           alt="story"
-                          className="h-28 w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300"
+                          className="h-20 w-20 sm:h-28 sm:w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300"
                         />
                       ) : (
-                        <div className="h-28 w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300 bg-white flex__center">
+                        <div className="h-20 w-20 sm:h-28 sm:w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300 bg-white flex__center">
                           <RiChatHistoryFill
                             size={25}
                             onClick={() =>
@@ -250,6 +291,7 @@ const Stories = () => {
                                 show: true,
                                 link: "",
                                 message: personalStory.message,
+                                postDate: personalStory.createdAt,
                               })
                             }
                           />
@@ -336,7 +378,6 @@ const Stories = () => {
       ) : null}
 
       {/* full preview story */}
-
       {showStory.show ? (
         <div className="fixed top-0 left-0 h-full w-full bg-black/90 z-50 flex__center">
           <IoClose
@@ -348,11 +389,18 @@ const Stories = () => {
                 show: false,
                 link: "",
                 message: "",
+                postDate: "",
               })
             }
           />
-          <div className="w-[500px] flex justify-center flex-col gap-y-10">
-            <p className="text-white ">{showStory.message}</p>
+          <div className="w-[500px] flex  flex-col gap-y-5">
+            <p className="text-white text-center capitalize">
+              {showStory.message}
+            </p>
+            <p className="text-white text-center text-xs">
+              {formattedDate(new Date(showStory.postDate))}
+            </p>
+
             {showStory.link ? (
               <div className="h-[400px]">
                 <img

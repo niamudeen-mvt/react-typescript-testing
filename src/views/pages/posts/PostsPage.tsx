@@ -13,8 +13,6 @@ const PostsPage = () => {
 
   const handleDeltePost = async (id: string) => {
     let res = await deletePost(id);
-    console.log("deltePost", res);
-
     if (res.status === 200) {
       sendNotification("success", "Post deleted succesfully");
     }

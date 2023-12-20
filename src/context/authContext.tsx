@@ -67,7 +67,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
   useEffect(() => {
-    console.log("inside useEffect");
     updateTokenFromLocalStorage();
 
     window.addEventListener("storage", updateTokenFromLocalStorage);
