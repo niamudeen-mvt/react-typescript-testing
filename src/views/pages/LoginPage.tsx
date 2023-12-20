@@ -1,18 +1,18 @@
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import TextError from "../../components/shared/TextError";
+import ThemeContainer from "../../components/layout/ThemeContainer";
 import { sendNotification } from "../../utils/notifications";
-import { Link, useNavigate } from "react-router-dom";
 import { storeAccessTokenLS, storeRefreshTokenLS } from "../../utils/helper";
 import { useAuth } from "../../context/authContext";
+import { useTheme } from "../../context/themeContext";
 import { loginUser } from "../../services/api/auth";
-import ThemeContainer from "../../components/layout/ThemeContainer";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
-import { useTheme } from "../../context/themeContext";
 
 const LoginPage = () => {
+  // react hook form
   const {
     register,
     handleSubmit,
@@ -21,6 +21,7 @@ const LoginPage = () => {
 
   const { setIsLoggedIn } = useAuth();
   const { isThemeLight } = useTheme();
+
   const isLoading = useSelector((state: RootState) => state.loading.isLoading);
   const dispatch = useDispatch();
 
@@ -29,13 +30,12 @@ const LoginPage = () => {
   const onSubmit = async (data: any) => {
     dispatch(startLoading());
     let res = await loginUser(data);
-
     if (res?.status === 200) {
       sendNotification("success", res.data.message);
       setIsLoggedIn(true);
       storeAccessTokenLS(res.data.access_token);
       storeRefreshTokenLS(res.data.refresh_token);
-      navigate("/tasks");
+      navigate("/");
     } else {
       sendNotification("warning", res?.response?.data?.message);
     }
@@ -43,7 +43,7 @@ const LoginPage = () => {
   };
 
   return (
-    <ThemeContainer isCenter={true}>
+    <ThemeContainer themeCenter={true} isCenter={true}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="min-h-[500px] text-white border p-10 rounded-md relative -z-0"

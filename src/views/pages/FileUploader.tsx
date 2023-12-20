@@ -88,7 +88,7 @@ const FileUploader = ({
   };
 
   return (
-    <ThemeContainer>
+    <ThemeContainer themeCenter={true}>
       {isLoading ? <CustomLoader /> : null}
       <>
         <div
@@ -114,23 +114,25 @@ const FileUploader = ({
             <p>Drag 'n' drop some files here, or click to select files</p>
           )}
         </div>
-        <span className="text-sm italic font-Montserrat">
+
+        <span className="text-sm italic">
           Allowed JPG, JPEG, WEBP, PNG. Max file size 200KB.
         </span>
         <br />
-        <span className="text-sm italic font-Montserrat">
+        <span className="text-sm italic">
           If your upload image is larger than 200KB allowed, reduce the size of
           the image if you want to reduce the size of the image click this link.
         </span>
         {`  `}
         <a
           href="https://picresize.com/"
-          className="text-sm italic font-Montserrat pointer-events-auto font-bold"
+          className="text-sm italic pointer-events-auto font-bold"
           rel="noreferrer"
           target="_blank"
         >
           Click Here To Convert
         </a>
+
         <div className="flex gap-x-4">
           <Link to="/gallery">
             <button

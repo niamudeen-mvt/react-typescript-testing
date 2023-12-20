@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react";
-import ActiveTasks from "./ActvieTask";
-import { MdDelete } from "react-icons/md";
 import ReactTyped from "react-typed";
+import { v4 as uuidv4 } from "uuid";
+import { MdDelete } from "react-icons/md";
+import { IoMdThumbsUp } from "react-icons/io";
+import ActiveTasks from "./ActvieTask";
 import { sendNotification } from "../../../utils/notifications";
+import { useAuth } from "../../../context/authContext";
+import ThemeContainer from "../../../components/layout/ThemeContainer";
 import {
   DragDropContext,
   Draggable,
   DropResult,
   Droppable,
 } from "react-beautiful-dnd";
-import { v4 as uuidv4 } from "uuid";
-import { IoMdThumbsUp } from "react-icons/io";
-import { useAuth } from "../../../context/authContext";
-import ThemeContainer from "../../../components/layout/ThemeContainer";
-import Stories from "../../../components/story/index";
 
 interface ITask {
   id: string;
@@ -162,12 +161,16 @@ const TaskPage = () => {
   };
 
   return (
-    <ThemeContainer>
-      <Stories />
+    <ThemeContainer themeCenter={true}>
       <div className="py-32">
-        <h1 className="text-2xl sm:text-5xl mb-20 text-white font-semibold text-center capitalize">
+        <h1 className="text-2xl sm:text-5xl mb-20 text-white font-semibold text-center capitalize z-10">
           Welcome {authUser?.name} to{" "}
-          <ReactTyped strings={["Taskify"]} typeSpeed={100} loop />
+          <ReactTyped
+            strings={["Taskify"]}
+            typeSpeed={100}
+            loop
+            className="z-10"
+          />
         </h1>
 
         <form onSubmit={handleAddTask} className="flex gap-6 mb-10 w-full">

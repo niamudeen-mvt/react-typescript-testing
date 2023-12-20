@@ -19,7 +19,9 @@ const Header = () => {
   }, [windowSize.width]);
 
   const routes = MENU_ITEMS.filter((route) =>
-    isLoggedIn ? route.type === "protected" : route.type !== "protected"
+    isLoggedIn
+      ? route.type === "protected" || route.type === "public"
+      : route.type !== "protected"
   );
 
   return (

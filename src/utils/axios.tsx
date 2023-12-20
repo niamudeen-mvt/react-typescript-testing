@@ -1,10 +1,7 @@
 import axios from "axios";
 import { getAccessToken, getRefreshToken, storeAccessTokenLS } from "./helper";
 import { refreshTokenApi } from "../services/api/auth";
-
-// const BASE_URL = "http://localhost:8000/api/v1";
-
-const BASE_URL = "https://test-backend-iota.vercel.app/api/v1";
+import { BASE_URL } from "../config";
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -12,6 +9,8 @@ const api = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+// request interceptors
 
 api.interceptors.request.use(
   async function (config) {
@@ -24,6 +23,8 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+// response interceptors
 
 api.interceptors.response.use(
   (response) => {

@@ -16,6 +16,7 @@ const SignupPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
   const navigate = useNavigate();
   const isLoading = useSelector((state: RootState) => state.loading.isLoading);
   const dispatch = useDispatch();
@@ -34,7 +35,7 @@ const SignupPage = () => {
   };
 
   return (
-    <ThemeContainer isCenter={true}>
+    <ThemeContainer themeCenter={true} isCenter={true}>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="min-h-[500px] text-white border p-10 rounded-md"

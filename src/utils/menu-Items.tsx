@@ -9,6 +9,7 @@ export const MENU_ITEMS = [
   {
     id: "home",
     path: "/",
+    type: "public",
     element: <Homepage />,
   },
   {

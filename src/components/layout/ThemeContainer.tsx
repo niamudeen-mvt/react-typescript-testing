@@ -5,13 +5,14 @@ import { useTheme } from "../../context/themeContext";
 type Props = {
   children: React.ReactNode;
   isCenter?: boolean;
+  themeCenter?: boolean;
 };
 
-const ThemeContainer = ({ children, isCenter }: Props) => {
+const ThemeContainer = ({ children, isCenter, themeCenter }: Props) => {
   const { isThemeLight, setIsThemeLight } = useTheme();
   return (
     <section
-      className={`min-h-screen flex__center ${
+      className={`min-h-screen ${themeCenter ? "flex__center" : ""} ${
         isThemeLight ? "bg-slate-500" : "dark__mode"
       }`}
     >

@@ -50,7 +50,7 @@ const GalleryPage = () => {
   };
 
   return (
-    <ThemeContainer>
+    <ThemeContainer themeCenter={true}>
       {isLoading ? <CustomLoader /> : null}
       <div>
         <h1 className="text-2xl text-white mb-10">
@@ -82,7 +82,6 @@ const GalleryPage = () => {
       >
         <FaPlus size={25} />
       </button>
-
       {showModal ? (
         <CustomModal showModal={showModal}>
           <Test setShowModal={setShowModal} setUserImages={setUserImages} />

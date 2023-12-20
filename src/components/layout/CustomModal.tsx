@@ -9,7 +9,7 @@ const CustomModal = ({
 }) => {
   return (
     <div
-      className={`bg-slate-300/50 ${
+      className={`bg-slate-300/50 z-40 ${
         showModal ? "block" : "hidden"
       } fixed inset-0 `}
     >
