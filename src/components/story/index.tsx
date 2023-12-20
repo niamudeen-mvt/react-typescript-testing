@@ -19,6 +19,7 @@ import { Link } from "react-router-dom";
 import { FILE_VALIDATION } from "../../utils/constants";
 import useWindowSize from "../../hooks/useWindowSize";
 import { formattedDate } from "../../utils/helper";
+import { MdDelete } from "react-icons/md";
 
 const Stories = () => {
   const [stories, setStories] = useState([]);
@@ -28,6 +29,7 @@ const Stories = () => {
     image: "",
   });
   const [showStory, setShowStory] = useState({
+    username: "",
     type: "",
     show: false,
     link: "",
@@ -43,7 +45,7 @@ const Stories = () => {
   const windowSize = useWindowSize();
 
   const personalStory: any = stories?.find(
-    (story: { userId: string }) => story.userId === authUser._id
+    (story: { userId: { _id: string } }) => story.userId._id === authUser._id
   );
 
   const socialStories: any = stories?.filter(
@@ -78,8 +80,7 @@ const Stories = () => {
         if (inputRef.current) {
           inputRef.current.value = "";
         }
-      }
-      if (file.size > FILE_VALIDATION.MAX_FILE_SIZE) {
+      } else if (file.size > FILE_VALIDATION.MAX_FILE_SIZE) {
         sendNotification("warning", `Allowed file size 200KB`);
         if (inputRef.current) {
           inputRef.current.value = "";
@@ -150,6 +151,7 @@ const Stories = () => {
     if (res.status === 200) {
       fetchStories();
       setShowStory({
+        username: "",
         type: "",
         show: false,
         link: "",
@@ -159,6 +161,7 @@ const Stories = () => {
       sendNotification("success", res.data.message);
     } else {
       setShowStory({
+        username: "",
         type: "",
         show: false,
         link: "",
@@ -194,6 +197,7 @@ const Stories = () => {
                       className="h-20 w-20 sm:h-28 sm:w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300 cursor-pointer border-4 border-green-500"
                       onClick={() =>
                         setShowStory({
+                          username: personalStory.userId.name,
                           type: "PERSONAL",
                           show: true,
                           link: personalStory.image,
@@ -209,6 +213,7 @@ const Stories = () => {
                         size={25}
                         onClick={() =>
                           setShowStory({
+                            username: personalStory.userId.name,
                             type: "PERSONAL",
                             show: true,
                             link: "",
@@ -222,20 +227,22 @@ const Stories = () => {
                 </div>
               </>
             ) : (
-              <>
-                <div key={story?._id} className="h-48 flex__center">
-                  <div className="cursor-pointer h-20 w-20 sm:h-28 sm:w-28 rounded-full bg-white flex__center border-4 border-green-500">
-                    <FaPlus
-                      size={25}
-                      onClick={() => setShowModal(true)}
-                      className="hover:scale-110 transition-all duration-300 text-slate-600"
-                    />
-                  </div>
+              // add story ================
+
+              <div key={story?._id} className="h-48 flex__center">
+                <div className="cursor-pointer h-20 w-20 sm:h-28 sm:w-28 rounded-full bg-white flex__center border-4 border-green-500">
+                  <FaPlus
+                    size={25}
+                    onClick={() => setShowModal(true)}
+                    className="hover:scale-110 transition-all duration-300 text-slate-600"
+                  />
                 </div>
-                {/* <p className="text-center text-sm">Add Story</p> */}
-              </>
+                {/* <p className="text-xs text-center">@{authUser.name}</p> */}
+              </div>
             )}
           </div>
+
+          {/* story slider   =========================== */}
           <div
             className={` ${
               windowSize.width < 992
@@ -260,44 +267,56 @@ const Stories = () => {
                   image: string;
                   message: string;
                   createdAt: string;
+                  userId: {
+                    name: string;
+                  };
                 }) => {
                   return (
-                    <div
-                      key={story?._id}
-                      className="cursor-pointer h-44 relative"
-                      onClick={() =>
-                        setShowStory({
-                          type: "SOCIAL",
-                          show: true,
-                          link: story.image,
-                          message: story.message,
-                          postDate: story.createdAt,
-                        })
-                      }
-                    >
-                      {story.image ? (
-                        <img
-                          src={story.image}
-                          alt="story"
-                          className="h-20 w-20 sm:h-28 sm:w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300"
-                        />
-                      ) : (
-                        <div className="h-20 w-20 sm:h-28 sm:w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300 bg-white flex__center">
-                          <RiChatHistoryFill
-                            size={25}
-                            onClick={() =>
-                              setShowStory({
-                                type: "SOCIAL",
-                                show: true,
-                                link: "",
-                                message: personalStory.message,
-                                postDate: personalStory.createdAt,
-                              })
-                            }
+                    <>
+                      <div
+                        key={story?._id}
+                        className="cursor-pointer h-44 relative"
+                        onClick={() =>
+                          setShowStory({
+                            username: story.userId.name,
+                            type: "SOCIAL",
+                            show: true,
+                            link: story.image,
+                            message: story.message,
+                            postDate: story.createdAt,
+                          })
+                        }
+                      >
+                        {story.image ? (
+                          <img
+                            src={story.image}
+                            alt="story"
+                            className="h-20 w-20 sm:h-28 sm:w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300"
                           />
-                        </div>
-                      )}
-                    </div>
+                        ) : (
+                          // if my social story has no image then showing default icon
+
+                          <div className="h-20 w-20 sm:h-28 sm:w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300 bg-white flex__center">
+                            <RiChatHistoryFill
+                              size={25}
+                              onClick={() =>
+                                setShowStory({
+                                  username: personalStory.userId.name,
+                                  type: "SOCIAL",
+                                  show: true,
+                                  link: "",
+                                  message: personalStory.message,
+                                  postDate: personalStory.createdAt,
+                                })
+                              }
+                            />
+                          </div>
+                        )}
+                      </div>
+                      <p className="text-xs text-center">
+                        @{story.userId.name}
+                      </p>
+                    </>
                   );
                 }
               )}
@@ -385,6 +404,7 @@ const Stories = () => {
             className="text-white fixed top-10 right-10 cursor-pointer"
             onClick={() =>
               setShowStory({
+                username: "",
                 type: "",
                 show: false,
                 link: "",
@@ -394,12 +414,27 @@ const Stories = () => {
             }
           />
           <div className="w-[500px] flex  flex-col gap-y-5">
-            <p className="text-white text-center capitalize">
-              {showStory.message}
-            </p>
-            <p className="text-white text-center text-xs">
+            <div className="flex gap-x-8">
+              <h1 className="text-white text-center text-sm bg-red-600 min-w-[100px] px-5 py-2">
+                @{showStory.username}
+              </h1>
+              {showStory.type === "PERSONAL" ? (
+                <button
+                  className="bg-white text-black text-sm  py-2 rounded-lg px-4"
+                  onClick={() => handleDelteStory()}
+                >
+                  <MdDelete
+                    size={22}
+                    className="hover:scale-110 transition-all duration-300"
+                  />
+                </button>
+              ) : null}
+            </div>
+
+            <span className="text-white text-xs">
               {formattedDate(new Date(showStory.postDate))}
-            </p>
+            </span>
+            <p className="text-white capitalize">{showStory.message}</p>
 
             {showStory.link ? (
               <div className="h-[400px]">
@@ -410,17 +445,6 @@ const Stories = () => {
                 />
               </div>
             ) : null}
-
-            <div className="text-center">
-              {showStory.type === "PERSONAL" ? (
-                <button
-                  className="bg-white text-black text-sm px-5 py-2 rounded-lg w-32"
-                  onClick={() => handleDelteStory()}
-                >
-                  {isLoading ? "Loading..." : "Delete Story"}
-                </button>
-              ) : null}
-            </div>
           </div>
         </div>
       ) : null}
