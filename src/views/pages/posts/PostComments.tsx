@@ -10,7 +10,9 @@ const PostComments = () => {
 
   const fetchPostComments = async () => {
     setIsLoading(true);
-    let res = await api.get(`/posts/${postId}/comments`);
+    let res = await api.get(
+      `https://jsonplaceholder.typicode.com/posts/${postId}/comments`
+    );
 
     if (res?.status === 200) {
       setComments(res?.data);

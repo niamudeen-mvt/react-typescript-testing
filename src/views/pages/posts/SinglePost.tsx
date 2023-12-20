@@ -16,20 +16,19 @@ const SinglePost = () => {
 
   const { postId, handlePostId, handleShowPost, handleContentTitle } =
     usePost();
-
   const { isThemeLight } = useTheme();
 
-  // FETCHING SINGLE POST ================
   const fetchSinglePost = async () => {
     setIsLoading(true);
-    let res = await api.get(`/posts/${postId}`);
+    let res = await api.get(
+      `https://jsonplaceholder.typicode.com/posts/${postId}`
+    );
     if (res?.status === 200) {
       setPost(res?.data);
     }
     setIsLoading(false);
   };
 
-  // USEEFFECT ON FIRST RENDER ===================
   useEffect(() => {
     fetchSinglePost();
   }, []);
