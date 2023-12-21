@@ -129,7 +129,8 @@ const QuizPage = () => {
       setResult({
         result: rightAnswersList.length,
         total: quizQuestions?.length,
-        attempted: answersList.length,
+        attempted: answersList?.filter((answer) => answer !== undefined)
+          ?.length,
         unattempted: quizQuestions.length - answersList?.length,
         right: rightAnswersList.length,
       });
@@ -219,12 +220,12 @@ const QuizPage = () => {
               Result: {result?.result}/{result?.total}
             </h1>
             <p>Total questions: {result?.total}</p>
-            <p>Attempted Questions {result?.attempted}</p>
+            <p>Attempted Questions: {result?.attempted}</p>
             <p>
-              Unattempted Quesitons
+              Unattempted Quesitons:{`  `}
               {result?.unattempted}
             </p>
-            <p>Right Questions {result?.right}</p>
+            <p>Right Questions: {result?.right}</p>
             <CustomButton text="Reset" onClick={handleReset} />
           </div>
         )}
