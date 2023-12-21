@@ -6,6 +6,7 @@ import { getStories } from "../../services/api/user";
 import PostStory from "./PostStory";
 import Story from "./Story";
 import StorySection from "./StorySection";
+import { TStory2 } from "../../utils/types";
 
 type TStory = {
   username?: string;
@@ -28,6 +29,15 @@ const Stories = () => {
     type: "",
     show: false,
     link: "",
+    message: "",
+    postDate: "",
+  });
+
+  const [showStory2, setShowStory2] = useState<TStory2>({
+    username: "",
+    type: "",
+    show: false,
+    images: [],
     message: "",
     postDate: "",
   });
@@ -63,6 +73,7 @@ const Stories = () => {
             stories={stories}
             setShowStory={setShowStory}
             setShowModal={setShowModal}
+            setShowStory2={setShowStory2}
           />
         )}
       </section>
@@ -89,6 +100,7 @@ const Stories = () => {
           showStory={showStory}
           setShowStory={setShowStory}
           fetchStories={fetchStories}
+          setShowStory2={setShowStory2}
         />
       ) : null}
     </>

@@ -7,6 +7,7 @@ import PostsContainer from "../views/pages/posts";
 import TaskPage from "../views/pages/tasks";
 import LayoutRoute from "../components/layout/LayoutRoute";
 import ProtectedRoutes from "../routes/ProtectedRoutes";
+import QuizPage from "../views/pages/quiz";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ export const router = createBrowserRouter([
             path: "gallery",
             element: <GalleryPage />,
           },
+          {
+            path: "quiz",
+            element: <QuizPage />,
+          },
         ],
       },
       {
@@ -72,6 +77,12 @@ export const MENU_ITEMS = [
     path: "/tasks",
     type: "protected",
     element: <TaskPage />,
+  },
+  {
+    id: "quiz",
+    path: "/quiz",
+    type: "protected",
+    element: <QuizPage />,
   },
   {
     id: "posts",

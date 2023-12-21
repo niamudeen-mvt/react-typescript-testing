@@ -12,3 +12,11 @@ export const daysOfWeek = [
   { label: "Friday", value: "Fri" },
   { label: "Saturday", value: "Sat" },
 ];
+
+// quiz constants ================================
+
+export const quizCategories = [
+  { id: 1, name: "HTML" },
+  { id: 2, name: "CSS" },
+  { id: 3, name: "Javascript" },
+];

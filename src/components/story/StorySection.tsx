@@ -6,6 +6,7 @@ import { FaPlus } from "react-icons/fa";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { TStory2 } from "../../utils/types";
 
 type TStory = {
   username?: string;
@@ -20,9 +21,15 @@ interface IProps {
   stories: never[];
   setShowStory: React.Dispatch<React.SetStateAction<TStory>>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowStory2: React.Dispatch<React.SetStateAction<TStory2>>;
 }
 
-const StorySection = ({ stories, setShowModal, setShowStory }: IProps) => {
+const StorySection = ({
+  stories,
+  setShowModal,
+  setShowStory,
+  setShowStory2,
+}: IProps) => {
   const windowSize = useWindowSize();
   const { authUser } = useAuth();
 
