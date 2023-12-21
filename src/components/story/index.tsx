@@ -50,6 +50,8 @@ const Stories = () => {
     setIsLoading(false);
   };
 
+  console.log(stories, "stories");
+
   return (
     <>
       {/* story section */}
