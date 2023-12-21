@@ -34,7 +34,7 @@ export const router = createBrowserRouter([
             element: <TaskPage />,
           },
           {
-            path: "post",
+            path: "posts",
             element: <PostsContainer />,
           },
           {

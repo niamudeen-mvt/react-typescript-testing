@@ -7,25 +7,11 @@ import { sendNotification } from "../../../utils/notifications";
 import CustomModal from "../../../components/layout/CustomModal";
 import { LuAlarmClock } from "react-icons/lu";
 import { QUIZ_TIME } from "../../../utils/constants";
-
-type TActiveQuestionType = {
-  question: string;
-  answer: string;
-  options: string[];
-};
-
-type TAnswerList = {
-  id: number;
-  answer: string;
-};
-
-type TQuizResullt = {
-  result: number;
-  total: number;
-  attempted: number;
-  unattempted: number;
-  right: number;
-};
+import {
+  TActiveQuestionType,
+  TAnswerList,
+  TQuizResullt,
+} from "../../../utils/types";
 
 const QuizPage = () => {
   const [quizCategory, setQuizCategory] = useState("");

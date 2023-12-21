@@ -6,3 +6,24 @@ export type TStory2 = {
   message: string;
   postDate: string;
 };
+
+// quiz seciton =================
+
+export type TActiveQuestionType = {
+  question: string;
+  answer: string;
+  options: string[];
+};
+
+export type TAnswerList = {
+  id: number;
+  answer: string;
+};
+
+export type TQuizResullt = {
+  result: number;
+  total: number;
+  attempted: number;
+  unattempted: number;
+  right: number;
+};

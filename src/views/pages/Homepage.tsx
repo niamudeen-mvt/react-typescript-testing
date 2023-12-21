@@ -2,7 +2,7 @@ import ReactTyped from "react-typed";
 import { Link } from "react-router-dom";
 import ThemeContainer from "../../components/layout/ThemeContainer";
 import { useAuth } from "../../context/authContext";
-import Stories from "../../components/story";
+// import Stories from "../../components/story";
 
 const Homepage = () => {
   const { isLoggedIn, authUser } = useAuth();
@@ -10,7 +10,7 @@ const Homepage = () => {
     <ThemeContainer themeCenter={isLoggedIn ? false : true}>
       {isLoggedIn ? (
         <div className="flex flex-col">
-          <Stories />
+          {/* <Stories /> */}
           <section>
             <div className="text-center flex flex-col gap-y-5">
               <h1 className="text-4xl sm:text-5xl font-semibold text-white">
