@@ -20,3 +20,5 @@ export const quizCategories = [
   { id: 2, name: "CSS" },
   { id: 3, name: "Javascript" },
 ];
+
+export const QUIZ_TIME = 5;
