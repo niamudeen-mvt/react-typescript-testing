@@ -163,16 +163,6 @@ const TaskPage = () => {
   return (
     <ThemeContainer themeCenter={true}>
       <div className="py-32">
-        <h1 className="text-2xl sm:text-5xl mb-20 text-white font-semibold text-center capitalize z-10">
-          Welcome {authUser?.name} to{" "}
-          <ReactTyped
-            strings={["Taskify"]}
-            typeSpeed={100}
-            loop
-            className="z-10"
-          />
-        </h1>
-
         <form onSubmit={handleAddTask} className="flex gap-6 mb-10 w-full">
           <input
             type="text"

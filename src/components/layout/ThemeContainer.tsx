@@ -12,7 +12,7 @@ const ThemeContainer = ({ children, isCenter, themeCenter }: Props) => {
   const { isThemeLight, setIsThemeLight } = useTheme();
   return (
     <section
-      className={`min-h-screen ${themeCenter ? "flex__center" : ""} ${
+      className={`min-h-screen w-full ${themeCenter ? "flex__center" : ""} ${
         isThemeLight ? "bg-slate-500" : "dark__mode"
       }`}
     >

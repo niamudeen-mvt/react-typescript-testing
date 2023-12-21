@@ -82,7 +82,7 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="text-white border p-10 rounded-md relative "
+      className="text-white border p-10 rounded-md relative"
     >
       <div className="form-control mb-6 flex flex-col">
         <label className="mb-4">Message</label>
