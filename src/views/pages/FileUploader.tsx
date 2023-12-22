@@ -145,6 +145,7 @@ const FileUploader = ({
             </button>
           </Link>
           <button
+            disabled
             className="bg-white text-black px-10 py-2 my-5 rounded-lg"
             onClick={handleUpload}
           >
