@@ -5,28 +5,13 @@ import { useAuth } from "../../context/authContext";
 import Stories from "../../components/story";
 
 const Homepage = () => {
-  const { isLoggedIn, authUser } = useAuth();
+  const { isLoggedIn } = useAuth();
   return (
-    <ThemeContainer themeCenter={true}>
+    <ThemeContainer themeCenter={isLoggedIn ? false : true}>
       {isLoggedIn ? (
-        <div>
+        <section className="py-32">
           <Stories />
-          <section>
-            <div className="text-center flex flex-col gap-y-5">
-              <h1 className="text-4xl sm:text-5xl font-semibold text-white">
-                Welcome {authUser?.name} to
-                {` `}
-                <ReactTyped strings={[`Taskfiy`]} typeSpeed={200} loop />
-              </h1>
-              <p>Ready to create your task list for today. !!!!!!!</p>
-              <Link to="/tasks">
-                <button className="bg-slate-700 px-12 py-4 text-white rounded-lg hover:bg-slate-600">
-                  Go to tasks
-                </button>
-              </Link>
-            </div>
-          </section>
-        </div>
+        </section>
       ) : (
         <div className="text-center">
           <h1 className="text-4xl sm:text-5xl font-semibold mb-10 text-white">

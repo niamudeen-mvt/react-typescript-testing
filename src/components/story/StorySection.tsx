@@ -6,13 +6,14 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { TShowStoryType2, TStoryType } from "../../utils/types";
+import { useTheme } from "../../context/themeContext";
 
 interface IProps {
-  stories: never[];
+  stories: TStoryType[];
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   setShowStory2: React.Dispatch<React.SetStateAction<TShowStoryType2>>;
-  PERSONAL: TStoryType;
-  SOCIAL: any;
+  PERSONAL: TStoryType | undefined;
+  SOCIAL: TStoryType[];
 }
 
 const StorySection = ({
@@ -22,8 +23,9 @@ const StorySection = ({
   SOCIAL,
 }: IProps) => {
   const windowSize = useWindowSize();
+  const { isThemeLight } = useTheme();
 
-  var settings = {
+  const settings = {
     dots: false,
     infinite: true,
     speed: 500,
@@ -51,8 +53,6 @@ const StorySection = ({
     ],
   };
 
-  console.log(PERSONAL);
-
   return (
     <div className={`grid grid-cols-2 lg:grid-cols-12 gap-5 lg:gap-10`}>
       {/* personal story ================== */}
@@ -77,11 +77,13 @@ const StorySection = ({
                     isShow: true,
                   })
                 }
+                color="black"
               />
               <span className="absolute right-0 top-14 bg-white rounded-full p-1 border-black border-2">
                 <FaPlus
                   onClick={() => setShowModal(true)}
                   className="text-xs"
+                  color="black"
                 />
               </span>
             </div>
@@ -96,7 +98,7 @@ const StorySection = ({
               <FaPlus
                 size={25}
                 onClick={() => setShowModal(true)}
-                className="hover:scale-110 transition-all duration-300 text-slate-600"
+                className="hover:scale-110 transition-all duration-300 text-slate-60"
               />
             </div>
             <p className="text-white text-xs text-center">
@@ -126,7 +128,7 @@ const StorySection = ({
       >
         <Slider {...settings}>
           {SOCIAL
-            ? SOCIAL.map((obj: any, i: number) => {
+            ? SOCIAL.map((obj: TStoryType, i: number) => {
                 return (
                   <div
                     className="h-48 cursor-pointer flex__center flex-col add__story"
@@ -142,6 +144,7 @@ const StorySection = ({
                             isShow: true,
                           })
                         }
+                        color="black"
                       />
                     </div>
                     <p className="text-xs text-center text-white">

@@ -5,20 +5,25 @@ import { Link } from "react-router-dom";
 import { FILE_VALIDATION } from "../../utils/constants";
 import { useTheme } from "../../context/themeContext";
 import FileValidationBox from "../shared/FileValidationBox";
+import { TStoryDetails } from "../../utils/types";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../store";
+import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 
 interface IProps {
-  story: {
-    message: string;
-    image: string;
-  };
+  story: TStoryDetails;
   setShowModal: React.Dispatch<SetStateAction<boolean>>;
   fetchStories: () => Promise<void>;
-  setStory: React.Dispatch<any>;
+  setStory: React.Dispatch<SetStateAction<TStoryDetails>>;
 }
 
 const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { isThemeLight } = useTheme();
+
+  const isLoading = useSelector((state: RootState) => state.loading.isLoading);
+  const dispatch = useDispatch();
+
   // uploading image ======================
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event?.target.files) {
@@ -53,6 +58,7 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
   // posting story =================
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    dispatch(startLoading());
     if (story?.message) {
       const formData = new FormData();
       if (story.image) {
@@ -77,6 +83,7 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
       setShowModal(true);
       sendNotification("warning", "Message field is required");
     }
+    dispatch(stopLoading());
   };
 
   return (
@@ -108,8 +115,9 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
       <button
         type="submit"
         className="mb-6 bg-white text-black px-7 py-2 rounded-lg border w-full text-sm mt-8 hover:bg-white/90 transition-all duration-300"
+        disabled={isLoading}
       >
-        Submit
+        {isLoading ? "posting......" : "Submit"}
       </button>
       <Link to="/">
         <button

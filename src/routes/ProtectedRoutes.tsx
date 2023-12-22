@@ -11,15 +11,11 @@ const ProtectedRoutes = () => {
   const routeName = useLocation().pathname;
   const navigate = useNavigate();
 
-  console.log(PUBLIC_ROUTES.includes(routeName), typeof routeName, isLoggedIn);
-
   useEffect(() => {
     if (PUBLIC_ROUTES.includes(routeName) && isLoggedIn) {
       navigate("/tasks");
     }
-  }, [routeName, isLoggedIn]);
-
-  console.log(routeName);
+  }, [routeName, isLoggedIn, navigate]);
 
   return <>{isLoggedIn ? <Outlet /> : <Homepage />}</>;
 };

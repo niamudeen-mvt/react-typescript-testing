@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import ReactTyped from "react-typed";
 import { v4 as uuidv4 } from "uuid";
 import { MdDelete } from "react-icons/md";
 import { IoMdThumbsUp } from "react-icons/io";
 import ActiveTasks from "./ActvieTask";
 import { sendNotification } from "../../../utils/notifications";
-import { useAuth } from "../../../context/authContext";
 import ThemeContainer from "../../../components/layout/ThemeContainer";
 import {
   DragDropContext,
@@ -24,7 +22,6 @@ interface ITask {
 const TaskPage = () => {
   const [tasks, setTasks] = useState<ITask[]>([]);
   const [completeTask, setCompleteTask] = useState<ITask[]>([]);
-  const { authUser } = useAuth();
   const [task, setTask] = useState({
     id: "",
     title: "",

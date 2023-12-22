@@ -10,10 +10,15 @@ import { deleteStory } from "../../services/api/user";
 import { useAuth } from "../../context/authContext";
 import { TShowStoryType2, TStoryType } from "../../utils/types";
 import defaultStory from "../../assets/images/default-story.avif";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { useDispatch } from "react-redux";
+import { startLoading, stopLoading } from "../../store/features/loadingSlice";
+import StoryLoader from "./StoryLoader";
 
 interface IProps {
-  PERSONAL: TStoryType;
-  SOCIAL: [];
+  PERSONAL: TStoryType | undefined;
+  SOCIAL: TStoryType[];
   showStory2: TShowStoryType2;
   fetchStories: () => Promise<void>;
   setShowStory2: React.Dispatch<React.SetStateAction<TShowStoryType2>>;
@@ -29,13 +34,13 @@ const Story = ({
   const [seconds, setSeconds] = useState(15);
   const { authUser } = useAuth();
 
+  const isLoading = useSelector((state: RootState) => state.loading.isLoading);
+  const dispatch = useDispatch();
+
   const STORIES =
     authUser._id === showStory2.userId
       ? PERSONAL
-      : SOCIAL.find(
-          (obj: { userId: { _id: string } }) =>
-            obj.userId._id === showStory2.userId
-        );
+      : SOCIAL.find((obj: TStoryType) => obj.userId._id === showStory2.userId);
 
   const settings = {
     dots: false,
@@ -53,6 +58,7 @@ const Story = ({
         userId: "",
         isShow: false,
       });
+      return;
     }
 
     const timer = setInterval(() => {
@@ -63,6 +69,7 @@ const Story = ({
   });
 
   const handleDelteStory = async (storyId: string) => {
+    dispatch(startLoading());
     let res = await deleteStory(storyId);
     if (res.status === 200) {
       fetchStories();
@@ -75,6 +82,7 @@ const Story = ({
       userId: "",
       isShow: false,
     });
+    dispatch(stopLoading());
   };
 
   return (
@@ -94,44 +102,48 @@ const Story = ({
         />
       </div>
 
-      <div className="bg-white w-full lg:w-1/2 ">
-        <Slider {...settings} className="bg-white">
-          {STORIES?.stories?.length &&
-            STORIES.stories.map((story) => {
-              return (
-                <div className="flex flex-col gap-y-5 border p-5 bg-white text-black">
-                  <div className="flex gap-x-8">
-                    <div className="flex justify-between items-center w-full">
-                      <h1 className="text-center text-sm">
-                        @{STORIES.userId.name}
-                      </h1>
-                      {showStory2.type === "PERSONAL" ? (
-                        <MdDelete
-                          size={22}
-                          className="hover:scale-125 transition-all duration-300 cursor-pointer"
-                          onClick={() => handleDelteStory(story._id)}
-                        />
-                      ) : null}
+      {isLoading ? (
+        <StoryLoader />
+      ) : (
+        <div className="bg-white w-full lg:w-1/2 ">
+          <Slider {...settings} className="bg-white">
+            {STORIES?.stories?.length &&
+              STORIES.stories.map((story) => {
+                return (
+                  <div className="flex flex-col gap-y-5 border p-5 bg-white text-black">
+                    <div className="flex gap-x-8">
+                      <div className="flex justify-between items-center w-full">
+                        <h1 className="text-center text-sm">
+                          @{STORIES.userId.name}
+                        </h1>
+                        {showStory2.type === "PERSONAL" ? (
+                          <MdDelete
+                            size={22}
+                            className="hover:scale-125 transition-all duration-300 cursor-pointer"
+                            onClick={() => handleDelteStory(story._id)}
+                          />
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
 
-                  {/* <span className=" text-xs">
+                    {/* <span className=" text-xs">
                     {formattedDate(new Date(STORIES.createdAt))}
                   </span> */}
 
-                  <div className="h-[400px]">
-                    <img
-                      src={story.image ? story.image : defaultStory}
-                      alt="story"
-                      className="w-full h-full object-contain"
-                    />
+                    <div className="h-[400px]">
+                      <img
+                        src={story.image ? story.image : defaultStory}
+                        alt="story"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <p className="text-sm capitalize">{story.message}</p>
                   </div>
-                  <p className="text-sm capitalize">{story.message}</p>
-                </div>
-              );
-            })}
-        </Slider>
-      </div>
+                );
+              })}
+          </Slider>
+        </div>
+      )}
     </div>
   );
 };

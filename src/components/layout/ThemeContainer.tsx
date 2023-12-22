@@ -16,7 +16,7 @@ const ThemeContainer = ({ children, isCenter, themeCenter }: Props) => {
         isThemeLight ? "bg-slate-500" : "dark__mode"
       }`}
     >
-      <div className={`custom__container ${isCenter ? "flex__center" : ""}`}>
+      <div className={`custom__container  ${isCenter ? "flex__center" : ""}`}>
         {children}
       </div>
       <div className="flex flex-col gap-4 fixed bottom-10 right-10">

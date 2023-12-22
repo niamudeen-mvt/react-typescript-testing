@@ -7,21 +7,14 @@ import PostStory from "./PostStory";
 import Story from "./Story";
 import StorySection from "./StorySection";
 import { useAuth } from "../../context/authContext";
-import { TShowStoryType2, TStoryType } from "../../utils/types";
-
-type TStory = {
-  username?: string;
-  type: string;
-  show: boolean;
-  link?: string | undefined;
-  message: string;
-  postDate: string;
-};
+import { TShowStoryType2, TStoryDetails, TStoryType } from "../../utils/types";
+import ReactTyped from "react-typed";
+import { Link } from "react-router-dom";
 
 const Stories = () => {
-  const [stories, setStories] = useState([]);
+  const [stories, setStories] = useState<TStoryType[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [story, setStory] = useState<any>({
+  const [story, setStory] = useState<TStoryDetails>({
     message: "",
     image: "",
   });
@@ -50,28 +43,39 @@ const Stories = () => {
     setIsLoading(false);
   };
 
-  const PERSONAL: any = stories?.find(
+  console.log(stories);
+
+  const PERSONAL: TStoryType | undefined = stories?.find(
     (story: TStoryType) => story.userId._id === authUser._id
   );
-  const SOCIAL: any = stories?.filter(
+  const SOCIAL: TStoryType[] = stories?.filter(
     (story: TStoryType) => story.userId._id !== authUser._id
   );
 
+  if (isLoading) return <CustomLoader />;
   return (
     <>
-      {/* story section */}
-      <section className="mb-32">
-        {isLoading ? (
-          <CustomLoader />
-        ) : (
-          <StorySection
-            stories={stories}
-            setShowModal={setShowModal}
-            setShowStory2={setShowStory2}
-            PERSONAL={PERSONAL}
-            SOCIAL={SOCIAL}
-          />
-        )}
+      <section className="mb-32 flex flex-col gap-y-32">
+        <StorySection
+          stories={stories}
+          setShowModal={setShowModal}
+          setShowStory2={setShowStory2}
+          PERSONAL={PERSONAL}
+          SOCIAL={SOCIAL}
+        />
+        <div className="text-center flex flex-col gap-y-5">
+          <h1 className="text-4xl sm:text-5xl font-semibold text-white">
+            Welcome {authUser?.name} to
+            {` `}
+            <ReactTyped strings={[`Taskfiy`]} typeSpeed={200} loop />
+          </h1>
+          <p>Ready to create your task list for today. !!!!!!!</p>
+          <Link to="/tasks">
+            <button className="bg-slate-700 px-12 py-4 text-white rounded-lg hover:bg-slate-600">
+              Go to tasks
+            </button>
+          </Link>
+        </div>
       </section>
 
       {/* story posting form */}
