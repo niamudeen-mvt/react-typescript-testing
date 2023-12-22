@@ -39,19 +39,20 @@ const QuizPage = () => {
 
   // quiz timer
   useEffect(() => {
-    let timer: string | number | NodeJS.Timeout | undefined;
+    let timer: NodeJS.Timeout;
 
     if (seconds === 0 && showQuizMenu && quizQuestions) {
       setShowModal(true);
       return;
-    } else if (showQuizMenu) {
-      if (seconds <= 0) return;
+    }
+    if (showQuizMenu && seconds > 0) {
+      // if (seconds <= 0) return;
       timer = setInterval(() => {
         setSeconds(seconds - 1);
       }, 1000);
     }
     return () => clearInterval(timer);
-  }, [activeQuestion, seconds, showQuizMenu, quizQuestions]);
+  }, [seconds, showQuizMenu, quizQuestions]);
 
   // showing quiz menu
   const handleShowQuizMenu = () => {
@@ -62,7 +63,6 @@ const QuizPage = () => {
       setShowQuizMenu(true);
       setSeconds(QUIZ_TIME);
       setQuestionNumber(1);
-
       setResult({
         result: 0,
         total: 0,
@@ -77,18 +77,23 @@ const QuizPage = () => {
   const handleSelectOption = (option: string) => {
     setSelectedOption(option);
 
-    const tempList = [...answersList];
-    tempList[questionNumber - 1] = { id: questionNumber, answer: option };
-    setAnswersList(tempList);
+    const isCorrectAnswer =
+      option.toLowerCase() === activeQuestion?.answer.toLowerCase();
+    const index = questionNumber - 1;
 
-    if (option.toLowerCase() === activeQuestion?.answer.toLowerCase()) {
-      if (rightAnswersList.length) {
+    setAnswersList((prevList) => {
+      const updatedList = [...prevList];
+      updatedList[index] = { id: questionNumber, answer: option };
+      return updatedList;
+    });
+
+    if (isCorrectAnswer) {
+      if (rightAnswersList?.length) {
         const index = questionNumber - 1;
 
         const tempList = [...rightAnswersList];
         tempList[index] = { id: questionNumber, answer: option };
 
-        console.log(tempList);
         setRightAnswersList(tempList);
       } else {
         setRightAnswersList([
@@ -99,9 +104,11 @@ const QuizPage = () => {
         ]);
       }
     } else {
-      const tempList = [...rightAnswersList];
-      tempList.splice(questionNumber - 1, 1);
-      setRightAnswersList(tempList);
+      setRightAnswersList((prevList) => {
+        const updatedList = [...prevList];
+        updatedList.splice(index, 1);
+        return updatedList;
+      });
     }
   };
 
@@ -110,17 +117,9 @@ const QuizPage = () => {
     setQuestionNumber(questionNumber + 1);
     setSelectedOption("");
 
-    if (quizQuestions?.length === questionNumber) {
-      console.log("last question");
-      setResult({
-        result: rightAnswersList.length,
-        total: quizQuestions?.length,
-        attempted: answersList?.filter((answer) => answer !== undefined)
-          ?.length,
-        unattempted: quizQuestions.length - answersList?.length,
-        right: rightAnswersList.length,
-      });
-      setQuizCategory("");
+    const isLastQuestion = quizQuestions?.length === questionNumber;
+    if (isLastQuestion) {
+      settingQuizResult();
     } else {
       setSeconds(QUIZ_TIME);
     }
@@ -135,10 +134,28 @@ const QuizPage = () => {
     setQuizCategory("");
   };
 
+  const settingQuizResult = () => {
+    if (quizQuestions) {
+      setResult({
+        result: rightAnswersList.length,
+        total: quizQuestions?.length,
+        attempted: answersList?.filter((answer) => answer !== undefined)
+          ?.length,
+        unattempted: quizQuestions.length - answersList?.length,
+        right: rightAnswersList.length,
+      });
+      setQuizCategory("");
+    }
+  };
+
   // continuing after quiz timer
   const handleContinuQuiz = () => {
-    setQuestionNumber(questionNumber + 1);
-    setSeconds(QUIZ_TIME);
+    const isLastQuestion = quizQuestions?.length === questionNumber;
+    if (isLastQuestion) {
+      settingQuizResult();
+    } else {
+      setQuestionNumber(questionNumber + 1);
+    }
     setShowModal(false);
   };
 
