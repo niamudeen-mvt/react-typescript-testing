@@ -6,7 +6,8 @@ import { getStories } from "../../services/api/user";
 import PostStory from "./PostStory";
 import Story from "./Story";
 import StorySection from "./StorySection";
-import { TStory2 } from "../../utils/types";
+import { useAuth } from "../../context/authContext";
+import { TShowStoryType2 } from "../../utils/types";
 
 type TStory = {
   username?: string;
@@ -32,17 +33,13 @@ const Stories = () => {
     message: "",
     postDate: "",
   });
-
-  const [showStory2, setShowStory2] = useState<TStory2>({
-    username: "",
+  const [showStory2, setShowStory2] = useState<TShowStoryType2>({
     type: "",
-    show: false,
-    images: [],
-    message: "",
-    postDate: "",
+    userId: "",
+    isShow: false,
   });
-
   const [isLoading, setIsLoading] = useState(false);
+  const { authUser } = useAuth();
 
   // fetching stories =====================
   useEffect(() => {
@@ -60,12 +57,19 @@ const Stories = () => {
     setIsLoading(false);
   };
 
-  console.log(stories, "stories");
+  const PERSONAL_STORIES = stories?.filter(
+    (story: { userId: { _id: string } }) => story.userId._id === authUser._id
+  );
+  const SOCIAL_STORIES = stories?.filter(
+    (story: { userId: { _id: string } }) => story.userId._id !== authUser._id
+  );
+
+  console.log(SOCIAL_STORIES);
 
   return (
     <>
       {/* story section */}
-      <section className="my-32">
+      <section className="mb-32">
         {isLoading ? (
           <CustomLoader />
         ) : (
@@ -95,12 +99,15 @@ const Stories = () => {
       ) : null}
 
       {/* full preview story */}
-      {showStory.show ? (
+      {showStory.show || showStory2.isShow ? (
         <Story
           showStory={showStory}
+          showStory2={showStory2}
           setShowStory={setShowStory}
-          fetchStories={fetchStories}
           setShowStory2={setShowStory2}
+          fetchStories={fetchStories}
+          PERSONAL_STORIES={PERSONAL_STORIES}
+          SOCIAL_STORIES={SOCIAL_STORIES}
         />
       ) : null}
     </>

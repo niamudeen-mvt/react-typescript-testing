@@ -6,7 +6,7 @@ import { FaPlus } from "react-icons/fa";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { TStory2 } from "../../utils/types";
+import { TShowStoryType2, TStory2, TStoryType } from "../../utils/types";
 
 type TStory = {
   username?: string;
@@ -21,14 +21,14 @@ interface IProps {
   stories: never[];
   setShowStory: React.Dispatch<React.SetStateAction<TStory>>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setShowStory2: React.Dispatch<React.SetStateAction<TStory2>>;
+  setShowStory2: React.Dispatch<React.SetStateAction<TShowStoryType2>>;
 }
 
 const StorySection = ({
+  setShowStory2,
   stories,
   setShowModal,
   setShowStory,
-  setShowStory2,
 }: IProps) => {
   const windowSize = useWindowSize();
   const { authUser } = useAuth();
@@ -40,6 +40,16 @@ const StorySection = ({
   const socialStories: any = stories?.filter(
     (story: { userId: string }) => story.userId !== authUser._id
   );
+
+  const PERSONAL_STORIES: TStoryType[] = stories?.filter(
+    (story: { userId: { _id: string } }) => story.userId._id === authUser._id
+  );
+  const SOCIAL_STORIES: TStoryType[] = stories?.filter(
+    (story: { userId: { _id: string } }) => story.userId._id !== authUser._id
+  );
+
+  console.log(PERSONAL_STORIES, "PERSONAL_STORIES");
+  console.log(SOCIAL_STORIES, "SOCIAL_STORIES");
 
   // story slider settings ================
 
@@ -72,49 +82,27 @@ const StorySection = ({
             : "col-span-2"
         }`}
       >
-        {personalStory ? (
-          <>
-            <div className="h-48 cursor-pointer relative">
-              {personalStory?.image ? (
-                <img
-                  src={personalStory?.image}
-                  alt="story"
-                  className="h-20 w-20 sm:h-28 sm:w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300 cursor-pointer border-4 border-green-500"
-                  onClick={() =>
-                    setShowStory({
-                      username: personalStory.userId.name,
-                      type: "PERSONAL",
-                      show: true,
-                      link: personalStory.image,
-                      message: personalStory.message,
-                      postDate: personalStory.createdAt,
-                    })
-                  }
-                />
-              ) : (
-                // if no story image added by user showing default image
-                <div className="h-20 w-20 sm:h-28 sm:w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300 bg-white flex__center border-4  border-green-500">
-                  <RiChatHistoryFill
-                    size={25}
-                    onClick={() =>
-                      setShowStory({
-                        username: personalStory.userId.name,
-                        type: "PERSONAL",
-                        show: true,
-                        link: "",
-                        message: personalStory.message,
-                        postDate: personalStory.createdAt,
-                      })
-                    }
-                  />
-                </div>
-              )}
-            </div>
-          </>
-        ) : (
-          // add story ================
+        {PERSONAL_STORIES.length > 0 && (
+          <div className="h-48 cursor-pointer flex__center flex-col">
+            <RiChatHistoryFill
+              size={25}
+              className="h-20 w-20 sm:h-28 sm:w-28 rounded-full hover:scale-110 transition-all duration-300 bg-white flex__center p-10 mb-3 border-4  border-green-500"
+              onClick={() =>
+                setShowStory2({
+                  type: "PERSONAL",
+                  userId: PERSONAL_STORIES[0].userId._id,
+                  isShow: true,
+                })
+              }
+            />
+            <p className="text-white text-xs text-center">
+              @{PERSONAL_STORIES[0]?.userId?.name}
+            </p>
+          </div>
+        )}
 
-          <div key={personalStory?._id} className="h-48 flex__center">
+        {PERSONAL_STORIES.length < 0 && (
+          <div className="h-48 flex__center">
             <div className="cursor-pointer h-20 w-20 sm:h-28 sm:w-28 rounded-full bg-white flex__center border-4 border-green-500">
               <FaPlus
                 size={25}
@@ -122,7 +110,6 @@ const StorySection = ({
                 className="hover:scale-110 transition-all duration-300 text-slate-600"
               />
             </div>
-            {/* <p className="text-xs text-center">@{authUser.name}</p> */}
           </div>
         )}
       </div>
@@ -145,66 +132,80 @@ const StorySection = ({
             : "col-span-10"
         }`}
       >
-        <Slider {...settings}>
-          {socialStories?.map(
-            (story: {
-              _id: string;
-              image: string;
-              message: string;
-              createdAt: string;
-              userId: {
-                name: string;
-              };
-            }) => {
-              return (
-                <>
-                  <div
-                    key={story?._id}
-                    className="cursor-pointer h-44 relative"
-                    onClick={() =>
-                      setShowStory({
-                        username: story.userId.name,
-                        type: "SOCIAL",
-                        show: true,
-                        link: story.image,
-                        message: story.message,
-                        postDate: story.createdAt,
-                      })
-                    }
-                  >
-                    {story.image ? (
-                      // if my social story has image
-                      <img
-                        src={story.image}
-                        alt="story"
-                        className="h-20 w-20 sm:h-28 sm:w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300"
-                      />
-                    ) : (
-                      // if my social story has no image then showing default icon
+        {SOCIAL_STORIES.length > 0 && (
+          <div className="h-48 cursor-pointer flex__center flex-col">
+            <RiChatHistoryFill
+              size={25}
+              className="h-20 w-20 sm:h-28 sm:w-28 rounded-full hover:scale-110 transition-all duration-300 bg-white flex__center p-11 mb-3"
+              onClick={() =>
+                setShowStory2({
+                  type: "SOCIAL",
+                  userId: SOCIAL_STORIES[0].userId._id,
+                  isShow: true,
+                })
+              }
+            />
+            <p className="text-xs text-center">
+              @{SOCIAL_STORIES[0].userId.name}
+            </p>
+          </div>
+        )}
+        {/* <Slider {...settings}>
+          {SOCIAL_STORIES?.map((story: TStoryType) => {
+            console.log(story);
+            return (
+              <>
+                <div
+                  key={story?._id}
+                  className="cursor-pointer h-44 relative"
+                  onClick={() =>
+                    setShowStory({
+                      username: story.userId.name,
+                      type: "SOCIAL",
+                      show: true,
+                      link: story.image,
+                      message: story.message,
+                      postDate: story.createdAt,
+                    })
+                  }
+                >
+                  {story.image ? (
+                    // if my social story has image
+                    <img
+                      src={story.image}
+                      alt="story"
+                      className="h-20 w-20 sm:h-28 sm:w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300"
+                    />
+                  ) : (
+                    // if my social story has no image then showing default icon
 
-                      <div className="h-20 w-20 sm:h-28 sm:w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300 bg-white flex__center">
-                        <RiChatHistoryFill
-                          size={25}
-                          onClick={() =>
-                            setShowStory({
-                              username: story.userId.name,
-                              type: "SOCIAL",
-                              show: true,
-                              link: "",
-                              message: story.message,
-                              postDate: story.createdAt,
-                            })
-                          }
-                        />
-                      </div>
-                    )}
-                  </div>
-                  <p className="text-xs text-center">@{story.userId.name}</p>
-                </>
-              );
-            }
-          )}
-        </Slider>
+                    <div className="h-20 w-20 sm:h-28 sm:w-28 rounded-full absolute top-1/4 left-1/4 hover:scale-110 transition-all duration-300 bg-white flex__center">
+                      <RiChatHistoryFill
+                        size={25}
+                        onClick={() => {
+                          setShowStory({
+                            username: story.userId.name,
+                            type: "SOCIAL",
+                            show: true,
+                            link: "",
+                            message: story.message,
+                            postDate: story.createdAt,
+                          });
+
+                          setShowStory2({
+                            isShow: true,
+                            userId: story.userId._id,
+                          });
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+                <p className="text-xs text-center">@{story.userId.name}</p>
+              </>
+            );
+          })}
+        </Slider> */}
       </div>
     </div>
   );
