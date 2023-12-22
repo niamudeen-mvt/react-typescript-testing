@@ -5,13 +5,15 @@ import quizMenu from "../../../utils/data.json";
 import CustomButton from "../../../components/shared/CustomButton";
 import { sendNotification } from "../../../utils/notifications";
 import CustomModal from "../../../components/layout/CustomModal";
-import { LuAlarmClock } from "react-icons/lu";
 import { QUIZ_TIME } from "../../../utils/constants";
+import QuizResult from "./QuizResult";
+import QuizStart from "./QuizStart";
 import {
   TActiveQuestionType,
   TAnswerList,
   TQuizResullt,
 } from "../../../utils/types";
+import { LuAlarmClock } from "react-icons/lu";
 
 const QuizPage = () => {
   const [quizCategory, setQuizCategory] = useState("");
@@ -21,7 +23,7 @@ const QuizPage = () => {
   const [selectedOption, setSelectedOption] = useState("");
   const [rightAnswersList, setRightAnswersList] = useState<TAnswerList[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [result, setResult] = useState<TQuizResullt>();
+  const [quizResult, setQuizResult] = useState<TQuizResullt | undefined>();
   const [seconds, setSeconds] = useState(QUIZ_TIME);
 
   // questions based on the quiz category
@@ -46,7 +48,6 @@ const QuizPage = () => {
       return;
     }
     if (showQuizMenu && seconds > 0) {
-      // if (seconds <= 0) return;
       timer = setInterval(() => {
         setSeconds(seconds - 1);
       }, 1000);
@@ -63,7 +64,7 @@ const QuizPage = () => {
       setShowQuizMenu(true);
       setSeconds(QUIZ_TIME);
       setQuestionNumber(1);
-      setResult({
+      setQuizResult({
         result: 0,
         total: 0,
         attempted: 0,
@@ -134,9 +135,10 @@ const QuizPage = () => {
     setQuizCategory("");
   };
 
+  // setting quiz result on last question
   const settingQuizResult = () => {
     if (quizQuestions) {
-      setResult({
+      setQuizResult({
         result: rightAnswersList.length,
         total: quizQuestions?.length,
         attempted: answersList?.filter((answer) => answer !== undefined)
@@ -155,6 +157,7 @@ const QuizPage = () => {
       settingQuizResult();
     } else {
       setQuestionNumber(questionNumber + 1);
+      setSeconds(QUIZ_TIME);
     }
     setShowModal(false);
   };
@@ -162,31 +165,21 @@ const QuizPage = () => {
   return (
     <ThemeContainer themeCenter={true} isCenter={true}>
       <div className="w-full h-full font-semibold text-white">
-        {!showQuizMenu ? (
-          // quiz section  ====================
-
+        {/* Quiz start ========================== */}
+        {!showQuizMenu && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="flex flex-col gap-y-5">
-              <h1 className="text-5xl leading-[60px]">
-                Welcome to the{` `}
-                <span className="text-black">Frontend Quiz!</span>
-              </h1>
-              <p className="text-sm font-normal">
-                Pick a subject to get started.
-              </p>
-            </div>
+            <QuizStart />
 
-            <div>
-              <QuizCategories
-                quizCategory={quizCategory}
-                setQuizCategory={setQuizCategory}
-                handleShowQuizMenu={handleShowQuizMenu}
-              />
-            </div>
+            <QuizCategories
+              quizCategory={quizCategory}
+              setQuizCategory={setQuizCategory}
+              handleShowQuizMenu={handleShowQuizMenu}
+            />
           </div>
-        ) : activeQuestion ? (
-          // quiz menu ==================
+        )}
 
+        {/* Quiz menu ========================= */}
+        {activeQuestion && showQuizMenu && (
           <div className="flex flex-col gap-5">
             <p className="text-white flex items-center gap-4">
               <LuAlarmClock size={22} /> 00:
@@ -214,28 +207,15 @@ const QuizPage = () => {
             </ul>
             <CustomButton text="Next" onClick={handleNext} />
           </div>
-        ) : (
-          // result menu ================================================
-          <div
-            className={`bg-green-600/50 py-32 flex__center flex-col gap-y-5`}
-          >
-            <h1 className="text-3xl">
-              Result: {result?.result}/{result?.total}
-            </h1>
-            <p>Total questions: {result?.total}</p>
-            <p>Attempted Questions: {result?.attempted}</p>
-            <p>
-              Unattempted Quesitons:{`  `}
-              {result?.unattempted}
-            </p>
-            <p>Right Questions: {result?.right}</p>
-            <CustomButton text="Reset" onClick={handleReset} />
-          </div>
+        )}
+
+        {/* Quiz result ================== */}
+        {!activeQuestion && showQuizMenu && (
+          <QuizResult quizResult={quizResult} handleReset={handleReset} />
         )}
       </div>
 
-      {/* timer alert ======================= */}
-      {showModal ? (
+      {showModal && (
         <CustomModal showModal={showModal}>
           <div className="max-w-[400px] w-full py-32 bg-white text-center rounded-lg shadow-xl shadow-slate-900/10">
             <p className="mb-3 text-red-600">You are out of time limit !!</p>
@@ -245,7 +225,7 @@ const QuizPage = () => {
             />
           </div>
         </CustomModal>
-      ) : null}
+      )}
     </ThemeContainer>
   );
 };
