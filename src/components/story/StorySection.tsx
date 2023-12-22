@@ -127,7 +127,6 @@ const StorySection = ({
         <Slider {...settings}>
           {SOCIAL
             ? SOCIAL.map((obj: any, i: number) => {
-                console.log(obj);
                 return (
                   <div
                     className="h-48 cursor-pointer flex__center flex-col add__story"

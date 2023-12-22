@@ -14,21 +14,21 @@ export const router = createBrowserRouter([
     element: <LayoutRoute />,
     children: [
       {
-        path: "/",
-        element: <Homepage />,
-      },
-      {
-        path: "/login",
-        element: <LoginPage />,
-      },
-      {
-        path: "/signup",
-        element: <SignupPage />,
-      },
-      {
-        path: "/",
+        path: "",
         element: <ProtectedRoutes />,
         children: [
+          {
+            path: "/",
+            element: <Homepage />,
+          },
+          {
+            path: "login",
+            element: <LoginPage />,
+          },
+          {
+            path: "signup",
+            element: <SignupPage />,
+          },
           {
             path: "tasks",
             element: <TaskPage />,
