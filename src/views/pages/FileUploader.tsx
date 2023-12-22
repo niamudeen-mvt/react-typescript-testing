@@ -133,6 +133,9 @@ const FileUploader = ({
             <p>Drag 'n' drop some files here, or click to select files</p>
           )}
         </div>
+        <p className="text-white">
+          Note: Image upload feature is disabled temporary*
+        </p>
         <FileValidationBox />
 
         <div className="flex gap-x-4">

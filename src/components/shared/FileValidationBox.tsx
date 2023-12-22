@@ -1,14 +1,11 @@
 const FileValidationBox = () => {
   return (
     <div>
-      <p className="text-white">
-        Note: Image upload feature is disabled temporary*
-      </p>
       <span className="text-sm">
-        Allowed JPG, JPEG, WEBP, PNG. Max file size 200KB.
+        Allowed JPG, JPEG, WEBP, PNG. Max file size 100KB.
       </span>
       <span className="text-sm">
-        If your upload image is larger than 200KB allowed, reduce the size of
+        If your upload image is larger than 100KB allowed, reduce the size of
         the image if you want to reduce the size of the image click this link.
       </span>
       {`  `}

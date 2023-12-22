@@ -97,10 +97,11 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
   //   dispatch(stopLoading());
   // };
 
+  console.log(story);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     dispatch(startLoading());
-    if (story?.message) {
+    if (story.message !== "") {
       let res = await postStories(story);
       if (res.status === 200) {
         fetchStories();
