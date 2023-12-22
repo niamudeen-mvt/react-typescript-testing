@@ -64,9 +64,9 @@ export const getStories = async (): Promise<any> => {
   }
 };
 
-export const deleteStory = async (): Promise<any> => {
+export const deleteStory = async (id: string): Promise<any> => {
   try {
-    let response = await api.delete(`/story/delete`);
+    let response = await api.delete(`/story/delete/${id}`);
     return response;
   } catch (error) {
     return error;

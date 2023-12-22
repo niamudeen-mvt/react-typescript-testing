@@ -1,15 +1,25 @@
 // story section
 
 export type TStoryType = {
-  _id?: string;
-  image: string;
   message: string;
-  createdAt: string;
+  stories: { message: string; image: string; _id: string }[];
   userId: {
     _id?: string;
     name: string;
   };
+  createdAt: string;
 };
+
+// export type TStoryType = {
+//   _id?: string;
+//   image: string;
+//   message: string;
+//   createdAt: string;
+//   userId: {
+//     _id?: string;
+//     name: string;
+//   };
+// };
 
 export type TShowStoryType2 = {
   type: string;

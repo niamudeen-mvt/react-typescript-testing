@@ -53,7 +53,6 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
   // posting story =================
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     if (story?.message) {
       const formData = new FormData();
       if (story.image) {
@@ -79,6 +78,7 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
       sendNotification("warning", "Message field is required");
     }
   };
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -107,7 +107,7 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
       <FileValidationBox />
       <button
         type="submit"
-        className="mb-6 bg-white text-black px-7 py-2 rounded-lg border w-full text-sm mt-8"
+        className="mb-6 bg-white text-black px-7 py-2 rounded-lg border w-full text-sm mt-8 hover:bg-white/90 transition-all duration-300"
       >
         Submit
       </button>

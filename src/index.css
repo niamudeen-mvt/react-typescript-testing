@@ -38,3 +38,7 @@ body {
 .dark__mode {
   @apply bg-black text-white;
 }
+
+.add__story {
+  display: flex !important;
+}

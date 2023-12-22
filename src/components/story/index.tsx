@@ -7,7 +7,7 @@ import PostStory from "./PostStory";
 import Story from "./Story";
 import StorySection from "./StorySection";
 import { useAuth } from "../../context/authContext";
-import { TShowStoryType2 } from "../../utils/types";
+import { TShowStoryType2, TStoryType } from "../../utils/types";
 
 type TStory = {
   username?: string;
@@ -57,14 +57,12 @@ const Stories = () => {
     setIsLoading(false);
   };
 
-  const PERSONAL_STORIES = stories?.filter(
-    (story: { userId: { _id: string } }) => story.userId._id === authUser._id
+  const PERSONAL: any = stories?.find(
+    (story: TStoryType) => story.userId._id === authUser._id
   );
-  const SOCIAL_STORIES = stories?.filter(
-    (story: { userId: { _id: string } }) => story.userId._id !== authUser._id
+  const SOCIAL: any = stories?.filter(
+    (story: TStoryType) => story.userId._id !== authUser._id
   );
-
-  console.log(SOCIAL_STORIES);
 
   return (
     <>
@@ -78,6 +76,8 @@ const Stories = () => {
             setShowStory={setShowStory}
             setShowModal={setShowModal}
             setShowStory2={setShowStory2}
+            PERSONAL={PERSONAL}
+            SOCIAL={SOCIAL}
           />
         )}
       </section>
@@ -106,8 +106,8 @@ const Stories = () => {
           setShowStory={setShowStory}
           setShowStory2={setShowStory2}
           fetchStories={fetchStories}
-          PERSONAL_STORIES={PERSONAL_STORIES}
-          SOCIAL_STORIES={SOCIAL_STORIES}
+          PERSONAL={PERSONAL}
+          SOCIAL={SOCIAL}
         />
       ) : null}
     </>
