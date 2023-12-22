@@ -14,7 +14,7 @@ const Homepage = () => {
           <section>
             <div className="text-center flex flex-col gap-y-5">
               <h1 className="text-4xl sm:text-5xl font-semibold text-white">
-                Welcome {authUser?.name}
+                Welcome {authUser?.name} to
                 {` `}
                 <ReactTyped strings={[`Taskfiy`]} typeSpeed={200} loop />
               </h1>

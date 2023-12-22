@@ -7,18 +7,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { TShowStoryType2, TStoryType } from "../../utils/types";
 
-type TStory = {
-  username?: string;
-  type: string;
-  show: boolean;
-  link?: string | undefined;
-  message: string;
-  postDate: string;
-};
-
 interface IProps {
   stories: never[];
-  setShowStory: React.Dispatch<React.SetStateAction<TStory>>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   setShowStory2: React.Dispatch<React.SetStateAction<TShowStoryType2>>;
   PERSONAL: TStoryType;
@@ -61,6 +51,8 @@ const StorySection = ({
     ],
   };
 
+  console.log(PERSONAL);
+
   return (
     <div className={`grid grid-cols-2 lg:grid-cols-12 gap-5 lg:gap-10`}>
       {/* personal story ================== */}
@@ -73,9 +65,9 @@ const StorySection = ({
             : "col-span-2"
         }`}
       >
-        {PERSONAL ? (
+        {PERSONAL?.stories?.length ? (
           <div className="h-48 cursor-pointer flex__center flex-col">
-            <div className="h-20 w-20 rounded-full hover:scale-110 transition-all duration-300 bg-white flex__center mb-3 border-4  border-green-500">
+            <div className="h-20 w-20 rounded-full hover:scale-110 transition-all duration-300 bg-white flex__center mb-3 border-4  border-green-500 relative">
               <RiChatHistoryFill
                 size={25}
                 onClick={() =>
@@ -86,6 +78,12 @@ const StorySection = ({
                   })
                 }
               />
+              <span className="absolute right-0 top-14 bg-white rounded-full p-1 border-black border-2">
+                <FaPlus
+                  onClick={() => setShowModal(true)}
+                  className="text-xs"
+                />
+              </span>
             </div>
             <p className="text-white text-xs text-center">
               @{PERSONAL?.userId?.name}
@@ -93,14 +91,17 @@ const StorySection = ({
           </div>
         ) : (
           // adding story
-          <div className="h-48 flex__center">
-            <div className="cursor-pointer h-20 w-20  rounded-full bg-white flex__center border-4 border-green-500">
+          <div className="h-48 flex__center flex-col">
+            <div className="cursor-pointer h-20 w-20  rounded-full bg-white flex__center border-4 border-slate-600 mb-3">
               <FaPlus
                 size={25}
                 onClick={() => setShowModal(true)}
                 className="hover:scale-110 transition-all duration-300 text-slate-600"
               />
             </div>
+            <p className="text-white text-xs text-center">
+              @{PERSONAL?.userId?.name}
+            </p>
           </div>
         )}
       </div>
@@ -144,7 +145,9 @@ const StorySection = ({
                         }
                       />
                     </div>
-                    <p className="text-xs text-center">@{obj.userId.name}</p>
+                    <p className="text-xs text-center text-white">
+                      @{obj.userId.name}
+                    </p>
                   </div>
                 );
               })

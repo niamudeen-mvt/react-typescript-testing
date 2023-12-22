@@ -25,14 +25,7 @@ const Stories = () => {
     message: "",
     image: "",
   });
-  const [showStory, setShowStory] = useState<TStory>({
-    username: "",
-    type: "",
-    show: false,
-    link: "",
-    message: "",
-    postDate: "",
-  });
+
   const [showStory2, setShowStory2] = useState<TShowStoryType2>({
     type: "",
     userId: "",
@@ -73,7 +66,6 @@ const Stories = () => {
         ) : (
           <StorySection
             stories={stories}
-            setShowStory={setShowStory}
             setShowModal={setShowModal}
             setShowStory2={setShowStory2}
             PERSONAL={PERSONAL}
@@ -99,11 +91,9 @@ const Stories = () => {
       ) : null}
 
       {/* full preview story */}
-      {showStory.show || showStory2.isShow ? (
+      {showStory2.isShow ? (
         <Story
-          showStory={showStory}
           showStory2={showStory2}
-          setShowStory={setShowStory}
           setShowStory2={setShowStory2}
           fetchStories={fetchStories}
           PERSONAL={PERSONAL}
