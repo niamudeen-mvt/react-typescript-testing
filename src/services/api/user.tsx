@@ -41,14 +41,23 @@ export const deleteImage = async (id: string): Promise<any> => {
   }
 };
 
-export const postStories = async (body: FormData): Promise<any> => {
+// export const postStories = async (body: FormData): Promise<any> => {
+//   try {
+//     let response = await api.post(`/story/post`, body, {
+//       headers: {
+//         Accept: "application/json",
+//         "Content-Type": "multipart/form-data",
+//       },
+//     });
+//     return response;
+//   } catch (error) {
+//     return error;
+//   }
+// };
+
+export const postStories = async (body: any): Promise<any> => {
   try {
-    let response = await api.post(`/story/post`, body, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    let response = await api.post(`/story/post`, body);
     return response;
   } catch (error) {
     return error;

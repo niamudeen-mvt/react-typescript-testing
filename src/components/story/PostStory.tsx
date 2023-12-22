@@ -47,25 +47,61 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
         FILE_VALIDATION.ALLOWED_IMAGES.includes(file.type) &&
         file.size < FILE_VALIDATION.MAX_FILE_SIZE
       ) {
-        setStory({
-          ...story,
-          image: file,
-        });
+        // setStory({
+        //   ...story,
+        //   image: file,
+        // });
+
+        const reader = new FileReader();
+
+        reader.onload = function (event: any) {
+          setStory({
+            ...story,
+            image: event.target.result,
+          });
+        };
+
+        reader.readAsDataURL(file);
       }
     }
   };
 
   // posting story =================
+  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   dispatch(startLoading());
+  //   if (story?.message) {
+  //     const formData = new FormData();
+  //     if (story.image) {
+  //       formData.append("image", story.image);
+  //     }
+  //     formData.append("message", story.message);
+  //     let res = await postStories(formData);
+  //     if (res.status === 200) {
+  //       fetchStories();
+  //       setShowModal(false);
+  //       sendNotification("success", res.data.message);
+  //       if (inputRef.current) {
+  //         inputRef.current.value = "";
+  //       }
+  //     } else {
+  //       sendNotification("error", res?.response?.data?.message);
+  //       if (inputRef.current) {
+  //         inputRef.current.value = "";
+  //       }
+  //     }
+  //   } else {
+  //     setShowModal(true);
+  //     sendNotification("warning", "Message field is required");
+  //   }
+  //   dispatch(stopLoading());
+  // };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     dispatch(startLoading());
     if (story?.message) {
-      const formData = new FormData();
-      if (story.image) {
-        formData.append("image", story.image);
-      }
-      formData.append("message", story.message);
-      let res = await postStories(formData);
+      let res = await postStories(story);
       if (res.status === 200) {
         fetchStories();
         setShowModal(false);
