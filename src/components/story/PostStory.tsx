@@ -109,7 +109,7 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
           className="border py-2 rounded-md px-2"
           onChange={handleChange}
           ref={inputRef}
-          disabled
+          // disabled
         />
       </div>
       <FileValidationBox />
