@@ -6,7 +6,6 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { TShowStoryType2, TStoryType } from "../../utils/types";
-import { useTheme } from "../../context/themeContext";
 
 interface IProps {
   stories: TStoryType[];

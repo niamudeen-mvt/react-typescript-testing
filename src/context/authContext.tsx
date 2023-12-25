@@ -7,7 +7,7 @@ type AuthStateTypes = {
   userLogout: () => void;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   authUser: {
-    _id?: string;
+    _id?: any;
     name: string;
   };
 };

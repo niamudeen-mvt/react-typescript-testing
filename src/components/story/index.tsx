@@ -101,6 +101,7 @@ const Stories = () => {
           fetchStories={fetchStories}
           PERSONAL={PERSONAL}
           SOCIAL={SOCIAL}
+          setStories={setStories}
         />
       ) : null}
     </>

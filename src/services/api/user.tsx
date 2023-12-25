@@ -99,3 +99,21 @@ export const deleteUploadcareImg = async (fileId: string): Promise<any> => {
     return error;
   }
 };
+
+export const likeStory = async (body: any): Promise<any> => {
+  try {
+    let response = await api.patch(`/story/likes`, body);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const storyViews = async (body: any): Promise<any> => {
+  try {
+    let response = await api.patch(`/story/views`, body);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};

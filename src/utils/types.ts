@@ -7,7 +7,7 @@ export type TStoryDetails = {
 
 export type TStoryType = {
   message: string;
-  stories: { message: string; image: string; _id: string }[];
+  stories: { message: string; image: string; _id: string; likes: string[] }[];
   userId: {
     _id?: string;
     name: string;
