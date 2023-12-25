@@ -5,22 +5,22 @@ import "slick-carousel/slick/slick-theme.css";
 import { IoClose } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { sendNotification } from "../../utils/notifications";
-// import { formattedDate } from "../../utils/helper";
 import { useAuth } from "../../context/authContext";
+import { formattedDate } from "../../utils/helper";
 import { TShowStoryType2, TStoryType } from "../../utils/types";
 import defaultStory from "../../assets/images/default-story.avif";
 import { FaHeart } from "react-icons/fa6";
-import { useDispatch } from "react-redux";
-import { startLoading, stopLoading } from "../../store/features/loadingSlice";
+import { IoIosArrowForward } from "react-icons/io";
 import { GoHeart } from "react-icons/go";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { RootState } from "../../store";
 import {
   deleteStory,
   deleteUploadcareImg,
   likeStory,
 } from "../../services/api/user";
-import { FiEye } from "react-icons/fi";
+
 interface IProps {
   PERSONAL: TStoryType | undefined;
   SOCIAL: TStoryType[];
@@ -38,7 +38,7 @@ const Story = ({
   setShowStory2,
   setStories,
 }: IProps) => {
-  const [seconds, setSeconds] = useState(15);
+  const [seconds, setSeconds] = useState(30);
   const { authUser } = useAuth();
   const [showLikes, setShowLikes] = useState(false);
 
@@ -49,6 +49,8 @@ const Story = ({
     authUser._id === showStory2.userId
       ? PERSONAL
       : SOCIAL.find((obj: TStoryType) => obj.userId._id === showStory2.userId);
+
+  // slider settings
 
   const settings = {
     dots: false,
@@ -138,19 +140,20 @@ const Story = ({
         <Slider {...settings} className="bg-white">
           {STORIES?.stories?.length &&
             STORIES.stories.map((story) => {
-              console.log(story);
-
+              // checking if story is already liked
               const isAlreadyLiked = story.likes
                 .map((e: any) => e.userId)
                 .includes(authUser._id);
               return (
                 <div className="flex flex-col gap-y-5  p-5 bg-white text-black relative">
+                  {/* story details */}
                   <>
                     <div className="flex justify-between items-center w-full">
                       <h1 className="text-center text-sm">
                         @{STORIES.userId.name}
                       </h1>
                       <div className="flex gap-x-6">
+                        {/* like secton */}
                         <span className="text-sm flex items-center gap-4">
                           {story.likes.length ? (
                             <button
@@ -177,14 +180,16 @@ const Story = ({
                             </button>
                           )}
                         </span>
+
                         {story.likes.length > 0 && (
-                          <FiEye
+                          <IoIosArrowForward
                             size={22}
                             onClick={() => setShowLikes(!showLikes)}
                             className="cursor-pointer"
                           />
                         )}
 
+                        {/* delete section */}
                         {showStory2.type === "PERSONAL" ? (
                           <MdDelete
                             size={22}
@@ -197,9 +202,9 @@ const Story = ({
                       </div>
                     </div>
 
-                    {/* <span className=" text-xs">
-                        {formattedDate(new Date(STORIES.createdAt))}
-                      </span> */}
+                    <span className=" text-xs">
+                      {formattedDate(new Date(story.createdAt))}
+                    </span>
 
                     <div className="h-[400px] mb-4">
                       <img
@@ -217,7 +222,6 @@ const Story = ({
                   </>
 
                   {/* users like list */}
-
                   <div
                     className={`absolute bottom-0 left-0 w-full  bg-blue-500/50 rounded-t-3xl flex__center transition-all duration-300 ${
                       showLikes ? "h-[90%]" : "h-0"
