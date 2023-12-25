@@ -107,7 +107,7 @@ const Story = ({
           }}
         />
       </div>
-      <div className="bg-white w-full lg:w-1/2 ">
+      <div className="bg-white w-full lg:w-1/2">
         <Slider {...settings} className="bg-white">
           {STORIES?.stories?.length &&
             STORIES.stories.map((story) => {
@@ -134,7 +134,7 @@ const Story = ({
                     {formattedDate(new Date(STORIES.createdAt))}
                   </span> */}
 
-                  <div className="h-[400px]">
+                  <div className="h-[400px] mb-4">
                     <img
                       src={
                         story.image

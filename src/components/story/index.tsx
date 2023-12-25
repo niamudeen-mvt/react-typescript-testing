@@ -47,7 +47,8 @@ const Stories = () => {
     (story: TStoryType) => story.userId._id === authUser._id
   );
   const SOCIAL: TStoryType[] = stories?.filter(
-    (story: TStoryType) => story.userId._id !== authUser._id
+    (story: TStoryType) =>
+      story.userId._id !== authUser._id && story.stories.length > 0
   );
 
   if (isLoading) return <CustomLoader />;

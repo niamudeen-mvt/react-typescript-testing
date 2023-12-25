@@ -52,7 +52,6 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
         const publicKey: string | undefined =
           process.env.REACT_APP_UPLOADCARE_PUBLIC_KEY;
 
-        console.log(publicKey, "public key");
         if (publicKey) {
           const options: BaseOptions = {
             publicKey,
@@ -64,13 +63,11 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
 
           dispatch(startLoading());
           const result = await base(file, options);
-          console.log(result, "result");
           if (result) {
             const fileDetails = await info(result.file, {
               publicKey,
             });
 
-            console.log(fileDetails, "fileDetails");
             dispatch(stopLoading());
             setStory({
               ...story,
