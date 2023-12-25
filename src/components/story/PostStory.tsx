@@ -50,8 +50,8 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
         FILE_VALIDATION.ALLOWED_IMAGES.includes(file.type) &&
         file.size < FILE_VALIDATION.MAX_FILE_SIZE
       ) {
-        // fileData must be `Blob` or `File` or `Buffer`
-        const publicKey: string | undefined = config.UPLOADCARE_PUBLIC_KEY;
+        const publicKey: string | undefined =
+          process.env.REACT_APP_UPLOADCARE_PUBLIC_KEY;
         if (publicKey) {
           const options: BaseOptions = {
             publicKey,
