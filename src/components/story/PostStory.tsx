@@ -11,7 +11,6 @@ import { RootState } from "../../store";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 // import { Widget } from "@uploadcare/react-widget";
 import { BaseOptions, base, info } from "@uploadcare/upload-client";
-import { config } from "../../config";
 
 interface IProps {
   story: TStoryDetails;

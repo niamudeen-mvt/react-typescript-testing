@@ -10,12 +10,11 @@ import { deleteStory, deleteUploadcareImg } from "../../services/api/user";
 import { useAuth } from "../../context/authContext";
 import { TShowStoryType2, TStoryType } from "../../utils/types";
 import defaultStory from "../../assets/images/default-story.avif";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+// import { useSelector } from "react-redux";
+// import { RootState } from "../../store";
 import { useDispatch } from "react-redux";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
-import StoryLoader from "./StoryLoader";
-import { config } from "../../config";
+// import { config } from "../../config";
 
 interface IProps {
   PERSONAL: TStoryType | undefined;
@@ -35,7 +34,7 @@ const Story = ({
   const [seconds, setSeconds] = useState(15);
   const { authUser } = useAuth();
 
-  const isLoading = useSelector((state: RootState) => state.loading.isLoading);
+  // const isLoading = useSelector((state: RootState) => state.loading.isLoading);
   const dispatch = useDispatch();
 
   const STORIES =
@@ -71,10 +70,12 @@ const Story = ({
 
   const handleDelteStory = async (storyId: string, fileUrl: string) => {
     dispatch(startLoading());
-    let res = await deleteStory(storyId);
 
-    const fileId = fileUrl.split("/")[0];
-    await deleteUploadcareImg(fileId);
+    if (fileUrl) {
+      const fileId = fileUrl?.split("/")[0];
+      await deleteUploadcareImg(fileId);
+    }
+    let res = await deleteStory(storyId);
 
     if (res.status === 200) {
       fetchStories();
@@ -106,56 +107,51 @@ const Story = ({
           }}
         />
       </div>
-
-      {isLoading ? (
-        <div>Deleting story......</div>
-      ) : (
-        <div className="bg-white w-full lg:w-1/2 ">
-          <Slider {...settings} className="bg-white">
-            {STORIES?.stories?.length &&
-              STORIES.stories.map((story) => {
-                return (
-                  <div className="flex flex-col gap-y-5 border p-5 bg-white text-black">
-                    <div className="flex gap-x-8">
-                      <div className="flex justify-between items-center w-full">
-                        <h1 className="text-center text-sm">
-                          @{STORIES.userId.name}
-                        </h1>
-                        {showStory2.type === "PERSONAL" ? (
-                          <MdDelete
-                            size={22}
-                            className="hover:scale-125 transition-all duration-300 cursor-pointer"
-                            onClick={() =>
-                              handleDelteStory(story._id, story.image)
-                            }
-                          />
-                        ) : null}
-                      </div>
+      <div className="bg-white w-full lg:w-1/2 ">
+        <Slider {...settings} className="bg-white">
+          {STORIES?.stories?.length &&
+            STORIES.stories.map((story) => {
+              return (
+                <div className="flex flex-col gap-y-5 border p-5 bg-white text-black">
+                  <div className="flex gap-x-8">
+                    <div className="flex justify-between items-center w-full">
+                      <h1 className="text-center text-sm">
+                        @{STORIES.userId.name}
+                      </h1>
+                      {showStory2.type === "PERSONAL" ? (
+                        <MdDelete
+                          size={22}
+                          className="hover:scale-125 transition-all duration-300 cursor-pointer"
+                          onClick={() =>
+                            handleDelteStory(story._id, story.image)
+                          }
+                        />
+                      ) : null}
                     </div>
+                  </div>
 
-                    {/* <span className=" text-xs">
+                  {/* <span className=" text-xs">
                     {formattedDate(new Date(STORIES.createdAt))}
                   </span> */}
 
-                    <div className="h-[400px]">
-                      <img
-                        src={
-                          story.image
-                            ? `https://ucarecdn.com/${story.image}`
-                            : defaultStory
-                        }
-                        alt="story"
-                        className="w-full h-full object-contain"
-                        loading="lazy"
-                      />
-                    </div>
-                    <p className="text-sm capitalize">{story.message}</p>
+                  <div className="h-[400px]">
+                    <img
+                      src={
+                        story.image
+                          ? `https://ucarecdn.com/${story.image}`
+                          : defaultStory
+                      }
+                      alt="story"
+                      className="w-full h-full object-contain"
+                      loading="lazy"
+                    />
                   </div>
-                );
-              })}
-          </Slider>
-        </div>
-      )}
+                  <p className="text-sm capitalize">{story.message}</p>
+                </div>
+              );
+            })}
+        </Slider>
+      </div>
     </div>
   );
 };
