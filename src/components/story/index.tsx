@@ -43,8 +43,6 @@ const Stories = () => {
     setIsLoading(false);
   };
 
-  console.log(stories);
-
   const PERSONAL: TStoryType | undefined = stories?.find(
     (story: TStoryType) => story.userId._id === authUser._id
   );

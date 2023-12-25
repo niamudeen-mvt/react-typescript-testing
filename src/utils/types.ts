@@ -2,7 +2,7 @@
 
 export type TStoryDetails = {
   message: string;
-  image: File | string;
+  image: string;
 };
 
 export type TStoryType = {

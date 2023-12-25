@@ -5,7 +5,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { IoClose } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { sendNotification } from "../../utils/notifications";
-import { deleteStory } from "../../services/api/user";
+import { deleteStory, deleteUploadcareImg } from "../../services/api/user";
 // import { formattedDate } from "../../utils/helper";
 import { useAuth } from "../../context/authContext";
 import { TShowStoryType2, TStoryType } from "../../utils/types";
@@ -15,6 +15,7 @@ import { RootState } from "../../store";
 import { useDispatch } from "react-redux";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import StoryLoader from "./StoryLoader";
+import { config } from "../../config";
 
 interface IProps {
   PERSONAL: TStoryType | undefined;
@@ -68,9 +69,13 @@ const Story = ({
     return () => clearInterval(timer);
   });
 
-  const handleDelteStory = async (storyId: string) => {
+  const handleDelteStory = async (storyId: string, fileUrl: string) => {
     dispatch(startLoading());
     let res = await deleteStory(storyId);
+
+    const fileId = fileUrl.split("/")[0];
+    await deleteUploadcareImg(fileId);
+
     if (res.status === 200) {
       fetchStories();
       sendNotification("success", res.data.message);
@@ -103,7 +108,7 @@ const Story = ({
       </div>
 
       {isLoading ? (
-        <StoryLoader />
+        <div>Deleting story......</div>
       ) : (
         <div className="bg-white w-full lg:w-1/2 ">
           <Slider {...settings} className="bg-white">
@@ -120,7 +125,9 @@ const Story = ({
                           <MdDelete
                             size={22}
                             className="hover:scale-125 transition-all duration-300 cursor-pointer"
-                            onClick={() => handleDelteStory(story._id)}
+                            onClick={() =>
+                              handleDelteStory(story._id, story.image)
+                            }
                           />
                         ) : null}
                       </div>
@@ -132,9 +139,14 @@ const Story = ({
 
                     <div className="h-[400px]">
                       <img
-                        src={story.image ? story.image : defaultStory}
+                        src={
+                          story.image
+                            ? `https://ucarecdn.com/${story.image}`
+                            : defaultStory
+                        }
                         alt="story"
                         className="w-full h-full object-contain"
+                        loading="lazy"
                       />
                     </div>
                     <p className="text-sm capitalize">{story.message}</p>

@@ -1,4 +1,6 @@
+import axios from "axios";
 import api from "../../utils/axios";
+import { config } from "../../config";
 
 export const getUser = async (): Promise<any> => {
   try {
@@ -76,6 +78,22 @@ export const getStories = async (): Promise<any> => {
 export const deleteStory = async (id: string): Promise<any> => {
   try {
     let response = await api.delete(`/story/delete/${id}`);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const deleteUploadcareImg = async (fileId: string): Promise<any> => {
+  try {
+    let response = await axios.delete(
+      `https://api.uploadcare.com/files/${fileId}/`,
+      {
+        headers: {
+          Authorization: `Uploadcare.Simple ${config.UPLOADCARE_PUBLIC_KEY}:${config.UPLOADCARE_PRIVATE_KEY}`,
+        },
+      }
+    );
     return response;
   } catch (error) {
     return error;
