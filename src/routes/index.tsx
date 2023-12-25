@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import GalleryPage from "../views/pages/GalleryPage";
+// import GalleryPage from "../views/pages/GalleryPage";
 import Homepage from "../views/pages/Homepage";
 import LoginPage from "../views/pages/LoginPage";
 import SignupPage from "../views/pages/Signup";
@@ -37,10 +37,10 @@ export const router = createBrowserRouter([
             path: "posts",
             element: <PostsContainer />,
           },
-          {
-            path: "gallery",
-            element: <GalleryPage />,
-          },
+          // {
+          //   path: "gallery",
+          //   element: <GalleryPage />,
+          // },
           {
             path: "quiz",
             element: <QuizPage />,
@@ -90,10 +90,10 @@ export const MENU_ITEMS = [
     type: "protected",
     element: <PostsContainer />,
   },
-  {
-    id: "gallery",
-    path: "/gallery",
-    type: "protected",
-    element: <GalleryPage />,
-  },
+  // {
+  //   id: "gallery",
+  //   path: "/gallery",
+  //   type: "protected",
+  //   element: <GalleryPage />,
+  // },
 ];
