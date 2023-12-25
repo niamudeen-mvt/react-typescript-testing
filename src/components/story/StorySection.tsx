@@ -1,18 +1,24 @@
 import React from "react";
-import useWindowSize from "../../hooks/useWindowSize";
-import { RiChatHistoryFill } from "react-icons/ri";
-import { FaPlus } from "react-icons/fa";
+
+// types
+import { TShowStoryType2, TStoryType } from "../../utils/types";
+
+// libraries
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { TShowStoryType2, TStoryType } from "../../utils/types";
+
+// icons
+import useWindowSize from "../../hooks/useWindowSize";
+import { RiChatHistoryFill } from "react-icons/ri";
+import { FaPlus } from "react-icons/fa";
 
 interface IProps {
   stories: TStoryType[];
-  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setShowStory2: React.Dispatch<React.SetStateAction<TShowStoryType2>>;
   PERSONAL: TStoryType | undefined;
   SOCIAL: TStoryType[];
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowStory2: React.Dispatch<React.SetStateAction<TShowStoryType2>>;
 }
 
 const StorySection = ({
@@ -23,6 +29,7 @@ const StorySection = ({
 }: IProps) => {
   const windowSize = useWindowSize();
 
+  // story section slider settings
   const settings = {
     dots: false,
     infinite: false,

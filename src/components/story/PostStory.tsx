@@ -1,16 +1,28 @@
 import React, { SetStateAction, useRef } from "react";
-import { deleteUploadcareImg, postStories } from "../../services/api/user";
-import { sendNotification } from "../../utils/notifications";
 import { Link } from "react-router-dom";
-import { FILE_VALIDATION } from "../../utils/constants";
-import { useTheme } from "../../context/themeContext";
-import FileValidationBox from "../shared/FileValidationBox";
 import { TStoryDetails } from "../../utils/types";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../store";
-import { startLoading, stopLoading } from "../../store/features/loadingSlice";
-// import { Widget } from "@uploadcare/react-widget";
+
+// apis
+import { deleteUploadcareImg, postStories } from "../../services/api/user";
+
+// helpers
+import { sendNotification } from "../../utils/notifications";
+import { FILE_VALIDATION } from "../../utils/constants";
+
+// context
+import { useTheme } from "../../context/themeContext";
+
+// components
+import FileValidationBox from "../shared/FileValidationBox";
+
+// library
 import { BaseOptions, base, info } from "@uploadcare/upload-client";
+
+// store
+import { RootState } from "../../store";
+import { useSelector, useDispatch } from "react-redux";
+import { startLoading, stopLoading } from "../../store/features/loadingSlice";
+import { config } from "../../config";
 
 interface IProps {
   story: TStoryDetails;
@@ -27,10 +39,12 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
   const dispatch = useDispatch();
 
   // uploading image ======================
+
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event?.target.files) {
-      const file = event?.target.files[0];
+      const file = event.target.files[0];
 
+      // checking the file type ==========================
       if (!FILE_VALIDATION.ALLOWED_IMAGES.includes(file.type)) {
         sendNotification(
           "warning",
@@ -41,6 +55,7 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
           inputRef.current.value = "";
         }
       } else if (file.size > FILE_VALIDATION.MAX_FILE_SIZE) {
+        // checking the size of file ===================
         sendNotification("warning", `Allowed file size 200KB`);
         if (inputRef.current) {
           inputRef.current.value = "";
@@ -49,8 +64,9 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
         FILE_VALIDATION.ALLOWED_IMAGES.includes(file.type) &&
         file.size < FILE_VALIDATION.MAX_FILE_SIZE
       ) {
-        const publicKey: string | undefined =
-          process.env.REACT_APP_UPLOADCARE_PUBLIC_KEY;
+        // if respective file met above conditions then uploading file to uploadcare
+
+        const publicKey: string | undefined = config.UPLOADCARE_PUBLIC_KEY;
 
         if (publicKey) {
           const options: BaseOptions = {
@@ -63,6 +79,9 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
 
           dispatch(startLoading());
           const result = await base(file, options);
+
+          // upload done and now fetching file info from uploadcare
+
           if (result) {
             const fileDetails = await info(result.file, {
               publicKey,
@@ -86,6 +105,7 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
     dispatch(startLoading());
     if (story.message !== "") {
       let res = await postStories(story);
+
       if (res.status === 200) {
         fetchStories();
         setShowModal(false);
