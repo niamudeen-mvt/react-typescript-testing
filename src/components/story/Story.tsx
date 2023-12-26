@@ -112,7 +112,7 @@ const Story = ({
     if (storyId && storyUserId) {
       let res = await likeStory({ storyId: storyId, storyUserId });
       if (res.status === 200) {
-        sendNotification("success", res?.data?.message);
+        // sendNotification("success", res?.data?.message);
         setStories(res?.data?.stories);
       } else {
         sendNotification("error", res?.response?.data?.message);
@@ -136,7 +136,8 @@ const Story = ({
           }}
         />
       </div>
-      <div className="bg-white w-full lg:w-1/2">
+
+      <div className="bg-white w-full lg:w-1/2 relative">
         <Slider {...settings} className="bg-white">
           {STORIES?.stories?.length &&
             STORIES.stories.map((story) => {
@@ -245,6 +246,7 @@ const Story = ({
               );
             })}
         </Slider>
+        {isLoading && <div className="absolute inset-0 bg-white/70 z-50"></div>}
       </div>
     </div>
   );

@@ -62,31 +62,34 @@ const Stories = () => {
       story.userId._id !== authUser._id && story.stories.length > 0
   );
 
-  if (isLoading) return <CustomLoader />;
   return (
     <>
-      <section className="mb-32 flex flex-col gap-y-32">
-        <StorySection
-          stories={stories}
-          setShowModal={setShowModal}
-          setShowStory2={setShowStory2}
-          PERSONAL={PERSONAL}
-          SOCIAL={SOCIAL}
-        />
-        <div className="text-center flex flex-col gap-y-5">
-          <h1 className="text-4xl sm:text-5xl font-semibold text-white">
-            Welcome {authUser?.name} to
-            {` `}
-            <ReactTyped strings={[`Taskfiy`]} typeSpeed={200} loop />
-          </h1>
-          <p>Ready to create your task list for today. !!!!!!!</p>
-          <Link to="/tasks">
-            <button className="bg-slate-700 px-12 py-4 text-white rounded-lg hover:bg-slate-600">
-              Go to tasks
-            </button>
-          </Link>
-        </div>
-      </section>
+      {isLoading ? (
+        <CustomLoader content="stories" />
+      ) : (
+        <section className="mb-32 flex flex-col gap-y-32">
+          <StorySection
+            stories={stories}
+            setShowModal={setShowModal}
+            setShowStory2={setShowStory2}
+            PERSONAL={PERSONAL}
+            SOCIAL={SOCIAL}
+          />
+          <div className="text-center flex flex-col gap-y-5">
+            <h1 className="text-4xl sm:text-5xl font-semibold text-white">
+              Welcome {authUser?.name} to
+              {` `}
+              <ReactTyped strings={[`Taskfiy`]} typeSpeed={200} loop />
+            </h1>
+            <p>Ready to create your task list for today. !!!!!!!</p>
+            <Link to="/tasks">
+              <button className="bg-slate-700 px-12 py-4 text-white rounded-lg hover:bg-slate-600">
+                Go to tasks
+              </button>
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* story posting form */}
       {showModal ? (
