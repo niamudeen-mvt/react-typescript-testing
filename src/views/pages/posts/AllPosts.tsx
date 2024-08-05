@@ -33,7 +33,7 @@ const AllPosts = ({ showMenu, setShowMenu, handleDeltePost }: IProps) => {
     setIsLoading(false);
   };
 
-  if (isLoading) return <CustomLoader />;
+  if (isLoading) return <CustomLoader content="Posts" />;
   return (
     <ul className="flex flex-col gap-y-4">
       {posts.map((post: { title: string; id: string }) => (

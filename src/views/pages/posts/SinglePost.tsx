@@ -18,20 +18,19 @@ const SinglePost = () => {
     usePost();
   const { isThemeLight } = useTheme();
 
-  const fetchSinglePost = async () => {
-    setIsLoading(true);
-    let res = await api.get(
-      `https://jsonplaceholder.typicode.com/posts/${postId}`
-    );
-    if (res?.status === 200) {
-      setPost(res?.data);
-    }
-    setIsLoading(false);
-  };
-
   useEffect(() => {
+    const fetchSinglePost = async () => {
+      setIsLoading(true);
+      let res = await api.get(
+        `https://jsonplaceholder.typicode.com/posts/${postId}`
+      );
+      if (res?.status === 200) {
+        setPost(res?.data);
+      }
+      setIsLoading(false);
+    };
     fetchSinglePost();
-  }, []);
+  }, [postId]);
 
   const dropMenu = [
     {

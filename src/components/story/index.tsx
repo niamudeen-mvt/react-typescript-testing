@@ -1,25 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-// layout
+import ReactTyped from "react-typed";
+import { useAuth } from "../../context/authContext";
+import { getStories } from "../../services/api/user";
 import ThemeContainer from "../layout/ThemeContainer";
 import CustomModal from "../layout/CustomModal";
-
-// components
 import CustomLoader from "../Loader";
 import PostStory from "./PostStory";
 import Story from "./Story";
 import StorySection from "./StorySection";
-import { useAuth } from "../../context/authContext";
-
-// types
 import { TShowStoryType2, TStoryDetails, TStoryType } from "../../utils/types";
-
-// libraries
-import ReactTyped from "react-typed";
-
-// apis
-import { getStories } from "../../services/api/user";
 
 const Stories = () => {
   const [stories, setStories] = useState<TStoryType[]>([]);
@@ -55,11 +45,14 @@ const Stories = () => {
 
   // seperating personal and other users stories
   const PERSONAL: TStoryType | undefined = stories?.find(
-    (story: TStoryType) => story.userId._id === authUser._id
+    (story: TStoryType) => story.userId?._id === authUser?._id
   );
+
   const SOCIAL: TStoryType[] = stories?.filter(
     (story: TStoryType) =>
-      story.userId._id !== authUser._id && story.stories.length > 0
+      story.userId &&
+      story.userId?._id !== authUser?._id &&
+      story.stories?.length > 0
   );
 
   return (

@@ -16,7 +16,7 @@ export const useTheme = () => {
 };
 
 const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [isThemeLight, setIsThemeLight] = useState(true);
+  const [isThemeLight, setIsThemeLight] = useState(false);
 
   return (
     <ThemeContext.Provider value={{ isThemeLight, setIsThemeLight }}>

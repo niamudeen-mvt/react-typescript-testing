@@ -8,21 +8,20 @@ const PostComments = () => {
 
   const { postId, handleShowComments, handleContentTitle } = usePost();
 
-  const fetchPostComments = async () => {
-    setIsLoading(true);
-    let res = await api.get(
-      `https://jsonplaceholder.typicode.com/posts/${postId}/comments`
-    );
-
-    if (res?.status === 200) {
-      setComments(res?.data);
-    }
-    setIsLoading(false);
-  };
-
   useEffect(() => {
+    const fetchPostComments = async () => {
+      setIsLoading(true);
+      let res = await api.get(
+        `https://jsonplaceholder.typicode.com/posts/${postId}/comments`
+      );
+
+      if (res?.status === 200) {
+        setComments(res?.data);
+      }
+      setIsLoading(false);
+    };
     fetchPostComments();
-  }, []);
+  }, [postId]);
 
   return (
     <>

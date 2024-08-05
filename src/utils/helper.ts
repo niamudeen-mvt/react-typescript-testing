@@ -1,7 +1,6 @@
 // access token
 
 import { config } from "../config/index";
-import { daysOfWeek } from "./constants";
 
 export const storeAccessTokenLS = (accessToken: string) => {
   if (config.ACCESS_TOKEN_KEY)

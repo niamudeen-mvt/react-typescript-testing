@@ -42,3 +42,9 @@ body {
 .add__story {
   display: flex !important;
 }
+
+@layer utilities {
+  .hide__scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
