@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { usePost } from "../../../context/postContext";
-import { fetchPost } from "../../../services/api/posts";
-import CustomLoader from "../../../components/Loader";
+import { usePost } from "../../context/postContext";
+import { fetchPost } from "../../services/api/posts";
+import Loader from "../../components/Loader";
 
 interface IProps {
   showMenu: boolean;
@@ -33,7 +33,7 @@ const AllPosts = ({ showMenu, setShowMenu, handleDeltePost }: IProps) => {
     setIsLoading(false);
   };
 
-  if (isLoading) return <CustomLoader content="Posts" />;
+  if (isLoading) return <Loader />;
   return (
     <ul className="flex flex-col gap-y-4">
       {posts.map((post: { title: string; id: string }) => (

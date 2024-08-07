@@ -1,4 +1,4 @@
-import { useTheme } from "../../../context/themeContext";
+import { useTheme } from "../../context/themeContext";
 
 const QuizStart = () => {
   const { isThemeLight } = useTheme();

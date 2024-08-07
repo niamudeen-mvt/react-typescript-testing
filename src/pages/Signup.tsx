@@ -1,14 +1,14 @@
 import { useForm } from "react-hook-form";
-import ThemeContainer from "../../components/layout/ThemeContainer";
-import TextError from "../../components/shared/TextError";
+import ThemeContainer from "../components/layout/ThemeContainer";
+import TextError from "../components/shared/TextError";
 import { Link, useNavigate } from "react-router-dom";
-import { sendNotification } from "../../utils/notifications";
+import { sendNotification } from "../utils/notifications";
 import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { RootState } from "../store";
 import { useDispatch } from "react-redux";
-import { registerUser } from "../../services/api/auth";
-import { startLoading, stopLoading } from "../../store/features/loadingSlice";
-import { useTheme } from "../../context/themeContext";
+import { registerUser } from "../services/api/auth";
+import { startLoading, stopLoading } from "../store/features/loadingSlice";
+import { useTheme } from "../context/themeContext";
 
 const SignupPage = () => {
   const {

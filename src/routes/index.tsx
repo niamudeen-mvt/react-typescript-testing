@@ -1,13 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
 // import GalleryPage from "../views/pages/GalleryPage";
-import Homepage from "../views/pages/Homepage";
-import LoginPage from "../views/pages/LoginPage";
-import SignupPage from "../views/pages/Signup";
-import PostsContainer from "../views/pages/posts";
-import TaskPage from "../views/pages/tasks";
+import Homepage from "../pages/Homepage";
+import LoginPage from "../pages/LoginPage";
+import SignupPage from "../pages/Signup";
+import PostsContainer from "../pages/posts";
+import TaskPage from "../pages/tasks";
 import LayoutRoute from "../components/layout/LayoutRoute";
 import ProtectedRoutes from "../routes/ProtectedRoutes";
-import QuizPage from "../views/pages/quiz";
+import QuizPage from "../pages/quiz";
 
 export const router = createBrowserRouter([
   {

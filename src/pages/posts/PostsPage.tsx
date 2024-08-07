@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { usePost } from "../../../context/postContext";
-import { deletePost } from "../../../services/api/posts";
-import { sendNotification } from "../../../utils/notifications";
+import { usePost } from "../../context/postContext";
+import { deletePost } from "../../services/api/posts";
+import { sendNotification } from "../../utils/notifications";
 import AllPosts from "./AllPosts";
 import SinglePost from "./SinglePost";
 import PostComments from "./PostComments";
-import ThemeContainer from "../../../components/layout/ThemeContainer";
+import ThemeContainer from "../../components/layout/ThemeContainer";
 
 const PostsPage = () => {
   const [showMenu, setShowMenu] = useState(false);

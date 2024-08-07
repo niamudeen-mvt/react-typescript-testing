@@ -31,10 +31,6 @@ body {
 
 /* =================== CONTAINER ==================== */
 
-.custom__container {
-  @apply max-w-[1200px] w-full mx-auto px-10 min-h-full;
-}
-
 .dark__mode {
   @apply bg-black text-white;
 }
@@ -44,6 +40,9 @@ body {
 }
 
 @layer utilities {
+  .custom__container {
+    @apply max-w-[1200px] w-full min-h-screen mx-auto px-10;
+  }
   .hide__scrollbar::-webkit-scrollbar {
     display: none;
   }

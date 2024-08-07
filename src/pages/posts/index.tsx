@@ -1,4 +1,4 @@
-import PostProvider from "../../../context/postContext";
+import PostProvider from "../../context/postContext";
 import PostsPage from "./PostsPage";
 
 const PostsContainer = () => {

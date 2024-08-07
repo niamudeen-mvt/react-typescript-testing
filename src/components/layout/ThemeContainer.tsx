@@ -8,28 +8,26 @@ type Props = {
   themeCenter?: boolean;
 };
 
-const ThemeContainer = ({ children, isCenter, themeCenter }: Props) => {
+const ThemeContainer = ({ children }: Props) => {
   const { isThemeLight, setIsThemeLight } = useTheme();
   return (
     <section
-      className={`min-h-screen w-full ${themeCenter ? "flex__center" : ""} ${
-        isThemeLight ? "bg-slate-500" : "dark__mode"
-      }`}
+      className={`min-h-screen ${isThemeLight ? "bg-slate-500" : "dark__mode"}`}
     >
-      <div className={`custom__container  ${isCenter ? "flex__center" : ""}`}>
+      <div className="custom__container flex__center">
         {children}
-      </div>
-      <div className="flex flex-col gap-4 fixed bottom-10 right-10">
-        <FaMoon
-          size={25}
-          onClick={() => setIsThemeLight(false)}
-          className="cursor-pointer"
-        />
-        <GoSun
-          size={25}
-          onClick={() => setIsThemeLight(true)}
-          className="cursor-pointer"
-        />
+        <div className="flex flex-col gap-4 fixed bottom-10 right-10">
+          <FaMoon
+            size={25}
+            onClick={() => setIsThemeLight(false)}
+            className="cursor-pointer"
+          />
+          <GoSun
+            size={25}
+            onClick={() => setIsThemeLight(true)}
+            className="cursor-pointer"
+          />
+        </div>
       </div>
     </section>
   );

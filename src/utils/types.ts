@@ -14,10 +14,8 @@ export type TStoryType = {
     likes: string[];
     createdAt: string;
   }[];
-  userId: {
-    _id?: string;
-    name: string;
-  };
+  userId: string;
+  username: string;
   createdAt: string;
 };
 

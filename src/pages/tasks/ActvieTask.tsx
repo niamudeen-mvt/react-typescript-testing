@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
-import { sendNotification } from "../../../utils/notifications";
+import { sendNotification } from "../../utils/notifications";
 import { IoMdThumbsUp } from "react-icons/io";
 import { AiFillEdit } from "react-icons/ai";
 import { MdDelete } from "react-icons/md";

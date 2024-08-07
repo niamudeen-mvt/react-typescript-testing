@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import ThemeContainer from "../../components/layout/ThemeContainer";
-import { deleteImage, getFiles } from "../../services/api/user";
-import { RootState } from "../../store";
+import ThemeContainer from "../components/layout/ThemeContainer";
+import { deleteImage, getFiles } from "../services/api/user";
+import { RootState } from "../store";
 import { useSelector, useDispatch } from "react-redux";
-import CustomLoader from "../../components/Loader";
 import { MdDelete } from "react-icons/md";
-import { startLoading, stopLoading } from "../../store/features/loadingSlice";
+import { startLoading, stopLoading } from "../store/features/loadingSlice";
 import { FaPlus } from "react-icons/fa6";
-import CustomModal from "../../components/layout/CustomModal";
-import { sendNotification } from "../../utils/notifications";
+import CustomModal from "../components/layout/CustomModal";
+import { sendNotification } from "../utils/notifications";
 import FileUploader from "./FileUploader";
+import Loader from "../components/Loader";
 
 const GalleryPage = () => {
   const [userImages, setUserImages] = useState([]);
@@ -45,7 +45,7 @@ const GalleryPage = () => {
     dispatch(stopLoading());
   };
 
-  if (isLoading) return <CustomLoader />;
+  if (isLoading) return <Loader />;
   return (
     <ThemeContainer>
       <div className="py-32">

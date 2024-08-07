@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
-import ThemeContainer from "../../../components/layout/ThemeContainer";
+import ThemeContainer from "../../components/layout/ThemeContainer";
 import QuizCategories from "./QuizCategories";
-import quizMenu from "../../../utils/data.json";
-import CustomButton from "../../../components/shared/CustomButton";
-import { sendNotification } from "../../../utils/notifications";
-import CustomModal from "../../../components/layout/CustomModal";
-import { QUIZ_TIME } from "../../../utils/constants";
+import quizMenu from "../../utils/data.json";
+import CustomButton from "../../components/shared/CustomButton";
+import { sendNotification } from "../../utils/notifications";
+import CustomModal from "../../components/layout/CustomModal";
+import { QUIZ_TIME } from "../../utils/constants";
 import QuizResult from "./QuizResult";
 import QuizStart from "./QuizStart";
 import {
   TActiveQuestionType,
   TAnswerList,
   TQuizResullt,
-} from "../../../utils/types";
+} from "../../utils/types";
 import { LuAlarmClock } from "react-icons/lu";
 
 const QuizPage = () => {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import api from "../../../utils/axios";
-import { usePost } from "../../../context/postContext";
+import api from "../../utils/axios";
+import { usePost } from "../../context/postContext";
 
 const PostComments = () => {
   const [comments, setComments] = useState([]);

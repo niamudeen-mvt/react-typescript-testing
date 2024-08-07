@@ -3,8 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 import { MdDelete } from "react-icons/md";
 import { IoMdThumbsUp } from "react-icons/io";
 import ActiveTasks from "./ActvieTask";
-import { sendNotification } from "../../../utils/notifications";
-import ThemeContainer from "../../../components/layout/ThemeContainer";
+import { sendNotification } from "../../utils/notifications";
+import ThemeContainer from "../../components/layout/ThemeContainer";
 import {
   DragDropContext,
   Draggable,

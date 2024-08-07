@@ -1,6 +1,6 @@
 import React from "react";
-import { quizCategories } from "../../../utils/constants";
-import CustomButton from "../../../components/shared/CustomButton";
+import { quizCategories } from "../../utils/constants";
+import CustomButton from "../../components/shared/CustomButton";
 
 interface IProps {
   quizCategory: string;

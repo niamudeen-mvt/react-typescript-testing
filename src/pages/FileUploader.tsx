@@ -1,16 +1,16 @@
 import { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
 import { useDropzone, DropzoneOptions, FileRejection } from "react-dropzone";
-import ThemeContainer from "../../components/layout/ThemeContainer";
-import { sendNotification } from "../../utils/notifications";
+import ThemeContainer from "../components/layout/ThemeContainer";
+import { sendNotification } from "../utils/notifications";
 import { useDispatch } from "react-redux";
-import { startLoading, stopLoading } from "../../store/features/loadingSlice";
-import { RootState } from "../../store";
+import { startLoading, stopLoading } from "../store/features/loadingSlice";
+import { RootState } from "../store";
 import { useSelector } from "react-redux";
-import CustomLoader from "../../components/Loader";
 import { Link } from "react-router-dom";
-import { uploadFiles } from "../../services/api/user";
-import { FILE_VALIDATION } from "../../utils/constants";
-import FileValidationBox from "../../components/shared/FileValidationBox";
+import { uploadFiles } from "../services/api/user";
+import { FILE_VALIDATION } from "../utils/constants";
+import FileValidationBox from "../components/shared/FileValidationBox";
+import Loader from "../components/Loader";
 
 const FileUploader = ({
   setShowModal,
@@ -108,7 +108,7 @@ const FileUploader = ({
 
   return (
     <ThemeContainer themeCenter={true}>
-      {isLoading ? <CustomLoader /> : null}
+      {isLoading ? <Loader /> : null}
       <>
         <div
           {...getRootProps()}

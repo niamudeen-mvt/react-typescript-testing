@@ -1,5 +1,5 @@
-import CustomButton from "../../../components/shared/CustomButton";
-import { TQuizResullt } from "../../../utils/types";
+import CustomButton from "../../components/shared/CustomButton";
+import { TQuizResullt } from "../../utils/types";
 
 interface IProps {
   quizResult: TQuizResullt | undefined;

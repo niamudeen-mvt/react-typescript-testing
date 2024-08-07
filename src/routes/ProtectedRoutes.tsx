@@ -1,6 +1,6 @@
 import { useAuth } from "../context/authContext";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import Homepage from "../views/pages/Homepage";
+import Homepage from "../pages/Homepage";
 import { useEffect } from "react";
 
 const PUBLIC_ROUTES = ["/login", "/signup"];

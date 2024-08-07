@@ -1,40 +1,28 @@
-import React, { SetStateAction, useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { TStoryDetails } from "../../utils/types";
-
-// apis
 import { deleteUploadcareImg, postStories } from "../../services/api/user";
-
-// helpers
 import { sendNotification } from "../../utils/notifications";
 import { FILE_VALIDATION } from "../../utils/constants";
-
-// context
 import { useTheme } from "../../context/themeContext";
-
-// components
 import FileValidationBox from "../shared/FileValidationBox";
-
-// library
 import { BaseOptions, base, info } from "@uploadcare/upload-client";
-
-// store
 import { RootState } from "../../store";
 import { useSelector, useDispatch } from "react-redux";
 import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { config } from "../../config";
+import { useQueryClient } from "@tanstack/react-query";
+import ThemeContainer from "../layout/ThemeContainer";
+import { showStoryUploader } from "../../store/features/storyUploaderSlice";
 
-interface IProps {
-  story: TStoryDetails;
-  setShowModal: React.Dispatch<SetStateAction<boolean>>;
-  fetchStories: () => Promise<void>;
-  setStory: React.Dispatch<SetStateAction<TStoryDetails>>;
-}
-
-const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
+const PostStory = () => {
+  const queryClient = useQueryClient();
   const inputRef = useRef<HTMLInputElement>(null);
   const { isThemeLight } = useTheme();
-
+  const [story, setStory] = useState<TStoryDetails>({
+    message: "",
+    image: "",
+  });
   const isLoading = useSelector((state: RootState) => state.loading.isLoading);
   const dispatch = useDispatch();
 
@@ -107,8 +95,8 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
       let res = await postStories(story);
 
       if (res.status === 200) {
-        fetchStories();
-        setShowModal(false);
+        queryClient.invalidateQueries({ queryKey: ["stories"] });
+        dispatch(showStoryUploader(false));
         sendNotification("success", res.data.message);
         if (inputRef.current) {
           inputRef.current.value = "";
@@ -120,7 +108,7 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
         }
       }
     } else {
-      setShowModal(true);
+      dispatch(showStoryUploader(true));
       sendNotification("warning", "Message field is required");
     }
     dispatch(stopLoading());
@@ -131,7 +119,7 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
       const fileId = story.image.split("/")[0];
       await deleteUploadcareImg(fileId);
     }
-    setShowModal(false);
+    dispatch(showStoryUploader(false));
     setStory({
       message: "",
       image: "",
@@ -139,47 +127,49 @@ const PostStory = ({ story, setShowModal, setStory, fetchStories }: IProps) => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="text-white border p-10 rounded-md relative"
-    >
-      <div className="form-control mb-6 flex flex-col">
-        <label className="mb-4">Message</label>
-        <input
-          autoComplete="off"
-          spellCheck={false}
-          className={`border-b mb-10 outline-none bg-transparent text-white ${
-            isThemeLight ? "border-black" : "border-white"
-          }`}
-          onChange={(event) =>
-            setStory({ ...story, message: event?.target.value })
-          }
-        />
-        <input
-          type="file"
-          className="border py-2 rounded-md px-2"
-          onChange={handleChange}
-          ref={inputRef}
-        />
-      </div>
-      <FileValidationBox />
-      <button
-        type="submit"
-        className="mb-6 bg-white text-black px-7 py-2 rounded-lg border w-full text-sm mt-8 hover:bg-white/90 transition-all duration-300"
-        disabled={isLoading}
+    <ThemeContainer>
+      <form
+        onSubmit={handleSubmit}
+        className="text-white border p-10 rounded-md relative"
       >
-        {isLoading ? "Wait....." : "Submit"}
-      </button>
-      <Link to="/">
+        <div className="form-control mb-6 flex flex-col">
+          <label className="mb-4">Message</label>
+          <input
+            autoComplete="off"
+            spellCheck={false}
+            className={`border-b mb-10 outline-none bg-transparent text-white ${
+              isThemeLight ? "border-black" : "border-white"
+            }`}
+            onChange={(event) =>
+              setStory({ ...story, message: event?.target.value })
+            }
+          />
+          <input
+            type="file"
+            className="border py-2 rounded-md px-2"
+            onChange={handleChange}
+            ref={inputRef}
+          />
+        </div>
+        <FileValidationBox />
         <button
-          className="bg-slate-800 text-white px-10 py-2 my-5 rounded-lg text-sm"
-          onClick={handleGoBackToStories}
+          type="submit"
+          className="mb-6 bg-white text-black px-7 py-2 rounded-lg border w-full text-sm mt-8 hover:bg-white/90 transition-all duration-300"
           disabled={isLoading}
         >
-          Go back
+          {isLoading ? "Wait....." : "Submit"}
         </button>
-      </Link>
-    </form>
+        <Link to="/">
+          <button
+            className="bg-slate-800 text-white px-10 py-2 my-5 rounded-lg text-sm"
+            onClick={handleGoBackToStories}
+            disabled={isLoading}
+          >
+            Go back
+          </button>
+        </Link>
+      </form>
+    </ThemeContainer>
   );
 };
 

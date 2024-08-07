@@ -1,15 +1,15 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import TextError from "../../components/shared/TextError";
-import ThemeContainer from "../../components/layout/ThemeContainer";
-import { sendNotification } from "../../utils/notifications";
-import { storeAccessTokenLS, storeRefreshTokenLS } from "../../utils/helper";
-import { useAuth } from "../../context/authContext";
-import { useTheme } from "../../context/themeContext";
-import { loginUser } from "../../services/api/auth";
-import { RootState } from "../../store";
-import { startLoading, stopLoading } from "../../store/features/loadingSlice";
+import TextError from "../components/shared/TextError";
+import ThemeContainer from "../components/layout/ThemeContainer";
+import { sendNotification } from "../utils/notifications";
+import { storeAccessTokenLS, storeRefreshTokenLS } from "../utils/helper";
+import { useAuth } from "../context/authContext";
+import { useTheme } from "../context/themeContext";
+import { loginUser } from "../services/api/auth";
+import { RootState } from "../store";
+import { startLoading, stopLoading } from "../store/features/loadingSlice";
 
 const LoginPage = () => {
   // react hook form
