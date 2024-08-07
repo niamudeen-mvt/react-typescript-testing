@@ -15,6 +15,19 @@ import { useQueryClient } from "@tanstack/react-query";
 import ThemeContainer from "../layout/ThemeContainer";
 import { showStoryUploader } from "../../store/features/storyUploaderSlice";
 
+const VALIDATE_FILE = (file: any) => {
+  if (!file) return;
+  if (!FILE_VALIDATION.ALLOWED_IMAGES.includes(file.type)) {
+    sendNotification("warning", `This format ${file.type} is not supported.`);
+    return false;
+  } else if (file.size > FILE_VALIDATION.MAX_FILE_SIZE) {
+    sendNotification("warning", `Allowed file size 200KB`);
+    return false;
+  } else {
+    return true;
+  }
+};
+
 const PostStory = () => {
   const queryClient = useQueryClient();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -53,9 +66,7 @@ const PostStory = () => {
         file.size < FILE_VALIDATION.MAX_FILE_SIZE
       ) {
         // if respective file met above conditions then uploading file to uploadcare
-
         const publicKey: string | undefined = config.UPLOADCARE_PUBLIC_KEY;
-
         if (publicKey) {
           const options: BaseOptions = {
             publicKey,
@@ -64,17 +75,13 @@ const PostStory = () => {
               subsystem: "uploader",
             },
           };
-
           dispatch(startLoading());
           const result = await base(file, options);
-
           // upload done and now fetching file info from uploadcare
-
           if (result) {
             const fileDetails = await info(result.file, {
               publicKey,
             });
-
             dispatch(stopLoading());
             setStory({
               ...story,
