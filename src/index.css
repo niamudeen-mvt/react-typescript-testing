@@ -1,42 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  /* background-color: rgba(0, 0, 0, 0.08); */
 }
 body {
   font-family: "Poppins", sans-serif;
-}
-
-.task__icon {
-  @apply w-4 h-4;
-}
-
-.flex__center {
-  @apply flex justify-center items-center;
-}
-
-.flex__col {
-  @apply flex justify-center items-center flex-col;
-}
-.flex__SB {
-  @apply flex justify-between items-center;
-}
-
-/* =================== CONTAINER ==================== */
-
-.dark__mode {
-  @apply bg-black text-white;
-}
-
-.add__story {
-  display: flex !important;
 }
 
 @layer utilities {
@@ -46,4 +20,26 @@ body {
   .hide__scrollbar::-webkit-scrollbar {
     display: none;
   }
+  .flex__center {
+    @apply flex justify-center items-center;
+  }
+
+  .flex__col {
+    @apply flex justify-center items-center flex-col;
+  }
+  .flex__SB {
+    @apply flex justify-between items-center;
+  }
+}
+
+.file__uploader {
+  @apply bg-white py-2.5 px-4 rounded-lg;
+}
+.file__uploader .uc-cancel-btn,
+.uc-done-btn {
+  @apply py-2 px-7;
+}
+
+:where([uc-simple-btn]) button:hover {
+  background-color: transparent !important;
 }

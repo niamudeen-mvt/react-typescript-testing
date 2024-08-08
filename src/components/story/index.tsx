@@ -1,9 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { getStories } from "../../services/api/user";
-
 import { TStoryType } from "../../utils/types";
 import Loader from "../Loader";
 import StorySlider from "./StorySlider";
+import { getStories } from "../../services/api/user";
 
 const Stories = () => {
   const fetchStories = async () => {
@@ -25,11 +24,9 @@ const Stories = () => {
 
   if (isLoading) return <Loader />;
   return (
-    <>
-      <div className="mb-32">
-        <StorySlider stories={stories} />
-      </div>
-    </>
+    <div className="mb-32">
+      <StorySlider stories={stories} />
+    </div>
   );
 };
 

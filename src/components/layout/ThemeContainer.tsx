@@ -12,7 +12,7 @@ const ThemeContainer = ({ children }: Props) => {
   const { isThemeLight, setIsThemeLight } = useTheme();
   return (
     <section
-      className={`min-h-screen ${isThemeLight ? "bg-slate-500" : "dark__mode"}`}
+      className={`min-h-screen ${isThemeLight ? "bg-slate-500" : "bg-black text-white"}`}
     >
       <div className="custom__container flex__center">
         {children}

@@ -19,3 +19,6 @@ export const deletePost = async (id: string): Promise<any> => {
     return error;
   }
 };
+
+
+

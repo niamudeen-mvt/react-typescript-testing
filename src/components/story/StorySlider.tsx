@@ -17,6 +17,7 @@ export default function StorySlider({ stories }: StorySliderProps) {
   const dispatch = useDispatch();
   const { authUser } = useAuth();
   const [seconds, setSeconds] = useState(TIMER);
+
   const clickToSeeStory = (userId: string) => {
     if (!stories || !userId) return;
 
@@ -96,33 +97,33 @@ export default function StorySlider({ stories }: StorySliderProps) {
         <div className="w-[40%] sm:w-[20%]">
           {personalStories.length > 0
             ? personalStories.map((story: any) => {
-                return renderPersonalStory(story);
-              })
+              return renderPersonalStory(story);
+            })
             : renderAddStory()}
         </div>
         <div className="flex w-[60%] sm:w-[80%]">
           {otherStories.length > 0
             ? otherStories.map((story: any) => {
-                return (
-                  <>
-                    <div
-                      className="h-48 cursor-pointer flex__center flex-col add__story"
-                      key={story.userId}
-                    >
-                      <div className="h-20 w-20 rounded-full hover:scale-110 transition-all duration-300 bg-white flex__center mb-3">
-                        <RiChatHistoryFill
-                          size={25}
-                          onClick={() => clickToSeeStory(story.userId)}
-                          color="black"
-                        />
-                      </div>
-                      <p className="text-xs text-center text-white">
-                        {story.username}
-                      </p>
+              return (
+                <>
+                  <div
+                    className="h-48 cursor-pointer flex__center flex-col !flex"
+                    key={story.userId}
+                  >
+                    <div className="h-20 w-20 rounded-full hover:scale-110 transition-all duration-300 bg-white flex__center mb-3">
+                      <RiChatHistoryFill
+                        size={25}
+                        onClick={() => clickToSeeStory(story.userId)}
+                        color="black"
+                      />
                     </div>
-                  </>
-                );
-              })
+                    <p className="text-xs text-center text-white">
+                      {story.username}
+                    </p>
+                  </div>
+                </>
+              );
+            })
             : null}
         </div>
       </div>

@@ -1,142 +1,76 @@
-import React, { useRef, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { TStoryDetails } from "../../utils/types";
+import { useDispatch } from "react-redux";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteUploadcareImg, postStories } from "../../services/api/user";
+import { TStoryDetails } from "../../utils/types";
 import { sendNotification } from "../../utils/notifications";
-import { FILE_VALIDATION } from "../../utils/constants";
 import { useTheme } from "../../context/themeContext";
 import FileValidationBox from "../shared/FileValidationBox";
-import { BaseOptions, base, info } from "@uploadcare/upload-client";
-import { RootState } from "../../store";
-import { useSelector, useDispatch } from "react-redux";
-import { startLoading, stopLoading } from "../../store/features/loadingSlice";
 import { config } from "../../config";
-import { useQueryClient } from "@tanstack/react-query";
 import ThemeContainer from "../layout/ThemeContainer";
 import { showStoryUploader } from "../../store/features/storyUploaderSlice";
+import Loader from "../Loader";
+import { FaCheck } from "react-icons/fa";
+import { FileUploaderRegular } from '@uploadcare/react-uploader';
+import "@uploadcare/react-uploader/core.css"
 
-const VALIDATE_FILE = (file: any) => {
-  if (!file) return;
-  if (!FILE_VALIDATION.ALLOWED_IMAGES.includes(file.type)) {
-    sendNotification("warning", `This format ${file.type} is not supported.`);
-    return false;
-  } else if (file.size > FILE_VALIDATION.MAX_FILE_SIZE) {
-    sendNotification("warning", `Allowed file size 200KB`);
-    return false;
-  } else {
-    return true;
-  }
-};
 
 const PostStory = () => {
   const queryClient = useQueryClient();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const dispatch = useDispatch();
   const { isThemeLight } = useTheme();
+
   const [story, setStory] = useState<TStoryDetails>({
     message: "",
     image: "",
   });
-  const isLoading = useSelector((state: RootState) => state.loading.isLoading);
-  const dispatch = useDispatch();
 
-  // uploading image ======================
 
-  const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event?.target.files) {
-      const file = event.target.files[0];
-
-      // checking the file type ==========================
-      if (!FILE_VALIDATION.ALLOWED_IMAGES.includes(file.type)) {
-        sendNotification(
-          "warning",
-          `This format ${file.type} is not supported.`
-        );
-
-        if (inputRef.current) {
-          inputRef.current.value = "";
-        }
-      } else if (file.size > FILE_VALIDATION.MAX_FILE_SIZE) {
-        // checking the size of file ===================
-        sendNotification("warning", `Allowed file size 200KB`);
-        if (inputRef.current) {
-          inputRef.current.value = "";
-        }
-      } else if (
-        FILE_VALIDATION.ALLOWED_IMAGES.includes(file.type) &&
-        file.size < FILE_VALIDATION.MAX_FILE_SIZE
-      ) {
-        // if respective file met above conditions then uploading file to uploadcare
-        const publicKey: string | undefined = config.UPLOADCARE_PUBLIC_KEY;
-        if (publicKey) {
-          const options: BaseOptions = {
-            publicKey,
-            store: "auto",
-            metadata: {
-              subsystem: "uploader",
-            },
-          };
-          dispatch(startLoading());
-          const result = await base(file, options);
-          // upload done and now fetching file info from uploadcare
-          if (result) {
-            const fileDetails = await info(result.file, {
-              publicKey,
-            });
-            dispatch(stopLoading());
-            setStory({
-              ...story,
-              image: `${fileDetails.fileId}/${fileDetails.filename}`,
-            });
-          }
-        }
-      }
-    }
-  };
-
-  // posting story =================
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleUploadStory = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch(startLoading());
-    if (story.message !== "") {
-      let res = await postStories(story);
-
-      if (res.status === 200) {
-        queryClient.invalidateQueries({ queryKey: ["stories"] });
-        dispatch(showStoryUploader(false));
-        sendNotification("success", res.data.message);
-        if (inputRef.current) {
-          inputRef.current.value = "";
-        }
-      } else {
-        sendNotification("error", res?.response?.data?.message);
-        if (inputRef.current) {
-          inputRef.current.value = "";
-        }
-      }
-    } else {
-      dispatch(showStoryUploader(true));
-      sendNotification("warning", "Message field is required");
-    }
-    dispatch(stopLoading());
+    if (!story.message) return sendNotification("warning", "Message is required");
+    storyUpload(story)
   };
 
-  const handleGoBackToStories = async () => {
+  const { mutate: storyUpload, isPending: isStoryUploading } = useMutation({
+    mutationFn: async (story: TStoryDetails) => {
+      const response = await postStories(story);
+      return response
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["stories"] });
+      dispatch(showStoryUploader(false));
+      sendNotification("success", "Story uploaded successfully");
+    }
+    ,
+    onError: (error: any) => {
+      dispatch(showStoryUploader(true));
+      sendNotification("error", error?.response?.data?.message);
+
+    }
+  })
+
+  const handleGoBack = async () => {
     if (story.image) {
       const fileId = story.image.split("/")[0];
       await deleteUploadcareImg(fileId);
     }
     dispatch(showStoryUploader(false));
-    setStory({
-      message: "",
-      image: "",
-    });
   };
-
+  const handleChangeEvent = (items: { allEntries: any[]; }) => {
+    const file = items.allEntries.filter((file) => file.status === 'success').map(file => file.cdnUrl)
+    if (!file) return sendNotification("error", "No file selected");
+    setStory({
+      ...story,
+      image: file[0]
+    })
+  };
   return (
     <ThemeContainer>
+      {isStoryUploading && <Loader />}
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleUploadStory}
         className="text-white border p-10 rounded-md relative"
       >
         <div className="form-control mb-6 flex flex-col">
@@ -144,39 +78,51 @@ const PostStory = () => {
           <input
             autoComplete="off"
             spellCheck={false}
-            className={`border-b mb-10 outline-none bg-transparent text-white ${
-              isThemeLight ? "border-black" : "border-white"
-            }`}
+            className={`border-b mb-10 outline-none bg-transparent text-white ${isThemeLight ? "border-black" : "border-white"
+              }`}
             onChange={(event) =>
               setStory({ ...story, message: event?.target.value })
             }
           />
-          <input
-            type="file"
-            className="border py-2 rounded-md px-2"
-            onChange={handleChange}
-            ref={inputRef}
-          />
+
+          <div className="flex items-center gap-x-4">
+            <FileUploaderRegular
+              pubkey={config.UPLOADCARE_PUBLIC_KEY}
+              maxLocalFileSizeBytes={200000}
+              multiple={false}
+              imgOnly={true}
+              sourceList="local, url, camera, dropbox"
+              classNameUploader="file__uploader uc-light" onChange={handleChangeEvent}
+            />
+            {
+              story.image &&
+              <div className="bg-green-600 w-max px-4 py-2 rounded-lg capitalize text-sm flex items-center gap-x-2">
+                <div className="p-1 bg-green-800 rounded-full">
+
+                  <FaCheck className="" size={12} />
+                </div>
+                file uploaded</div>
+            }
+          </div>
         </div>
         <FileValidationBox />
         <button
           type="submit"
           className="mb-6 bg-white text-black px-7 py-2 rounded-lg border w-full text-sm mt-8 hover:bg-white/90 transition-all duration-300"
-          disabled={isLoading}
+          disabled={isStoryUploading}
         >
-          {isLoading ? "Wait....." : "Submit"}
+          {isStoryUploading ? "Wait....." : "Submit"}
         </button>
         <Link to="/">
           <button
             className="bg-slate-800 text-white px-10 py-2 my-5 rounded-lg text-sm"
-            onClick={handleGoBackToStories}
-            disabled={isLoading}
+            onClick={handleGoBack}
           >
             Go back
           </button>
         </Link>
       </form>
-    </ThemeContainer>
+    </ThemeContainer >
   );
 };
 

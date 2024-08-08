@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AiOutlineMenu } from "react-icons/ai";
 import { IoCloseSharp } from "react-icons/io5";
-import useWindowSize from "../../hooks/useWindowSize";
 import { useAuth } from "../../context/authContext";
 import { MENU_ITEMS } from "../../routes";
+import useWindowSize from "../../hooks/useWindowSize";
 
 const Header = () => {
   const { userLogout, isLoggedIn } = useAuth();
@@ -32,18 +32,16 @@ const Header = () => {
         </a>
 
         <nav
-          className={`md:block hidden ${
-            showModal
-              ? "fixed w-full bg-slate-900 top-0 left-0 z-50 flex__center h-full"
-              : ""
-          }`}
+          className={`md:block hidden ${showModal
+            ? "fixed w-full bg-slate-900 top-0 left-0 z-50 flex__center h-full"
+            : ""
+            }`}
         >
           <ul
-            className={`flex ${
-              showModal
-                ? "flex-col gap-y-6 w-full bg-slate-900 top-0 left-0 flex__center h-full"
-                : "gap-x-6 "
-            }`}
+            className={`flex ${showModal
+              ? "flex-col gap-y-6 w-full bg-slate-900 top-0 left-0 flex__center h-full"
+              : "gap-x-6 "
+              }`}
           >
             {routes?.map((route: { path: string; id: string }) => {
               return (
@@ -53,11 +51,10 @@ const Header = () => {
                   onClick={() => setShowModal(false)}
                 >
                   <li
-                    className={`cursor-pointer capitalize  px-2 text-sm py-1 rounded-md ${
-                      showModal
-                        ? "text-white"
-                        : "hover:bg-slate-100 text-slate-500"
-                    }  ${routeName === route.path ? "font-semibold" : ""}`}
+                    className={`cursor-pointer capitalize  px-2 text-sm py-1 rounded-md ${showModal
+                      ? "text-white"
+                      : "hover:bg-slate-100 text-slate-500"
+                      }  ${routeName === route.path ? "font-semibold" : ""}`}
                   >
                     {route.id}
                   </li>
@@ -68,11 +65,10 @@ const Header = () => {
               <Link to="/">
                 <li
                   onClick={userLogout}
-                  className={`cursor-pointer capitalize  px-2 text-sm py-1 rounded-md ${
-                    showModal
-                      ? " text-white"
-                      : "text-slate-500 hover:bg-slate-100"
-                  } `}
+                  className={`cursor-pointer capitalize  px-2 text-sm py-1 rounded-md ${showModal
+                    ? " text-white"
+                    : "text-slate-500 hover:bg-slate-100"
+                    } `}
                 >
                   logout
                 </li>
@@ -82,16 +78,14 @@ const Header = () => {
         </nav>
         {showModal ? (
           <IoCloseSharp
-            className={`cursor-pointer md:hidden h-6 w-6 z-50 fixed right-5 ${
-              showModal ? "text-white font-semibold" : "text-black"
-            }`}
+            className={`cursor-pointer md:hidden h-6 w-6 z-50 fixed right-5 ${showModal ? "text-white font-semibold" : "text-black"
+              }`}
             onClick={() => setShowModal(!showModal)}
           />
         ) : (
           <AiOutlineMenu
-            className={`cursor-pointer md:hidden h-6 w-6 z-50 fixed right-5 ${
-              showModal ? "text-white" : "text-black"
-            }`}
+            className={`cursor-pointer md:hidden h-6 w-6 z-50 fixed right-5 ${showModal ? "text-white" : "text-black"
+              }`}
             onClick={() => setShowModal(!showModal)}
           />
         )}
