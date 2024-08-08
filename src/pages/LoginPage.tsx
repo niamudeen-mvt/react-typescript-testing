@@ -65,9 +65,8 @@ const LoginPage = () => {
             })}
             autoComplete="off"
             spellCheck={false}
-            className={`border-b mb-4 outline-none bg-transparent text-white ${
-              isThemeLight ? "border-black" : "border-white"
-            }`}
+            className={`border-b mb-4 outline-none bg-transparent text-white ${isThemeLight ? "border-black" : "border-white"
+              }`}
           />
           {errors.email && <TextError msg={errors.email.message} />}
         </div>
@@ -87,9 +86,8 @@ const LoginPage = () => {
             })}
             autoComplete="off"
             spellCheck={false}
-            className={`border-b mb-4 outline-none bg-transparent text-white ${
-              isThemeLight ? "border-black" : "border-white"
-            }`}
+            className={`border-b mb-4 outline-none bg-transparent text-white ${isThemeLight ? "border-black" : "border-white"
+              }`}
           />
           {errors.password && <TextError msg={errors.password.message} />}
         </div>

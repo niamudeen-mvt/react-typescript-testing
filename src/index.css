@@ -32,6 +32,8 @@ body {
   }
 }
 
+/* File Uploader Css ***/
+
 .file__uploader {
   @apply bg-white py-2.5 px-4 rounded-lg;
 }

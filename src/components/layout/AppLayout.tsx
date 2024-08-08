@@ -3,16 +3,18 @@ import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import { ToastContainerNotification } from "../../utils/notifications";
 
-const LayoutRoute = () => {
+const AppLayout = () => {
   return (
     <>
       <Header />
-      <ThemeProvider>
-        <Outlet />
-      </ThemeProvider>
+      <main>
+        <ThemeProvider>
+          <Outlet />
+        </ThemeProvider>
+      </main>
       <ToastContainerNotification />
     </>
   );
 };
 
-export default LayoutRoute;
+export default AppLayout;

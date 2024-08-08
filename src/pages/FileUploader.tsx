@@ -112,9 +112,8 @@ const FileUploader = ({
       <>
         <div
           {...getRootProps()}
-          className={`border min-h-[300px] p-5 mb-4 ${
-            previews?.length === 0 ? "flex__center text-white" : ""
-          }`}
+          className={`border min-h-[300px] p-5 mb-4 ${previews?.length === 0 ? "flex__center text-white" : ""
+            }`}
         >
           <input {...getInputProps()} ref={inputRef} />
           {previews?.length ? (

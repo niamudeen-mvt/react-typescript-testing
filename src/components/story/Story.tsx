@@ -46,6 +46,7 @@ const Story = ({
 
   const [show, setShow] = useState(false)
 
+
   const storyActionsMenuRef = useRef<any>(null)
 
   const activeStoryData = stories?.find(
@@ -57,18 +58,18 @@ const Story = ({
    * This useEffect is used to close the story when the user clicks outside
    * */
 
-  useEffect(() => {
-    const handleClickOutside = (event: any) => {
-      if (storyActionsMenuRef.current && !storyActionsMenuRef.current.contains(event.target)) {
-        setShow(false)
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+  // useEffect(() => {
+  //   const handleClickOutside = (event: any) => {
+  //     if (storyActionsMenuRef.current && !storyActionsMenuRef.current.contains(event.target) && !show) {
+  //       setShow(false)
+  //     }
+  //   };
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
 
-  }, [])
+  // }, [])
 
 
   /*
@@ -78,7 +79,6 @@ const Story = ({
   useEffect(() => {
     if (seconds === 0) {
       dispatch(hideStory());
-      setShow(false)
       return;
     }
 
@@ -183,16 +183,12 @@ const Story = ({
   }
 
 
-
   function renderDeleteStory(story: any) {
-
-
     return (
       <>
         {story.userId === authUser._id &&
           <div>
-            <button id="dropdownMenuIconButton" className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 relative
-    " type="button" onClick={() => setShow(!show)}>
+            <button id="dropdownMenuIconButton" className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 relative" type="button" onClick={() => setShow(!show)}>
               <svg className="w-5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
                 <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
               </svg>

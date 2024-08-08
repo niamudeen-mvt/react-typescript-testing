@@ -3,14 +3,16 @@ import { Link, useLocation } from "react-router-dom";
 import { AiOutlineMenu } from "react-icons/ai";
 import { IoCloseSharp } from "react-icons/io5";
 import { useAuth } from "../../context/authContext";
-import { MENU_ITEMS } from "../../routes";
 import useWindowSize from "../../hooks/useWindowSize";
+import { ALL_ROUTES } from "../../routes";
 
 const Header = () => {
-  const { userLogout, isLoggedIn } = useAuth();
-  const [showModal, setShowModal] = useState(false);
   const routeName = useLocation().pathname;
   const windowSize = useWindowSize();
+
+
+  const { userLogout, isLoggedIn } = useAuth();
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (windowSize.width >= 768) {
@@ -18,11 +20,12 @@ const Header = () => {
     }
   }, [windowSize.width]);
 
-  const routes = MENU_ITEMS.filter((route) =>
-    isLoggedIn
-      ? route.type === "protected" || route.type === "public"
-      : route.type !== "protected"
-  );
+
+
+  const MENU_ITEMS =
+    ALL_ROUTES && isLoggedIn ?
+      ALL_ROUTES.filter((menu) => menu.isPrivate && !menu.isHidden) :
+      ALL_ROUTES.filter((menu) => !menu.isPrivate && !menu.isHidden)
 
   return (
     <header className="bg-white fixed w-full z-50">
@@ -43,7 +46,7 @@ const Header = () => {
               : "gap-x-6 "
               }`}
           >
-            {routes?.map((route: { path: string; id: string }) => {
+            {MENU_ITEMS?.map((route: { path: string; id: string }) => {
               return (
                 <Link
                   key={route.id}

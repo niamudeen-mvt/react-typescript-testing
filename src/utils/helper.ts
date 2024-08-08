@@ -1,6 +1,4 @@
-// access token
-
-import { config } from "../config/index";
+import { config } from "../config";
 
 export const storeAccessTokenLS = (accessToken: string) => {
   if (config.ACCESS_TOKEN_KEY)
