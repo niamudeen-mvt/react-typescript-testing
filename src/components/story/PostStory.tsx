@@ -30,6 +30,8 @@ const PostStory = () => {
   const handleUploadStory = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!story.message) return sendNotification("warning", "Message is required");
+
+    if (!story.image) return sendNotification("warning", "Image is required");
     storyUpload(story)
   };
 
@@ -44,10 +46,8 @@ const PostStory = () => {
       sendNotification("success", "Story uploaded successfully");
     }
     ,
-    onError: (error: any) => {
+    onError: () => {
       dispatch(showStoryUploader(true));
-      sendNotification("error", error?.response?.data?.message);
-
     }
   })
 
@@ -99,7 +99,7 @@ const PostStory = () => {
               <div className="bg-green-600 w-max px-4 py-2 rounded-lg capitalize text-sm flex items-center gap-x-2">
                 <div className="p-1 bg-green-800 rounded-full">
 
-                  <FaCheck className="" size={12} />
+                  <FaCheck size={12} />
                 </div>
                 file uploaded</div>
             }

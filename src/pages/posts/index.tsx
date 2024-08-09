@@ -1,7 +1,7 @@
 import PostProvider from "../../context/postContext";
 import PostsPage from "./PostsPage";
 
-const PostsContainer = () => {
+const PostsSection = () => {
   return (
     <PostProvider>
       <PostsPage />
@@ -9,4 +9,4 @@ const PostsContainer = () => {
   );
 };
 
-export default PostsContainer;
+export default PostsSection;

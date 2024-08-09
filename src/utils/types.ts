@@ -1,40 +1,50 @@
-// story section
+// types related to the forms
+
+export type TSignupFormValues = {
+  name: string;
+  phone: number;
+  email: string;
+  password: string;
+};
+
+export type TLoginFormValues = {
+  email: string;
+  password: string;
+};
+
+// types related to the stories
+
+export type TStories = {
+  stories: TStory[];
+  userId: string;
+  username: string;
+  _id: string;
+};
 
 export type TStoryDetails = {
   message: string;
   image: string;
 };
 
-export type TStoryType = {
+export type TStory = {
   message: string;
-  stories: {
-    message: string;
-    image: string;
-    _id: string;
-    likes: string[];
-    createdAt: string;
-  }[];
+  image: string;
+  _id: string;
+  likes: TStoryLikes;
+  createdAt: string;
   userId: string;
   username: string;
-  createdAt: string;
 };
 
-export type TShowStoryType2 = {
-  type: string;
-  userId: string | undefined;
-  isShow: boolean;
+export type TStoryLike = {
+  name: string;
+  userId: string;
+  _id: string;
 };
 
-export type TStory2 = {
-  username?: string;
-  type: string;
-  show: boolean;
-  images: { image: string }[];
-  message: string;
-  postDate: string;
-};
+export type TStoryLikes = TStoryLike[];
 
-// quiz seciton =================
+// types related to the quiz
 
 export type TActiveQuestionType = {
   question: string;

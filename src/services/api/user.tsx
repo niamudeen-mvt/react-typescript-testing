@@ -2,6 +2,8 @@ import axios from "axios";
 import api from "../../utils/axios";
 import { config } from "../../config";
 
+
+
 export const getUser = async (): Promise<any> => {
   try {
     let response = await api.get(`/auth/user`);

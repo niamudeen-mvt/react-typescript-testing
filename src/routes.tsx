@@ -3,7 +3,6 @@ import { createBrowserRouter } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/Signup";
-import PostsContainer from "./pages/posts";
 import TaskPage from "./pages/tasks";
 import QuizPage from "./pages/quiz";
 import StoriesPage from "./pages/Stories";
@@ -11,6 +10,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import PublicRoutes from "./components/routes/PublicRoutes";
 import ProtectedRoutes from "./components/routes/ProtectedRoutes";
 import AppLayout from "./components/layout/AppLayout";
+import PostsSection from "./pages/posts";
 
 export const ALL_ROUTES = [
   {
@@ -52,7 +52,7 @@ export const ALL_ROUTES = [
     id: "posts",
     path: "/posts",
     type: "protected",
-    element: <PostsContainer />,
+    element: <PostsSection />,
     isPrivate: true,
   },
 ];
@@ -76,7 +76,7 @@ export const PRIVATE_ROUTES = ALL_ROUTES.filter(
   };
 });
 
-export const _ROUTER = createBrowserRouter([
+export const _router = createBrowserRouter([
   {
     path: "",
     element: <AppLayout />,

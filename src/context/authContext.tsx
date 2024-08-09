@@ -1,21 +1,22 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { getUser } from "../services/api/user";
-import { removeAccessToken } from "../utils/helper";
+import { getItemsFromLC, removeItemFromLS } from "../utils/helper";
+import { _localStorageConfig } from "../config";
 
 type AuthStateTypes = {
   isLoggedIn: boolean;
   userLogout: () => void;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   authUser: {
-    _id?: any;
+    _id?: string;
     name: string;
   };
 };
 
 const defaultContextValues: AuthStateTypes = {
   isLoggedIn: false,
-  userLogout: () => {},
-  setIsLoggedIn: () => {},
+  userLogout: () => { },
+  setIsLoggedIn: () => { },
   authUser: {
     _id: "",
     name: "",
@@ -45,11 +46,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [isLoggedIn]);
 
   const userLogout = async () => {
-    removeAccessToken();
+    removeItemFromLS(_localStorageConfig.token);
+    removeItemFromLS(_localStorageConfig.id);
     setIsLoggedIn(false);
   };
 
-  const storedAccessToken = localStorage.getItem("access_token");
+  const storedAccessToken = getItemsFromLC(_localStorageConfig.token);
 
   useEffect(() => {
     if (storedAccessToken) {
@@ -59,14 +61,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [storedAccessToken]);
 
-  const updateTokenFromLocalStorage = () => {
-    if (storedAccessToken) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  };
   useEffect(() => {
+    const updateTokenFromLocalStorage = () => {
+      if (storedAccessToken) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    };
     updateTokenFromLocalStorage();
 
     window.addEventListener("storage", updateTokenFromLocalStorage);
@@ -74,7 +76,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => {
       window.removeEventListener("storage", updateTokenFromLocalStorage);
     };
-  }, []);
+  }, [storedAccessToken]);
 
   return (
     <AuthContext.Provider

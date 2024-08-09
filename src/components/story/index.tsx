@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { TStoryType } from "../../utils/types";
+import { TStories } from "../../utils/types";
 import Loader from "../Loader";
 import StorySlider from "./StorySlider";
 import { getStories } from "../../services/api/user";
@@ -11,7 +11,7 @@ const Stories = () => {
 
     if (stories?.length > 0) {
       return stories.filter(
-        (activeStory: TStoryType) =>
+        (activeStory: TStories) =>
           activeStory.stories && activeStory.stories?.length > 0
       );
     }
@@ -19,7 +19,7 @@ const Stories = () => {
   };
   const { data: stories, isLoading } = useQuery({
     queryKey: ["stories"],
-    queryFn: fetchStories,
+    queryFn: fetchStories
   });
 
   if (isLoading) return <Loader />;

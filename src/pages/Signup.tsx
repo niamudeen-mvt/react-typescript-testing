@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import ThemeContainer from "../components/layout/ThemeContainer";
 import TextError from "../components/shared/TextError";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,20 +9,23 @@ import { useDispatch } from "react-redux";
 import { registerUser } from "../services/api/auth";
 import { startLoading, stopLoading } from "../store/features/loadingSlice";
 import { useTheme } from "../context/themeContext";
+import { TSignupFormValues } from "../utils/types";
+
+
 
 const SignupPage = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<TSignupFormValues>();
 
   const navigate = useNavigate();
   const isLoading = useSelector((state: RootState) => state.loading.isLoading);
   const dispatch = useDispatch();
   const { isThemeLight } = useTheme();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit: SubmitHandler<TSignupFormValues> = async (data: TSignupFormValues) => {
     dispatch(startLoading());
     let res = await registerUser(data);
     if (res?.status === 201) {
@@ -47,11 +50,12 @@ const SignupPage = () => {
             type="text"
             {...register("name", {
               required: true,
-              validate: (value) => isNaN(value),
+              validate: (value) => {
+                return isNaN(Number(value))
+              }
             })}
-            className={`border-b mb-4 outline-none bg-transparent text-white ${
-              isThemeLight ? "border-black" : "border-white"
-            }`}
+            className={`border-b mb-4 outline-none bg-transparent text-white ${isThemeLight ? "border-black" : "border-white"
+              }`}
             autoComplete="off"
             spellCheck={false}
           />
@@ -70,9 +74,8 @@ const SignupPage = () => {
               required: true,
               pattern: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
             })}
-            className={`border-b mb-4 outline-none bg-transparent text-white ${
-              isThemeLight ? "border-black" : "border-white"
-            }`}
+            className={`border-b mb-4 outline-none bg-transparent text-white ${isThemeLight ? "border-black" : "border-white"
+              }`}
             autoComplete="off"
             spellCheck={false}
           />
@@ -91,9 +94,8 @@ const SignupPage = () => {
               required: true,
               minLength: 3,
             })}
-            className={`border-b mb-4 outline-none bg-transparent text-white ${
-              isThemeLight ? "border-black" : "border-white"
-            }`}
+            className={`border-b mb-4 outline-none bg-transparent text-white ${isThemeLight ? "border-black" : "border-white"
+              }`}
             autoComplete="off"
             spellCheck={false}
           />
@@ -112,9 +114,8 @@ const SignupPage = () => {
               required: true,
               maxLength: 10,
             })}
-            className={`border-b mb-4 outline-none bg-transparent text-white ${
-              isThemeLight ? "border-black" : "border-white"
-            }`}
+            className={`border-b mb-4 outline-none bg-transparent text-white ${isThemeLight ? "border-black" : "border-white"
+              }`}
             autoComplete="off"
             spellCheck={false}
           />

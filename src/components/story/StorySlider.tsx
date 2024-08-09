@@ -1,27 +1,30 @@
-import { RiChatHistoryFill } from "react-icons/ri";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { showStory } from "../../store/features/storySlice";
 import { useAuth } from "../../context/authContext";
 import { FaPlus } from "react-icons/fa";
-import { showStoryUploader } from "../../store/features/storyUploaderSlice";
-import { useState } from "react";
+import { RiChatHistoryFill } from "react-icons/ri";
 import Story from "./Story";
+import { TStories, TStory } from "../../utils/types";
+import { STORY_TIMER } from "../../config";
+import { showStory } from "../../store/features/storySlice";
+import { showStoryUploader } from "../../store/features/storyUploaderSlice";
 
 type StorySliderProps = {
   stories: [];
 };
 
-const TIMER: number = 30;
+
 
 export default function StorySlider({ stories }: StorySliderProps) {
   const dispatch = useDispatch();
   const { authUser } = useAuth();
-  const [seconds, setSeconds] = useState(TIMER);
+  const [seconds, setSeconds] = useState(STORY_TIMER);
 
   const clickToSeeStory = (userId: string) => {
     if (!stories || !userId) return;
 
-    const existingStory: any = stories.find((el: any) => el.userId === userId);
+    const existingStory: TStories = stories && stories.find((el: TStories) => el.userId === userId)!;
+
 
     if (existingStory) {
       dispatch(
@@ -32,7 +35,7 @@ export default function StorySlider({ stories }: StorySliderProps) {
           stories: existingStory?.stories,
         })
       );
-      setSeconds(TIMER);
+      setSeconds(STORY_TIMER);
       return;
     } else {
       console.log("No story found");
@@ -54,7 +57,7 @@ export default function StorySlider({ stories }: StorySliderProps) {
     );
   };
 
-  const renderPersonalStory = (story: any) => {
+  const renderPersonalStory = (story: TStory) => {
     return (
       <div
         className="h-48 cursor-pointer flex__center flex-col"
@@ -83,12 +86,12 @@ export default function StorySlider({ stories }: StorySliderProps) {
 
   const personalStories =
     (stories &&
-      stories?.filter((story: any) => story.userId === authUser?._id)) ||
+      stories?.filter((story: TStory) => story.userId === authUser?._id)) ||
     [];
 
   const otherStories =
     (stories &&
-      stories?.filter((story: any) => story.userId !== authUser?._id)) ||
+      stories?.filter((story: TStory) => story.userId !== authUser?._id)) ||
     [];
 
   return (
@@ -96,14 +99,14 @@ export default function StorySlider({ stories }: StorySliderProps) {
       <div className="flex gap-10 overflow-hidden max-w-[100%] w-full overflow-x-auto hide__scrollbar">
         <div className="w-[40%] sm:w-[20%]">
           {personalStories.length > 0
-            ? personalStories.map((story: any) => {
+            ? personalStories.map((story: TStory) => {
               return renderPersonalStory(story);
             })
             : renderAddStory()}
         </div>
         <div className="flex w-[60%] sm:w-[80%]">
           {otherStories.length > 0
-            ? otherStories.map((story: any) => {
+            ? otherStories.map((story: TStory) => {
               return (
                 <>
                   <div

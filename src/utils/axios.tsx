@@ -1,21 +1,25 @@
 import axios from "axios";
-import { getAccessToken, getRefreshToken, storeAccessTokenLS } from "./helper";
 import { refreshTokenApi } from "../services/api/auth";
-import { BASE_URL } from "../config";
+import { _localStorageConfig, BASE_URL } from "../config";
+import { getItemsFromLC, setItemsIntoLS } from "./helper";
 
 const api = axios.create({
   baseURL: BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
+  timeout: 10000,
 });
 
 // request interceptors
 
 api.interceptors.request.use(
   async function (config) {
-    if (config.url !== "/auth/login" && config.url !== "/auth/register") {
-      config.headers["Authorization"] = `Bearer ${getAccessToken()}`;
+
+    const token = getItemsFromLC("access_token");
+
+    if (config?.url && !["/auth/login", "/auth/register"].includes(config?.url)) {
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },
@@ -26,35 +30,70 @@ api.interceptors.request.use(
 
 // response interceptors
 
+
 let isRefreshing = false;
+let failedQueue: any = [];
+let retryOriginalRequest = null;
+
+const processQueue = (error: any, token = null) => {
+  failedQueue.forEach((prom: any) => {
+    if (token) {
+      prom.resolve(token);
+    } else {
+      prom.reject(error);
+    }
+  });
+  failedQueue = [];
+};
+
 
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  response => response,
+
   async (error) => {
+
     const originalRequest = error.config;
 
-    if (error.response && error.response.status === 401 && !isRefreshing) {
+    if (error?.response?.status === 401) {
+      if (isRefreshing) {
+
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then(token => {
+          originalRequest.headers["Authorization"] = `Bearer ${token}`;
+          return axios(originalRequest);
+        }).catch(err => Promise.reject(err));
+
+      }
+
       isRefreshing = true;
+      retryOriginalRequest = originalRequest;
+
       try {
-        const refresh_token = getRefreshToken();
-        if (refresh_token) {
-          const res = await refreshTokenApi({
-            refresh_token: refresh_token,
-          });
+        const userId = getItemsFromLC(_localStorageConfig.id);
+        if (userId) {
+          const res = await refreshTokenApi(userId);
 
           if (res?.status === 200) {
-            storeAccessTokenLS(res.data.access_token);
+            const { access_token } = res?.data;
 
-            originalRequest.headers["Authorization"] =
-              `Bearer` + res.data.access_token;
+            if (access_token) {
 
-            return axios(originalRequest);
+              setItemsIntoLS(_localStorageConfig.token, access_token);
+
+              axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+
+              processQueue(null, access_token);
+
+              retryOriginalRequest.headers["Authorization"] = `Bearer ${access_token}`;
+
+              return axios(retryOriginalRequest);
+            }
           }
         }
-      } catch (error) {
-        console.log("Refresh token failed", error);
+      } catch (err) {
+        processQueue(err, null);
+        return Promise.reject(err);
       } finally {
         isRefreshing = false;
       }

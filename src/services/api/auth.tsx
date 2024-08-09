@@ -26,11 +26,11 @@ export const loginUser = async (body: {
   }
 };
 
-export const refreshTokenApi = async (body: {
-  refresh_token: string;
+export const refreshTokenApi = async (userId: {
+  userId: string;
 }): Promise<any> => {
   try {
-    const response = await api.post("/auth/refresh-token", body);
+    const response = await api.get(`/auth/refresh-token/${userId}`);
     return response;
   } catch (error) {
     return error;

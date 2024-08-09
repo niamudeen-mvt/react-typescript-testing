@@ -1,14 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import moment from "moment";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { sendNotification } from "../../utils/notifications";
 import { useAuth } from "../../context/authContext";
 import { RootState } from "../../store";
-import {
-  deleteStory,
-  deleteUploadcareImg,
-  likeStory,
-} from "../../services/api/user";
 import ToastComponent from "../shared/Toast";
 import Loader from "../Loader";
 import { GoHeart } from "react-icons/go";
@@ -16,6 +12,10 @@ import { FaHeart } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import { hideStory } from "../../store/features/storySlice";
 import Slider from "react-slick";
+import { TStories, TStory, TStoryLike, TStoryLikes } from "../../utils/types";
+import {
+  likeStory,
+} from "../../services/api/user";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -34,7 +34,7 @@ const Story = ({
   seconds,
   setSeconds,
 }: {
-  stories: any[];
+  stories: TStories[]
   seconds: number;
   setSeconds: React.Dispatch<React.SetStateAction<number>>;
 }) => {
@@ -44,10 +44,10 @@ const Story = ({
   const activeStory = useSelector((state: RootState) => state.story);
   const dispatch = useDispatch();
 
-  const [show, setShow] = useState(false)
+  // const [show, setShow] = useState(false)
 
 
-  const storyActionsMenuRef = useRef<any>(null)
+  // const storyActionsMenuRef = useRef<any>(null)
 
   const activeStoryData = stories?.find(
     (story) => story?.userId === activeStory.userId
@@ -77,6 +77,9 @@ const Story = ({
    * */
 
   useEffect(() => {
+
+    if (!activeStory.show) return
+
     if (seconds === 0) {
       dispatch(hideStory());
       return;
@@ -87,16 +90,16 @@ const Story = ({
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [seconds, dispatch, setSeconds]);
+  }, [activeStory.show, dispatch, seconds, setSeconds]);
 
 
-  const deleteStoryHandler = async (storyId: string, fileUrl: string) => {
-    const fileId = fileUrl?.split("/")[0];
-    await deleteUploadcareImg(fileId);
+  // const deleteStoryHandler = async (storyId: string, fileUrl: string) => {
+  //   const fileId = fileUrl?.split("/")[0];
+  //   await deleteUploadcareImg(fileId);
 
-    const response: any = await deleteStory(storyId);
-    return response;
-  };
+  //   const response: any = await deleteStory(storyId);
+  //   return response;
+  // };
 
   const likeStoryHandler = async (storyId: string, storyUserId: string) => {
     const response = await likeStory({ storyId, storyUserId });
@@ -104,7 +107,10 @@ const Story = ({
   };
 
   const { mutate: mutateLike, isPending: isLikePending } = useMutation({
-    mutationFn: (payload: any) =>
+    mutationFn: (payload: {
+      storyId: string;
+      userId: string;
+    }) =>
       likeStoryHandler(payload?.storyId, payload?.userId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["stories"] });
@@ -114,21 +120,21 @@ const Story = ({
     },
   });
 
-  const { mutate: mutateDelete, isPending: isStoryDeleting } = useMutation({
-    mutationFn: (payload: any) =>
-      deleteStoryHandler(payload?.storyId, payload?.fileUrl),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["stories"] });
-      dispatch(hideStory());
-      sendNotification("success", "Story deleted successfully");
-    },
-    onError: (error: any) => {
-      dispatch(hideStory());
-    },
-  });
+  // const { mutate: mutateDelete, isPending: isStoryDeleting } = useMutation({
+  //   mutationFn: (payload: any) =>
+  //     deleteStoryHandler(payload?.storyId, payload?.fileUrl),
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ["stories"] });
+  //     dispatch(hideStory());
+  //     sendNotification("success", "Story deleted successfully");
+  //   },
+  //   onError: (error: any) => {
+  //     dispatch(hideStory());
+  //   },
+  // });
 
   const clickToCloseStory = () => {
-    setShow(false)
+    // setShow(false)
     dispatch(hideStory());
   };
 
@@ -152,12 +158,15 @@ const Story = ({
   }
 
 
-  function renderStoryLikes(storyLikes: any, story: any) {
+  function renderStoryLikes(storyLikes: TStoryLikes, story: TStory) {
     if (!story) return;
 
     const IS_ALREADY_LIKED =
-      storyLikes?.length > 0 &&
-      storyLikes.map((e: any) => e.userId).includes(authUser._id);
+      storyLikes?.length > 0
+        && authUser?._id
+        && storyLikes.map((e: TStoryLike) => e.userId).includes(authUser._id) ? true : false;
+
+
     return (
       <>
         {storyLikes && storyLikes.length > 0 ? (
@@ -183,43 +192,45 @@ const Story = ({
   }
 
 
-  function renderDeleteStory(story: any) {
-    return (
-      <>
-        {story.userId === authUser._id &&
-          <div>
-            <button id="dropdownMenuIconButton" className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 relative" type="button" onClick={() => setShow(!show)}>
-              <svg className="w-5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
-                <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
-              </svg>
-            </button>
+  // function renderDeleteStory(story: any) {
+  //   return (
+  //     <>
+  //       {story.userId === authUser._id &&
+  //         <div>
+  //           <button id="dropdownMenuIconButton" className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 relative" type="button" onClick={() => setShow(!show)}>
+  //             <svg className="w-5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
+  //               <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
+  //             </svg>
+  //           </button>
 
-            {
-              show &&
-              <div
-                ref={storyActionsMenuRef}
-                className="bg-white divide-y divide-gray-100 rounded-lg shadow w-32 absolute top-14 right-8">
-                <ul className="py-5 px-3 text-xs text-gray-700 space-y-3" aria-labelledby="dropdownMenuIconButton">
-                  <li className="hover:bg-gray-100 py-2 px-2 rounded-md cursor-pointer transition-all duration-300">
-                    <button type="button" onClick={() =>
-                      mutateDelete({ storyId: story?._id, fileUrl: story.image })
-                    }>
-                      Delete
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            }
-          </div>
-        }
-      </>
-    );
-  }
+  //           {
+  //             show &&
+  //             <div
+  //               ref={storyActionsMenuRef}
+  //               className="bg-white divide-y divide-gray-100 rounded-lg shadow w-32 absolute top-14 right-8">
+  //               <ul className="py-5 px-3 text-xs text-gray-700 space-y-3" aria-labelledby="dropdownMenuIconButton">
+  //                 <li className="hover:bg-gray-100 py-2 px-2 rounded-md cursor-pointer transition-all duration-300">
+  //                   <button type="button" onClick={() =>
+  //                     mutateDelete({ storyId: story?._id, fileUrl: story.image })
+  //                   }>
+  //                     Delete
+  //                   </button>
+  //                 </li>
+  //               </ul>
+  //             </div>
+  //           }
+  //         </div>
+  //       }
+  //     </>
+  //   );
+  // }
 
   return (
     <>
-      {(isLikePending || isStoryDeleting) && <Loader />}
+      {isLikePending && <Loader />}
+
       <ToastComponent />
+
       {activeStory.show && (
         <div className="fixed top-0 left-0 h-full w-full bg-black/90 z-40 flex__center p-10 max-h-screen overflow-y-auto">
           <div className="text-white fixed top-32 right-10 cursor-pointer flex gap-x-4 ">
@@ -230,24 +241,23 @@ const Story = ({
             <Slider {...SLIDER_SETTINGS}>
               {activeStoryData.stories &&
                 activeStoryData.stories.length > 0 &&
-                activeStoryData.stories.map((story: any) => {
+                activeStoryData.stories.map((story: TStory) => {
                   return (
                     <div
                       className="flex flex-col gap-y-5 space-y-5 p-5 bg-white text-black relative"
                       key={story?._id}
                     >
                       {/* STORY TOP SECTION */}
-                      <div className="flex justify-between">
-                        <div>
-                          <h1 className="text-sm font-semibold">
-                            {story?.username}
-                          </h1>
-                          <span className="text-xs">
-                            {new Date(story?.createdAt).toLocaleDateString()}
-                          </span>
-                        </div>
+                      <div className="flex items-center gap-x-4">
 
-                        {renderDeleteStory(story)}
+                        <h1 className="text-sm font-semibold">
+                          {story?.username}
+                        </h1>
+                        <span className="text-xs">
+                          {story?.createdAt && moment(story?.createdAt).startOf('hour').fromNow()}
+                        </span>
+
+                        {/* {renderDeleteStory(story)} */}
                       </div>
 
                       {/* STORY MIDDLE SECTION */}

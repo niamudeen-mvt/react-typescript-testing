@@ -1,28 +1,33 @@
-import { config } from "../config";
+// code related to the local storage
 
-export const storeAccessTokenLS = (accessToken: string) => {
-  if (config.ACCESS_TOKEN_KEY)
-    return localStorage.setItem(config.ACCESS_TOKEN_KEY, accessToken);
+export const setItemsIntoLS = (
+  key: string,
+  value: any,
+  isJson: boolean = false
+) => {
+  if (!value) return;
+
+  if (isJson) {
+    return localStorage.setItem(key, JSON.stringify(value));
+  }
+  return localStorage.setItem(key, value);
 };
 
-export const getAccessToken = () => {
-  return localStorage.getItem("access_token");
+export const getItemsFromLC = (key: string, isJson: boolean = false) => {
+  if (!key) return;
+
+  if (isJson && localStorage.getItem(key)) {
+    return JSON.parse(localStorage.getItem(key) as string);
+  }
+
+  return localStorage.getItem(key);
 };
 
-export const removeAccessToken = () => {
-  return localStorage.removeItem("access_token");
+export const removeItemFromLS = (key: string) => {
+  return localStorage.removeItem(key);
 };
 
-// Refresh token
-
-export const storeRefreshTokenLS = (refreshToken: string) => {
-  if (config.REFRESH_TOKEN_KEY)
-    return localStorage.setItem(config.REFRESH_TOKEN_KEY, refreshToken);
-};
-export const getRefreshToken = () => {
-  if (config.REFRESH_TOKEN_KEY)
-    return localStorage.getItem(config.REFRESH_TOKEN_KEY);
-};
+// code related to the date formatting
 
 export const formattedDate = (dateTime: number | Date | undefined) => {
   const dateFormatter = new Intl.DateTimeFormat("en-US", {

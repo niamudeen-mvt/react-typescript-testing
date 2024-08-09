@@ -1,15 +1,18 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import TextError from "../components/shared/TextError";
 import ThemeContainer from "../components/layout/ThemeContainer";
 import { sendNotification } from "../utils/notifications";
-import { storeAccessTokenLS, storeRefreshTokenLS } from "../utils/helper";
+import { setItemsIntoLS } from "../utils/helper";
 import { useAuth } from "../context/authContext";
 import { useTheme } from "../context/themeContext";
 import { loginUser } from "../services/api/auth";
 import { RootState } from "../store";
+import { TLoginFormValues } from "../utils/types";
 import { startLoading, stopLoading } from "../store/features/loadingSlice";
+import { _localStorageConfig } from "../config";
+
 
 const LoginPage = () => {
   // react hook form
@@ -17,7 +20,7 @@ const LoginPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<TLoginFormValues>();
 
   const { setIsLoggedIn } = useAuth();
   const { isThemeLight } = useTheme();
@@ -27,14 +30,17 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit: SubmitHandler<TLoginFormValues> = async (data: TLoginFormValues) => {
     dispatch(startLoading());
     let res = await loginUser(data);
+
     if (res?.status === 200) {
       sendNotification("success", res.data.message);
       setIsLoggedIn(true);
-      storeAccessTokenLS(res.data.access_token);
-      storeRefreshTokenLS(res.data.refresh_token);
+
+      setItemsIntoLS(_localStorageConfig.token, res.data.access_token);
+      setItemsIntoLS(_localStorageConfig.id, res.data.userId);
+
       navigate("/");
     } else {
       sendNotification("warning", res?.response?.data?.message);
@@ -68,7 +74,7 @@ const LoginPage = () => {
             className={`border-b mb-4 outline-none bg-transparent text-white ${isThemeLight ? "border-black" : "border-white"
               }`}
           />
-          {errors.email && <TextError msg={errors.email.message} />}
+          {errors.email && <TextError msg={errors.email.message?.toString()} />}
         </div>
         <div className="form-control mb-6 flex flex-col">
           <label>Password</label>
@@ -89,7 +95,7 @@ const LoginPage = () => {
             className={`border-b mb-4 outline-none bg-transparent text-white ${isThemeLight ? "border-black" : "border-white"
               }`}
           />
-          {errors.password && <TextError msg={errors.password.message} />}
+          {errors.password && <TextError msg={errors.password.message?.toString()} />}
         </div>
         <button
           type="submit"

@@ -2,10 +2,16 @@ import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const THEME_COLOR = "dark";
+import { MdError } from "react-icons/md";
+import { MdWarning } from "react-icons/md";
+import { IoShieldCheckmark } from "react-icons/io5";
+
+const THEME_COLOR = "colored";
 const POSITION = "bottom-right";
+const CLASS_NAME = 'text-xs'
 
 export const sendNotification = (type: string, msg: string) => {
+
   if (type === "success") {
     return toast.success(`${msg}`, {
       position: POSITION,
@@ -16,7 +22,8 @@ export const sendNotification = (type: string, msg: string) => {
       draggable: false,
       progress: undefined,
       theme: THEME_COLOR,
-      icon: false,
+      icon: <IoShieldCheckmark size={22} />,
+      className: CLASS_NAME,
     });
   } else if (type === "warning") {
     return toast.warning(`${msg}`, {
@@ -28,10 +35,11 @@ export const sendNotification = (type: string, msg: string) => {
       draggable: false,
       progress: undefined,
       theme: THEME_COLOR,
-      icon: false,
+      icon: <MdWarning size={22} />,
+      className: CLASS_NAME,
     });
   } else {
-    return toast.error(`${msg}`, {
+    return toast.error(` ${msg}`, {
       position: POSITION,
       autoClose: 2000,
       hideProgressBar: false,
@@ -40,7 +48,8 @@ export const sendNotification = (type: string, msg: string) => {
       draggable: false,
       progress: undefined,
       theme: THEME_COLOR,
-      icon: false,
+      icon: <MdError size={22} />,
+      className: CLASS_NAME,
     });
   }
 };
