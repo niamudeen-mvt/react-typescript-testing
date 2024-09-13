@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { fetchPost } from "../../services/api/posts";
 import Loader from "../../components/Loader";
@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import PostContainer from "../../components/PostContainer";
 import { useState } from "react";
 import { TPost } from "../../utils/types";
-import path from "path";
 
 
 const PostsPage = () => {
@@ -22,19 +21,12 @@ const PostsPage = () => {
 
   return (
     <PostContainer>
-
       {isLoading && <Loader />}
-
-      {/* Post list */}
-
       <div className="flex flex-col gap-y-4">
         {POSTS && POSTS.length > 0 && POSTS.map((post: TPost) => (
           <PostCard key={post.id} post={post} />
         ))}
-
-        {!POSTS && <p>No Posts Found</p>}
       </div>
-
     </PostContainer >
   );
 
@@ -86,11 +78,6 @@ const PostActionsMenu = ({ post }: { post: TPost }) => {
 
 
   const isShow = showMenu && postId === post?.id
-
-
-
-
-
   const deletePost = async (postId: string) => {
 
   }

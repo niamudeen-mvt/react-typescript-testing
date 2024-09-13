@@ -63,6 +63,7 @@ export const ALL_ROUTES = [
     type: "protected",
     element: <Post />,
     isPrivate: true,
+    excludeFromNav: true
   },
   {
     id: "post-comments",
@@ -70,6 +71,7 @@ export const ALL_ROUTES = [
     element: <PostComments />,
     type: "protected",
     isPrivate: true,
+    excludeFromNav: true
   },
 ];
 

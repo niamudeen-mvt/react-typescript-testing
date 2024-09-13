@@ -5,6 +5,7 @@ import { useTheme } from "../../context/themeContext";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import PostContainer from "../../components/PostContainer";
+import Loader from "../../components/Loader";
 
 const Post = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -40,7 +41,10 @@ const Post = () => {
   return (
     <PostContainer>
       <div className="custom__container">
-        {POST ? (
+        {
+          isLoading && <Loader />
+        }
+        {POST &&
           <section className='space-y-4'>
 
             {/* go back button  */}
@@ -55,27 +59,19 @@ const Post = () => {
               className={`${isThemeLight ? "bg-white" : "bg-white text-black"
                 } p-10 grid gap-y-4 rounded-lg shadow-2xl`}
             >
-              {isLoading ? (
-                <div>Loading .......</div>
-              ) : (
-                <>
-                  <div className="flex justify-end">
-                    <CustomDrodown
-                      showMenu={showMenu}
-                      setShowMenu={setShowMenu}
-                      dropMenu={dropMenu}
-                    />
-                  </div>
-                  <h1 className="text-3xl">Title : {POST.title}</h1>
-                  <p>body : {POST.body}</p>
-                </>
-              )}
+              <div className="flex justify-end">
+                <CustomDrodown
+                  showMenu={showMenu}
+                  setShowMenu={setShowMenu}
+                  dropMenu={dropMenu}
+                />
+              </div>
+              <h1 className="text-3xl">Title : {POST.title}</h1>
+              <p>body : {POST.body}</p>
             </div>
 
           </section>
-        ) : (
-          <p>No Post to show</p>
-        )}
+        }
       </div>
     </PostContainer>
   );

@@ -24,8 +24,8 @@ const Header = () => {
 
   const MENU_ITEMS =
     ALL_ROUTES && isLoggedIn ?
-      ALL_ROUTES.filter((menu) => menu.isPrivate && !menu.isHidden) :
-      ALL_ROUTES.filter((menu) => !menu.isPrivate && !menu.isHidden)
+      ALL_ROUTES.filter((menu) => menu.isPrivate && !menu.isHidden && !menu.excludeFromNav) :
+      ALL_ROUTES.filter((menu) => !menu.isPrivate && !menu.isHidden && !menu.excludeFromNav);
 
   return (
     <header className="bg-white fixed w-full z-50">

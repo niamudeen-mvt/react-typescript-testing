@@ -29,7 +29,7 @@ const PostComments = () => {
         isLoading && <Loader />
       }
       <div >
-        {COMMENTS ? (
+        {COMMENTS && (
           <section className="custom__contianer">
 
             {/* Go back button */}
@@ -69,8 +69,6 @@ const PostComments = () => {
             </div>
 
           </section>
-        ) : (
-          <p>No Comments to show</p>
         )}
       </div>
     </PostContainer>
