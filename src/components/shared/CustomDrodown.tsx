@@ -1,5 +1,6 @@
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { usePost } from "../../context/postContext";
+import { Link } from "react-router-dom";
 
 type Props = {
   showMenu: boolean;
@@ -28,17 +29,18 @@ const CustomDrodown = ({ setShowMenu, showMenu, dropMenu }: Props) => {
           <ul className="h-full flex flex-col justify-between w-full">
             {dropMenu.map((e) => {
               return (
-                <li
-                  key={e.id}
-                  onClick={() => {
-                    handleShowComments(true);
-                    handleContentTitle("Comments");
-                  }}
-                  className="flex gap-x-2 hover:bg-blue-300 px-3 py-1 rounded-md transition-all duration-300 text-black"
-                >
-                  {/* <span className="text-xs">x</span> */}
-                  <span className="text-xs">{e.title}</span>
-                </li>
+                <Link to={`/post/comments/${e.id}`} key={e.id}>
+                  <li
+                    onClick={() => {
+                      handleShowComments(true);
+                      handleContentTitle("Comments");
+                    }}
+                    className="flex gap-x-2 hover:bg-blue-300 px-3 py-1 rounded-md transition-all duration-300 text-black"
+                  >
+                    {/* <span className="text-xs">x</span> */}
+                    <span className="text-xs">{e.title}</span>
+                  </li>
+                </Link>
               );
             })}
           </ul>

@@ -8,9 +8,11 @@ import QuizPage from "./pages/quiz";
 import StoriesPage from "./pages/Stories";
 import NotFoundPage from "./pages/NotFoundPage";
 import PublicRoutes from "./components/routes/PublicRoutes";
-import ProtectedRoutes from "./components/routes/ProtectedRoutes";
 import AppLayout from "./components/layout/AppLayout";
-import PostsSection from "./pages/posts";
+import Post from "./pages/posts/Post";
+import PostComments from "./pages/posts/PostComments";
+import ProtectedRoutes from "./components/routes/ProtectedRoutes";
+import PostsPage from "./pages/posts";
 
 export const ALL_ROUTES = [
   {
@@ -52,7 +54,21 @@ export const ALL_ROUTES = [
     id: "posts",
     path: "/posts",
     type: "protected",
-    element: <PostsSection />,
+    element: <PostsPage />,
+    isPrivate: true,
+  },
+  {
+    id: "post",
+    path: "/post/:postId",
+    type: "protected",
+    element: <Post />,
+    isPrivate: true,
+  },
+  {
+    id: "post-comments",
+    path: "/post/comments/:postId",
+    element: <PostComments />,
+    type: "protected",
     isPrivate: true,
   },
 ];

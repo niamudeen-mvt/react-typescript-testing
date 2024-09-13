@@ -64,3 +64,17 @@ export type TQuizResullt = {
   unattempted: number;
   right: number;
 };
+
+
+// types related to the posts
+export type TComment = {
+  name: string;
+  email: string;
+  body: string
+}
+
+
+export type TPost = {
+  title: string;
+  id: string
+}

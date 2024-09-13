@@ -16,10 +16,10 @@ const contextDefaultValues: PostContextState = {
   showPost: false,
   showComments: false,
   contentTitle: "Posts",
-  handlePostId: () => {},
-  handleShowPost: () => {},
-  handleShowComments: () => {},
-  handleContentTitle: () => {},
+  handlePostId: () => { },
+  handleShowPost: () => { },
+  handleShowComments: () => { },
+  handleContentTitle: () => { },
 };
 
 const PostContext = createContext<PostContextState>(contextDefaultValues);

@@ -3,9 +3,9 @@ import api from "../../utils/axios";
 export const fetchPost = async (): Promise<any> => {
   try {
     let response = await api.get(`https://jsonplaceholder.typicode.com/posts`);
-    return response;
+    return response?.data || [];
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
